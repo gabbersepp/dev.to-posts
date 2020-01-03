@@ -12,7 +12,7 @@ canonical_url:
 Have you ever been annoyed of searching for the right cypress fixture file path, copy it and pasting it into `cy.fixture()` or `cy.route()`? Then this article will help you!
 
 # Why you should use fixtures and how to use them
-Fixture files provide testdata of any kind. In Cypress they can be used to load data (e.g. predefined user data) or tell `XHR` requests to return specific data.
+Fixture files provide test data of any kind. In Cypress they can be used to load data (e.g. predefined user data) or tell `XHR` requests to return specific data.
 
 If you have not explicitly disabled fixtures in cypress, the default path to the fixture's directory is `cypress/fixtures`. You can change this in the `cypress.json` config file:
 ```json
@@ -35,9 +35,30 @@ If I now want to use one of them, the typical process is like:
 This is very annoying because it breaks my programming flow.
 
 # The solution
-I was thinking about how cool it would be if VSCode can suggest me the file that I am searching. 
+I was thinking about how cool it would be if VSCode can suggest me the file that I am searching. In exactly the way as you get suggestions for property names and so on. 
+But unfortunately there was not any extension that offers me this features. And if a developer reaches this point at anytime, this is mostly the start of a new project ;-P
+
+# Cypress Fixture-IntelliSense
+And that was the birth of this small but helpful extension. You find it in [the VSCode marketplace](https://marketplace.visualstudio.com/items?itemName=JosefBiehler.cypress-fixture-intellisense). 
+
+# Usage
+Currently it supports:
+
+## cy.fixture()
+Type anywhere in your JS/TS file:
+```js
+cy.fixture("")
+```
+Then ensure that the cursor is placed between the double quotes (normally this is the default behavior in VSCode). Now press `STRG + Space` (On Windows) to trigger the Intellisense.
+
+Example:
+
+![Suggestion](assets/example.gif)
+
+
+----
 
 # Found a typo?
-As I am not a native english speaker, it is very likly that you will find an error. In this case, feel free to create a pull request here: https://github.com/gabbersepp/dev.to-posts . Also please open a PR for all other kind of errors.
+As I am not a native English speaker, it is very likely that you will find an error. In this case, feel free to create a pull request here: https://github.com/gabbersepp/dev.to-posts . Also please open a PR for all other kind of errors.
 
 Do not worry about merge conflicts. I will resolve them on my own. 

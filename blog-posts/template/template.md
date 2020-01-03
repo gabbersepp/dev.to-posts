@@ -10,6 +10,7 @@ canonical_url:
 
 # Header
 
+----
 
 # Found a typo?
 As I am not a native english speaker, it is very likly that you will find an error. In this case, feel free to create a pull request here: https://github.com/gabbersepp/dev.to-posts . Also please open a PR for all other kind of errors.
