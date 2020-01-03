@@ -10,7 +10,6 @@ node_js:
   - '11'
 
 script:
-  - yarn run prettier:check
   - yarn run embedme:check
 
 after_success:
