@@ -1,7 +1,7 @@
 ---
 published: false
 title: "Intellisense for Cypress Fixture Files"
-cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/intellisense-for-cypress-fixture-files/assets/your-asset.png"
+cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/intellisense-for-cypress-fixture-files/assets/header.png"
 description: "Introducing a VSCode extension that provides intellisense for cypress fixture file paths"
 tags: cypress, javascript, vscode, productivity
 series:
