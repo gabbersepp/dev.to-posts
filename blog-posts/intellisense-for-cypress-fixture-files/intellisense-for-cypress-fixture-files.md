@@ -44,6 +44,9 @@ And that was the birth of this small but helpful extension. You find it in [the 
 # Usage
 Currently it supports:
 
+* cy.fixture()
+* cy.route()
+
 ## cy.fixture()
 Type anywhere in your JS/TS file:
 ```js
@@ -51,9 +54,20 @@ cy.fixture("")
 ```
 Then ensure that the cursor is placed between the double quotes (normally this is the default behavior in VSCode). Now press `STRG + Space` (On Windows) to trigger the Intellisense.
 
-Example:
+## cy.route()
+Type anywhere in your JS/TS file:
+```js
+cy.route("...", /route/, "")
+```
+Then ensure that the cursor is placed between the last double quotes (normally this is the default behavior in VSCode). Now press `STRG + Space` (On Windows) to trigger the Intellisense.
 
-![Suggestion](assets/example.gif)
+## File filter
+The extension also supports filtering based on the input made between the double quotes.
+E.g. if you write `cy.fixture("test")` and the cursor is placed after **t**, then you will only see files that contains `test` in its filename.
+
+## Example
+
+![Suggestion](./assets/example.gif)
 
 
 ----
