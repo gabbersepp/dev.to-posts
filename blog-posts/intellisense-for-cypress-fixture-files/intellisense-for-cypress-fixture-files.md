@@ -9,7 +9,7 @@ canonical_url:
 ---
 
 # Intellisense for Cypress Fixture Files
-Have you ever been annoyed of searching for the right cypress fixture file path, copy it and pasting it into `cy.fixture()` or `cy.route()`? Then this article will help you!
+Are you tired of looking for the right file path for cypress fixtures, copying it and pasting it into cy.fixture () or cy.route ()? Then this article will help you!
 
 # Why you should use fixtures and how to use them
 Fixture files provide test data of any kind. In Cypress they can be used to load data (e.g. predefined user data) or tell `XHR` requests to return specific data.
@@ -69,6 +69,8 @@ E.g. if you write `cy.fixture("test")` and the cursor is placed after **t**, the
 
 ![Suggestion](./assets/example.gif)
 
+# Do you miss anything?
+Do you have any change requests for the extension? Do you miss something or you found a bug? Do not hesitate to open a new issue at Github or write a comment under this post.
 
 ----
 
