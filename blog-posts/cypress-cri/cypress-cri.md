@@ -1,7 +1,7 @@
 ---
 published: false
 title: "Low level access to Chrome Debugger Protocol and Cypress"
-cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/cypress-cri/assets/header1.png"
+cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/cypress-cri/assets/header3.png"
 description: "Show Low level access to the chrome remote debugger protocol and an introduction how to the protocol with an abstraction layer with cypress"
 tags: cypress, testing, debug, chrome
 series:
