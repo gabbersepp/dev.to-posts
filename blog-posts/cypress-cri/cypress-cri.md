@@ -18,10 +18,11 @@ If you fix something on the car, you make a new entry with the current date and 
 Currently I'm refactoring the whole application. So you will find not the best code in this repository :-D
 
 See this example Screen (it is in German right now):
+
 ![Service History example](./assets/service-history-example.jpg)
 
 # Usage of Print Media Query
-Maybe you noticed the *Print* button at the bottom of the app. It will print the whole page. But as you can imagine, when the entry gets printed, I do not want some elements to appear at the paper. E.g. the images at the bottom. Also I do not want the input elements to show up as such. And the textarea should be resized to show the whole content. 
+Maybe you noticed the *Print / Drucken* button at the bottom of the app. It will print the whole page. But as you can imagine, when the entry gets printed, I do not want some elements to appear at the paper. E.g. the images at the bottom. Also I do not want the input elements to show up as such. And the textarea should be resized to show the whole content. 
 
 This is done by using a `print media query` that defines some extra CSS. The end result looks like this:
 
@@ -110,8 +111,84 @@ There are some limitations when you use the protocol in your tests.
     Whenever a spec file contains more than one test, the same browser instance is reused. This means, that you also use the same debugging session. And this introduces problems. Let's say, you activate the `print media query` in the first test which hides an element. Then in the next test, this element is missing, too. This holds true also if you reload the page. To bypass this behavior you need to reset the browser state before or after each test which can lead to further problems.
 
 ## Full runnable example
-You can copy & paste all the code shown here or just use the [official example](https://github.com/cypress-io/cypress-example-recipes/pull/384) added by me to the official example recipes repo.
+I show you some specific lines of code of the full example. But to avoid duplicate code, I don't write down everything I have written in the [official example](https://github.com/cypress-io/cypress-example-recipes/pull/384). Also you can have a look at my [real world solution](https://github.com/gabbersepp/service-history/pull/19).
 
+For the sake of clarity I will only point you to some specific code blocks
+
+### 1. Conflict with existing connection
+You must get the port of an already passed debug parameter. This can easily be done in the `plugins file` by listening to the `before:browser:launch` event and extracting the potential passed argument.
+
+```js
+// code/plugins-port.js
+
+const CDP = require('chrome-remote-interface');
+
+let port = 0;
+
+module.exports = (on) => {
+  on('before:browser:launch', (browser, args) => {
+    port = ensureRdpPort(args);
+  })
+}
+
+function ensureRdpPort(args) {
+  const existing = args.find(arg => arg.slice(0, 23) === '--remote-debugging-port')
+
+  if (existing) {
+    return Number(existing.split('=')[1])
+  }
+
+  port = 40000 + Math.round(Math.random() * 25000)
+  args.push(`--remote-debugging-port=${port}`)
+  return port
+}
+```
+
+Please note that you have to store the port for later use. I have decided to use a local variable, but you can use whatever you want.
+For me this works best, because I define tasks for every interaction with the debugger protocol. For example:
+
+```js
+// code/plugins-task.js
+
+let client;
+
+module.exports = (on) => {
+    //...
+    on("task", {
+        activatePrintMediaQuery: async () => {
+            client = client || await CDP({ port });
+            return client.send('Emulation.setEmulatedMedia', { media: "print" })
+        }
+    })
+    //...
+}
+```
+
+`client` is stored to a local variable. The reason for this is found in the next section.
+
+### 2. Resetting chrome state
+The best solution I have found is to close the  connection. For this purpose I define a new task that can be called in a `beforeEach`:
+
+```js
+// code/plugins-reset.js
+
+module.exports = (on) => {
+    //...
+    on("task", {
+        //...
+        resetCRI: async () => {
+            if (client) {
+                await client.close();
+            }
+        
+            return Promise.resolve(true);
+        }
+    }
+    //...
+}
+```
+
+As you can see, the `client` is reused. This works in my case but if the `beforeEach` fails in a nested `describe`, you may encounter wrong test results.
 
 # Additional links
 - [Simple Websocket Client Extension](https://chrome.google.com/webstore/detail/simple-websocket-client/pfdhoblngboilpfeibdedpjgfnlcodoo?hl=de)
@@ -122,6 +199,6 @@ You can copy & paste all the code shown here or just use the [official example](
 ----
 
 # Found a typo?
-As I am not a native english speaker, it is very likly that you will find an error. In this case, feel free to create a pull request here: https://github.com/gabbersepp/dev.to-posts . Also please open a PR for all other kind of errors.
+As I am not a native English speaker, it is very likely that you will find an error. In this case, feel free to create a pull request here: https://github.com/gabbersepp/dev.to-posts . Also please open a PR for all other kind of errors.
 
 Do not worry about merge conflicts. I will resolve them on my own. 
