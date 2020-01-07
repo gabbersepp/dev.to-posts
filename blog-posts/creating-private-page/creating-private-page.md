@@ -34,7 +34,7 @@ Yes I am one of those poor people who must handle GDPR because I am from Germany
     I like markdown syntax. It has something minimalist. Thus that is how I want to write my page.
 + **Git**
 
-    I like the idea of cool stuff beeing open source. And open source projects gain from a lot of benefits, e.g. free (Travis builds)[https://travis-ci.org] and free hosting. Using git also gives me version history for free.
+    I like the idea of cool stuff beeing open source. And open source projects gain from a lot of benefits, e.g. free [Travis builds](https://travis-ci.org) and free hosting. Using git also gives me version history for free.
 + **Project showcase**
 
     I have a few projects on github.com. Not very spectacular but at least they are my projects and I want them to be shared among the rest of the world. But of course I do not want to duplicate a project's description to my personal page.
