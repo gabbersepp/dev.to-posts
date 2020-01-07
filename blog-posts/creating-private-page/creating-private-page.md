@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 title: "Creating a personal page with Twitter sync, github sync, dev.to sync"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/creating-private-page/assets/header.png"
 description: "Learn how I build my personal page using eleventy, twitter, github and other cool stuff"
