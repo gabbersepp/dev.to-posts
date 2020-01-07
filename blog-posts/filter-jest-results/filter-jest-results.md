@@ -22,7 +22,7 @@ describe("suite", () => {
     expect(true).toBe(true)
   })
 
-  it("this test should not appear in the html and junit report", () => {
+  it("Skipped", () => {
     expect(false).toBe(true)
   })
 })
