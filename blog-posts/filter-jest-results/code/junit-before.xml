@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="2" failures="1" time="2.823">
+  <testsuite name="suite" errors="0" failures="1" skipped="0" timestamp="2020-01-07T20:10:48" time="1.584" tests="2">
+    <testcase classname="suite this test should appear in the html and junit report" name="suite this test should appear in the html and junit report" time="0.002">
+    </testcase>
+    <testcase classname="suite this test should not appear in the html and junit report" name="suite this test should not appear in the html and junit report" time="0.003">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+</failure>
+    </testcase>
+  </testsuite>
+</testsuites>
