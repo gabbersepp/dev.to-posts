@@ -8,7 +8,11 @@ series: creating_private_page
 canonical_url:
 ---
 
-# Header
+This is the second part of this series. In the first I talked about my motivations to revive my old website [biehler-josef.de](https://biehler-josef.de). Now we need to build the first milestone and this is definitly the HTML that everyone can view in the browser. 
+I thought a lot about how to do this. For those that just began to code the last one to ten years, I can tell you that today you have the best time ever. Back then there were only a few tutorials, nearly nothing javascript related, PHP was very popular and so PHP based CMS systems were.
+Nowadays this has changed completely. You have plenty of possibilities to build a website. You can choose whatever JS framework you want. You can host your page, whether you use NodeJS or C# or ... , with very low cost or even for free if you publish your project under an open source license.
+
+I discovered [11ty](https://11ty.dev) a few days ago
 
 ----
 
