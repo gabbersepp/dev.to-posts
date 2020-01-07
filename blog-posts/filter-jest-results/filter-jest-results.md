@@ -16,6 +16,17 @@ The usecase is a bit complicated. In the end we needed to remove test results if
 If we have this `javascript` code:
 ```js
 // code/jest.spec.js
+
+describe("suite", () => {
+  it("this test should appear in the html and junit report", () => {
+    expect(true).toBe(true)
+  })
+
+  it("this test should not appear in the html and junit report", () => {
+    expect(false).toBe(true)
+  })
+})
+
 ```
 
 I want to get this test result:

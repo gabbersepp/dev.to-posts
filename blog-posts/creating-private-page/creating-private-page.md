@@ -1,15 +1,14 @@
 ---
 published: false
-title: "Creating a personal page"
-cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/intellisense-for-cypress-fixture-files/assets/your-asset.png"
-description: "TODO: fill"
-tags: cypress, javascript, vscode, productivity
+title: "Creating a personal page with Twitter sync, github sync, dev.to sync"
+cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/creating-private-page/assets/header.png"
+description: "Learn how I build my personal page using eleventy, twitter, github and other cool stuff"
+tags: tutorial, eleventy, twitter, github
 series: creating_private_page
 canonical_url:
 ---
-wichtig: front_matter bearbeiten
 
-Long time ago I had a personal page that provides tutorials about many programming stuff. E.g. I showed how an oprating system can be built using Assembler. Or how the Win32 API can be used with ASM. Also some Delphi stuff was there and so on.
+Long time ago I had a personal page that provides tutorials about many programming stuff. E.g. I showed how an operating system can be built using Assembler. Or how the Win32 API can be used with ASM. Also some Delphi stuff was there and so on.
 
 My page was very popular within a specific target group. I had good SEO ranks and all that stuff. But at some point in time I lost interest in writing tutorials. And also I had no time left because other (non programming related) projects became more important. 
 
