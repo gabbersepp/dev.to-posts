@@ -115,7 +115,7 @@ module.exports = {
       "default",
       "jest-junit",
       "jest-html-reporter",
-      "path/to/jest-report-wrapper.js"
+      "relative/path/to/jest-report-wrapper.js"
   ],
   testMatch: ["<rootDir>/specs/*.js"]
 };
