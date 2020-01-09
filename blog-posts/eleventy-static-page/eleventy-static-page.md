@@ -22,6 +22,7 @@ This are the steps to use `eleventy`:
 "scripts": {
     "11ty": "eleventy"
   }`
++ create a `.md` file
 + call `npm run 11ty`
 
 And after that you will find a directory named `_site` that contains the **HTML** code.
@@ -37,7 +38,7 @@ So something like this will do the trick:
 {% endfor %}
 ```
 
-## Publish a new dynamic collection to liquid
+# Publish a new dynamic collection to liquid
 In order to access `tweets` we must read the file and tell anyone that we have a new list of objects.
 
 The reading part is easy:
@@ -49,7 +50,7 @@ The reading part is easy:
 Eleventy offers a special method that allows you to add new collections. To use this you must create a file named `.eleventy.js` in the project root (it is a config file) that exports a function whose only parameter is a `eleventyConfig`.
 On that object you can call `addCollection('tweets', tweets)`. Now you can access it:
 
-```js
+```
 {% for t in collections.tweets %}
     {{ t.id }}
 {% endfor %}
@@ -72,6 +73,12 @@ module.exports = function(eleventyConfig) {
 }
 ```
 
+For a runnable example, please visit:
++ [52cc18d8c8f3ce20a7b493cc26b5e7caa9b7b752](https://github.com/gabbersepp/biehler-josef.de/commit/52cc18d8c8f3ce20a7b493cc26b5e7caa9b7b752)
++ [d9386f31cf43a97ca26ebe3cd096ade2ca9e5590](https://github.com/gabbersepp/biehler-josef.de/commit/d9386f31cf43a97ca26ebe3cd096ade2ca9e5590)
+
+# Summary
+You have learned how easy `Eleventy` can be setup and how you can utilize Liquid to display a dynamic list. 
 
 ----
 
