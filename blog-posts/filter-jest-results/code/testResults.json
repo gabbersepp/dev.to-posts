@@ -1,0 +1,12 @@
+{
+  "numPassingTests": 5,
+  "testFilePath": "path/to/spec.js",
+  "testResults": [
+    {
+      "ancestorTitles": [
+        "SelectField Component"
+      ],
+      "title": "renders text input correctly"
+    }
+  ]
+}
