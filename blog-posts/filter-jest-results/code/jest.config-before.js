@@ -6,5 +6,5 @@ module.exports = {
         "pageTitle": "Jest Test Report"
         }]
   ],
-  testMatch: ["<rootDir>/specs/*.js"]
+  testMatch: ["<rootDir>/spec.js"]
 };

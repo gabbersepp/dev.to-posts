@@ -1,0 +1,11 @@
+{
+  "name": "jest-report-wrapper-devto",
+  "scripts": {
+    "jest": "jest"
+  },
+  "devDependencies": {
+    "jest": "^24.9.0",
+    "jest-html-reporter": "^2.8.0",
+    "jest-junit": "^10.0.0"
+  }
+}

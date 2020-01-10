@@ -1,0 +1,10 @@
+{
+  "name": "project",
+  "scripts": {
+    "11ty": "eleventy",
+    "11ty-serve": "eleventy --serve"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^0.10.0"
+  }
+}

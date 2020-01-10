@@ -13,7 +13,7 @@ I thought a lot about how to do this. For those that just began to code the last
 Nowadays this has changed completely. You have plenty of possibilities to build a website. You can choose whatever JS framework you want. You can host your page, whether you use NodeJS or C# or ... , with very low cost or even for free if you publish your project der an open source license.
 
 # Choosing the right thing
-Among all those possibilities it is very hard to decide how I should create my website. I already have [one](https://jodekadev.de). It is written with React but completly manually. This is sufficient because that content does not change very often. But I plan to updated the content every day or at least once per week. 
+Among all those possibilities it is very hard to decide how I should create my website. I already have [one](https://jodekadev.de). It is written with React but completly manually. This is sufficient because that content does not change very often. But I plan to updated the content of the new page every day or at least once per week. 
 By chance I discovered [11ty](https://11ty.dev) a few days ago. It is a static site builder that works with zero config. I hate tools I have to configure very long. In the best case I install it and it works. And yes, **11ty** fulfills exactly my expectation!
 
 This are the steps to use `eleventy`:
@@ -73,9 +73,8 @@ module.exports = function(eleventyConfig) {
 }
 ```
 
-For a runnable example, please visit:
-+ [52cc18d8c8f3ce20a7b493cc26b5e7caa9b7b752](https://github.com/gabbersepp/biehler-josef.de/commit/52cc18d8c8f3ce20a7b493cc26b5e7caa9b7b752)
-+ [d9386f31cf43a97ca26ebe3cd096ade2ca9e5590](https://github.com/gabbersepp/biehler-josef.de/commit/d9386f31cf43a97ca26ebe3cd096ade2ca9e5590)
+# Examplecode
+You can checkout the my blog post repo and test the code used in this post. Check the [README.md](./project/README.md) of the project.
 
 # Summary
 You have learned how easy `Eleventy` can be setup and how you can utilize Liquid to display a dynamic list. 

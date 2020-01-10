@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="1" failures="0" time="2.124">
+  <testsuite name="suite" errors="0" failures="0" skipped="0" timestamp="2020-01-09T19:50:17" time="1.272" tests="1">
+    <testcase classname="suite this test should appear in the html and junit report" name="suite this test should appear in the html and junit report" time="0.002">
+    </testcase>
+  </testsuite>
+</testsuites>
