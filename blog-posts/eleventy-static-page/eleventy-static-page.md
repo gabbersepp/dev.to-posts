@@ -8,7 +8,7 @@ series: creating_private_page
 canonical_url:
 ---
 
->**Example files:** You'll find the example code [in the blog post's project directory](./project/README.md)
+>**Example files:** You'll find the example code [in the blog post's project directory](https://github.com/gabbersepp/dev.to-posts/tree/master/blog-posts/eleventy-static-page/project/README.md)
 
 This is the second part of this series. In the first I talked about my motivations to revive my old website [biehler-josef.de](https://biehler-josef.de). Now we need to build the first milestone and this is definitely the HTML that everyone can view in the browser. 
 I thought a lot about how to do this. For those that just began to code the last one to ten years, I can tell you that today you have the best time ever. Back then there were only a few tutorials, nearly nothing complex with **javascript**, **PHP** was very popular and so were PHP based CMS systems.
@@ -67,20 +67,25 @@ Note the **collections** keyword here which is necessary.
 Full code of `.eleventy.js`:
 
 ```js
-// code/eleventy.js
+// project/.eleventy.js
 
 const fs = require("fs");
 
 module.exports = function(eleventyConfig) {
-    const tweetsStr = fs.readFileSync("../preprocessing/twitter/tweets.json").toString();
-    const tweets = JSON.parse(tweetsStr);
-    console.log(tweetsStr)
-    eleventyConfig.addCollection("tweets", () => tweets);
-}
-```
+  const tweetsStr = fs.readFileSync("./tweets.json").toString();
+  const tweets = JSON.parse(tweetsStr);
+  console.log(tweetsStr)
+  eleventyConfig.addCollection("tweets", () => tweets);
 
-# Examplecode
-You can checkout the my blog post repo and test the code used in this post. Check the [README.md](./project/README.md) of the project.
+  return {
+    dir: {
+      input: "views",
+      output: "dist"
+    }
+  }
+}
+
+```
 
 # Summary
 You have learned how easy `Eleventy` can be setup and how you can utilize Liquid to display a dynamic list. 
