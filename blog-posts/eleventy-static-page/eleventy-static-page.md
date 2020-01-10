@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 title: "Use eleventy to create my static page"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/eleventy-static-page/assets/header.png"
 description: "Write your website with markdown + liquid and publish it as static page. This article shows how I create my page with eleventy"
@@ -37,13 +37,11 @@ And after that you will find a directory named `_site` that contains the **HTML*
 Let's say we have a file `tweets.json` that contains a list of tweets and we want to display them. How can we do this? **Eleventy** sends the markdown files through the [liquid template engine](https://shopify.github.io/liquid/) so we can use everything we can do in liquid. That means we have control structures and iteration structures as well.
 
 So something like this will do the trick:
-
 ```
 {% for tweet in tweets %}
   id: {{ tweet.id }}
 {% endfor %}
 ```
-
 # Publish a new dynamic collection to liquid
 In order to access `tweets` we must read the file and tell someone that we have a new list of objects.
 
