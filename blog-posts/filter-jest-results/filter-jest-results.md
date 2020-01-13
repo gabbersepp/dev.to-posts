@@ -8,12 +8,14 @@ series:
 canonical_url:
 ---
 
-Today we stumbled over a problem in our API test infrastructure that induced some brainwork to fix it. In this article I show you how you can build your own Jest reporter and also how you can wrap existing reporters to filter out specific test results.
+>**Example files:** You'll find the example code [in the blog post's project directory](https://github.com/gabbersepp/dev.to-posts/tree/master/blog-posts/filter-jest-results/project/README.md)
+
+A few days ago we stumbled over a problem in our API test infrastructure that induced some brainwork to fix it. In this article I show you how you can build your own Jest reporter and also how you can wrap existing reporters to filter out specific test results.
 
 # Our use case
 We skip tests conditional under specific circumstances.
 
-How is this done? Well we have overwritten `describe() & test()` and if we encounter a situation where we must skip the test, we do not pass the original arguments to the original function but use this construct:
+How is this done? Well we have overwritten `describe() & it()` and if we encounter a situation where we must skip the test, we do not pass the original arguments to the original function but use this construct:
 
 ```js
   describe('Skipped', () => {
@@ -21,7 +23,7 @@ How is this done? Well we have overwritten `describe() & test()` and if we encou
   });
 ```
 
-Similar works the replacement for `test()` that allows us to execute tests within a `describe` but skip specific ones. 
+Similar works the replacement for `it()` that allows us to execute tests within a `describe` but skip specific ones. 
 
 To keep our reports clean we want to filter out skipped tests.
 So we can omit all tests that are named **Skipped**.
@@ -353,6 +355,9 @@ onRunComplete(test, runResults) {
   })
 }
 ```
+
+# Summary
+
 
 # Additional Resources <a name="additional-resources">
 + [A very good explanation of the `Jest` reporter interface](https://medium.com/@colinwren/writing-a-jest-test-reporter-cb7c123ec211)
