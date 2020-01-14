@@ -30,8 +30,6 @@ So we can omit all tests that are named **Skipped**.
 
 **This is our spec file:**
 
-wichtgi: nur grüne fälle nutzen, weil wir später im code auch nur die success subtrahieren
-
 ```js
 // code/jest.spec.js
 
@@ -108,7 +106,7 @@ Obviously we want this output:
 ```
 
 # The idea
-I read through the "Jest" documentation, but found nothing to do with any filter logic. We also don't want to change existing reporters. So the only solution is to pack an existing reporter into an own reporter that does not pass on all test results. Also some test measurements must be adjusted, like the amount of total tests and so on.
+I read through the "Jest" documentation, but found nothing related to filter logic. Changing existing reporters is out of the question  so the only solution is to pack an existing reporter into an own reporter that does not pass on all test results. Also some test measurements must be adjusted, like the amount of total tests and so on.
 
 # Writing an Jest reporter
 So our first goal is to write an own jest reporter. It's basic structure is very simple as you can see:
@@ -357,6 +355,9 @@ onRunComplete(test, runResults) {
 ```
 
 # Summary
+You learned how you can write an own `jest` reporter and how you can modify the test results to control the html/junit/... output.
+
+Is there a native functionality in `jest` for doing this kind of stuff? Let me know! 
 
 
 # Additional Resources <a name="additional-resources">
