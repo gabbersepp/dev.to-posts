@@ -1,8 +1,8 @@
 [
     { "id": 231289, "relativePathToArticle": "./blog-posts/intellisense-for-cypress-fixture-files/intellisense-for-cypress-fixture-files.md"},
     { "id": 232092, "relativePathToArticle": "./blog-posts/cypress-cri/cypress-cri.md"},
-    { "id": 233542, "relativePathToArticle": "./blog-posts/creating-private-page/creating-private-page.md" },
+    { "id": 233542, "relativePathToArticle": "./blog-posts/private-page/creating-private-page/creating-private-page.md" },
     { "id": 234173, "relativePathToArticle": "./blog-posts/filter-jest-results/filter-jest-results.md" },
-    { "id": 234172, "relativePathToArticle": "./blog-posts/eleventy-static-page/eleventy-static-page.md" },
+    { "id": 234172, "relativePathToArticle": "./blog-posts/private-page/eleventy-static-page/eleventy-static-page.md" },
     { "id": 231328, "relativePathToArticle": "./blog-posts/cypress-test-route-not-hit/cypress-test-route-not-hit.md" }
 ]

@@ -1,14 +1,14 @@
 ---
 published: true
 title: "Use eleventy to create my static page"
-cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/eleventy-static-page/assets/header.png"
+cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/private-page/eleventy-static-page/assets/header.png"
 description: "Write your website with markdown + liquid and publish it as static page. This article shows how I create my page with eleventy"
 tags: tutorial, eleventy, html, website
 series: creating_private_page
 canonical_url:
 ---
 
->**Example files:** You'll find the example code [in the blog post's project directory](https://github.com/gabbersepp/dev.to-posts/tree/master/blog-posts/eleventy-static-page/project/README.md)
+>**Example files:** You'll find the example code [in the blog post's project directory](https://github.com/gabbersepp/dev.to-posts/tree/master/blog-posts/private-page/eleventy-static-page/project/README.md)
 
 This is the second part of this series. In the first I talked about my motivations to revive my old website (link will be added in the next days). Now we need to build the first milestone and this is definitely the HTML that everyone can view in the browser. 
 I thought a lot about how to do this. For those that just began to code the last one to ten years, I can tell you that today you have the best time ever. Back then there were only a few tutorials, nearly nothing complex with **javascript**, **PHP** was very popular and so were PHP based CMS systems.
