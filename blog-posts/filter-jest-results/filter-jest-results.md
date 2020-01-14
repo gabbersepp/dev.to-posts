@@ -1,8 +1,8 @@
 ---
-published: false
+published: true
 title: "Filter Jest test results based on test result itself using a wrapper"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/filter-jest-results/assets/header.jpg"
-description: "If you ever needed to filter Jest test results based on something that is within the result itself, then this article might helü you. Also this article gives a little insight on how to write a Jest reporter."
+description: "If you ever needed to filter Jest test results based on something that is within the result itself, then this article might help you. Also this article gives a little insight on how to write a Jest reporter."
 tags: jest, testing, javascript, tutorial
 series:
 canonical_url:
