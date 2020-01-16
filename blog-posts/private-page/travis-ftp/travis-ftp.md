@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 title: "Publish static website with Travis to existing FTP server"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/private-page/travis-ftp/assets/header.png"
 description: "Shows you how you can utilize travis-ci.org to publish to a ftp server"
@@ -8,7 +8,7 @@ series: creating_private_page
 canonical_url:
 ---
 
->**Note**: You can checkout the runnable example at the [this blog post's repo](https://github.com/gabbersepp/dev.to-posts/master/blog-posts/private-page/travis-ftp/project/README.md).
+>**Note**: You can checkout the runnable example at the [this blog post's repo](https://github.com/gabbersepp/dev.to-posts/blob/master/blog-posts/private-page/travis-ftp/project/README.md).
 
 In the last article I showed you how you can create a static website using `11ty`. Now we want to publish the output somewhere. As I am paying for webspace it makes sense, that I deploy the page there by using a `ftp client`. Of course you can choose any webhoster for this.
 
@@ -100,6 +100,10 @@ Of course you should not display the values in your build log because this is pu
 
 # Summary
 This was a quick introduction into travis. Of course you can upload your files every time manually to the ftp server. But this is annoying and consumes time. So I suggest you to familiarize yourself with one of the free CI server. It is definitely worth a look!
+
+# What is next?
+The next time we will have a look at creating a design with `11ty`. It will be very basic and I only want to show you some `11ty` basics.
+Also we must think about how we can fetch tweets.
 
 ----
 
