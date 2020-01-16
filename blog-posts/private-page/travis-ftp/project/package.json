@@ -1,0 +1,9 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {},
+  "devDependencies": {
+    "ftp-client": "^0.2.2"
+  }
+}

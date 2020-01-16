@@ -1,47 +1,53 @@
 ---
 published: false
 title: "Publish static website with Travis to existing FTP server"
-cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/private-page/travis-ftp/assets/your-asset.png"
+cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/private-page/travis-ftp/assets/header.png"
 description: "Shows you how you can utilize travis-ci.org to publish to a ftp server"
 tags: eleventy, ftp, travis, website
 series: creating_private_page
 canonical_url:
 ---
 
->**Note**: You can checkout the runnable example at the [biehler-josef.de repo](https://github.com/gabbersepp/biehler-josef.de/tree/1.eleventy.ftp.travis). Choose tag `1.eleventy.ftp.travis`.
+>**Note**: You can checkout the runnable example at the [this blog post's repo](https://github.com/gabbersepp/dev.to-posts/master/blog-posts/private-page/travis-ftp/project/README.md).
 
 In the last article I showed you how you can create a static website using `11ty`. Now we want to publish the output somewhere. As I am paying for webspace it makes sense, that I deploy the page there by using a `ftp client`. Of course you can choose any webhoster for this.
 
 # FTP upload
-I choose [basic-ftp](https://www.npmjs.com/package/basic-ftp) for this task as it is very easy to use.
+I choose [ftp-client](https://www.npmjs.com/package/ftp-client) for this task as it is very easy to use.
 
-All HTML resides in `/page/dist` so we just need to take all of the directory and upload it to the root directory.
+All HTML resides in `/dist` so we just need to take all of the directory and upload it to the root directory.
 
 ```js
-// code/ftp.js
+// project/ftp.js
 
-const ftp = require("basic-ftp")
- 
+const FtpClient = require('ftp-client');
+
 async function upload() {
-    const client = new ftp.Client();
-    client.ftp.verbose = true;
+    const config = {
+        host: process.env.FTP_SERVER,
+        user: process.env.FTP_USER,
+        password: process.env.FTP_PWD,
+        port: 21,
+        secure: true
+    };
 
-    try {
-        await client.access({
-            host: process.env.FTP_SERVER,
-            user: process.env.FTP_USER,
-            password: process.env.FTP_PWD,
-            secure: true
+    const options = {
+        logging: 'basic'
+    };
+
+    const client = new FtpClient(config, options);
+
+    client.connect(function () {
+        client.upload(['dist/**'], '/', {
+            overwrite: 'older'
+        }, function (result) {
+            console.log(result);
         });
-        await client.uploadFromDir("./page/dist", "./");
-    } catch(err) {
-        console.log(err);
-    }
+    });
+  }
 
-    client.close();
-}
+  upload()
 
-upload()
 ```
 
 Please note the usage of environment variables here. Later on I show you how to use them in travis.
