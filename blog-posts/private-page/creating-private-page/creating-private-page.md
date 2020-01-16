@@ -19,7 +19,7 @@ Yes I am one of those poor people who must handle GDPR because I am from Germany
 + **No comments**
 
 
-    A comment functionality would require a kind of an login. This would involve cookies and all that stuff and thus would force me to be GDPR compliant. To be honest, I can do so much more in the time that would be needed to fully understand the GDPR. And yes, there are many different intepretations and opinions. I don't think that a person like me and you can implement the GDPR 100% correct without asking a lawyer.
+    A comment functionality would require a kind of an login. This would involve cookies and all that stuff and thus would force me to be GDPR compliant. To be honest, I can do so much more in the time that would be needed to fully understand the GDPR. And yes, there are many different interpretations and opinions. I don't think that a person like me and you can implement the GDPR 100% correct without asking a lawyer.
 + **But I want comments!**
 
     Of course people should be able to comment. A tutorial without interaction is senseless. So I will publish my blog posts regarding programming stuff here at dev.to and then link them at my website. No cookies, no accounts but fully functional!
