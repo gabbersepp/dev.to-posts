@@ -4,6 +4,6 @@
   "description": "",
   "scripts": {},
   "devDependencies": {
-    "ftp-client": "^0.2.2"
+    "ftp-client": "0.2.2"
   }
 }
