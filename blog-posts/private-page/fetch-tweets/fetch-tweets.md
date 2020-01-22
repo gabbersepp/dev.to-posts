@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 title: "Fetch tweets, download images and display them"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/private-page/fetch-tweets/assets/header.png"
 description: "Fetch the latest tweets from twitter, store them to a local JSON file and download their images"
