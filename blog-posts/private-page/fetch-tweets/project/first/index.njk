@@ -1,0 +1,32 @@
+<style>
+.row {
+    margin: 20px;
+    width: 150px;
+}
+
+.img img {
+    width: 100px;
+    height: 100px;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row
+}
+
+.text {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+}
+</style>
+<div class="container">
+{% for t in collections.tweets %}
+    <div class="row">
+        <div class="text">{{t.fullText}}</div>
+        <div class="img"><img src="{{t.twitterMediaUrl}}"></div>
+    </div>
+    -----
+{% endfor %}
+</div>
