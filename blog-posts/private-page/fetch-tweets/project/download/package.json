@@ -5,8 +5,8 @@
     "eleventy": "node twitter.js && eleventy --serve"
   },
   "devDependencies": {
-    "@11ty/eleventy": "^0.10.0",
-    "request": "^2.88.0",
-    "twitter-lite": "^0.9.4"
+    "@11ty/eleventy": "0.10.0",
+    "request": "2.88.0",
+    "twitter-lite": "0.9.4"
   }
 }
