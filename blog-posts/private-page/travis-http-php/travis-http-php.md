@@ -1,7 +1,7 @@
 ---
 published: false
 title: "Publishing my blog using HTTP upload in PHP"
-cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/private-page/travis-http-php/assets/header.png"
+cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/private-page/travis-http-php/assets/header.jpg"
 description: "After a hard struggle with travis and my FTP server, I decided to use a HTTP upload"
 tags: php, javascript, website, deployment
 series: creating_private_page
