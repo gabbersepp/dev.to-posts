@@ -15,18 +15,83 @@ But the fight is not lost! My webspace paket includes a PHP instance and thus I 
 # The PHP fileupload
 Shame on me, it's been a long time since I programmed PHP. So I guess the following code is very quick and dirty.
 
+First I need a method for reading the `HTTP` Header to check a secret that I send along with the request.
+
 ```php
-// code/upload.php
+// code/upload.php#L3-L19
+
+function getRequestHeaders() {
+    $headers = array();
+    foreach($_SERVER as $key => $value) {
+        if (substr($key, 0, 5) <> 'HTTP_') {
+            continue;
+        }
+        $header = str_replace(' ', '-', ucwords(str_replace('_', ' ', strtolower(substr($key, 5)))));
+        $headers[$header] = $value;
+    }
+    return $headers;
+}
+
+$headers = getRequestHeaders();
+
+if ($headers['Secret'] != "<your secret>") {
+	die("wrong secret");
+}
+```
+
+The file can be accessed with `$_FILES`. To store the image somewhere, use `move_uploaded_file`.
+
+```php
+// code/upload.php#L21-L22
+
+move_uploaded_file($_FILES['zip-file']['tmp_name'], './'.$_FILES['zip-file']['name']);
+
 ```
 
 It is very basic but should be enough to accept files from anywhere. To speed up the upload process I moved the whole `/dist`directory into a ZIP archive. So I need to unzip it with PHP:
 
 ```php
-// code/unzip.php
+// code/upload.php#L23-L30
+
+$zip = new ZipArchive;
+if ($zip->open('test.zip') === TRUE) {
+    $zip->extractTo('./');
+    $zip->close();
+    echo 'ok';
+} else {
+    echo 'error duringunzip';
+}
 ```
 
 # Zip & send the files with NodeJS
-I was a bit lazy and took the first search result on google to get a runnable code for uploading a file.
+For zipping the files I use [archiver](https://www.npmjs.com/package/archiver) and for making the upload request [request](https://www.npmjs.com/package/request).
+
+`archiver` is very straight forward and only needs a few lines of code:
+
+```js
+// code/zip.js
+
+var fs = require('fs');
+var archiver = require('archiver');
+
+var fileName =   'test.zip'
+var fileOutput = fs.createWriteStream(fileName);
+const archive = archiver('zip');
+
+fileOutput.on('close', function () {
+    console.log(archive.pointer() + ' total bytes');
+    console.log('archiver has been finalized and the output file descriptor has closed.');
+});
+
+archive.pipe(fileOutput);
+archive.directory('dist/', false);
+archive.on('error', function(err){
+    throw err;
+});
+archive.finalize();
+```
+
+Sending the file is also very simple and done quickly:
 
 ```js
 // code/send.js
@@ -46,6 +111,9 @@ var r = request.post(options, function optionalCallback (err, httpResponse, body
 var form = r.form()
 form.append('zip-file', fs.createReadStream(path.join(__dirname, "..", 'test.zip')))
 ```
+
+# Summary
+I replaced the FTP deployment with a HTTP upload endpoint. The `/dist` directory is zipped and unzipped with `php`.
 
 
 ----
