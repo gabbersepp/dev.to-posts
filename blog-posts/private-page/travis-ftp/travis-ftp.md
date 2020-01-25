@@ -10,6 +10,10 @@ canonical_url:
 
 >**Note**: You can checkout the runnable example at the [this blog post's repo](https://github.com/gabbersepp/dev.to-posts/blob/master/blog-posts/private-page/travis-ftp/project/README.md).
 
+>**IMPORTANT**: Unfortunately travis does not support FTP. See this article for a explanation:
+
+{% post gabbersepp/publishing-my-blog-using-http-upload-in-php-3aj7 %}
+
 In the last article I showed you how you can create a static website using `11ty`. Now we want to publish the output somewhere. As I am paying for webspace it makes sense, that I deploy the page there by using a `ftp client`. Of course you can choose any webhoster for this.
 
 # FTP upload
