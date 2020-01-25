@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 title: "Publishing my blog using HTTP upload in PHP"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/private-page/travis-http-php/assets/header.jpg"
 description: "After a hard struggle with travis and my FTP server, I decided to use a HTTP upload"
@@ -8,12 +8,12 @@ series: creating_private_page
 canonical_url:
 ---
 
-In the last article I wrote about how to publish a website with `travis` and FTP. First everything seems fine but the nightly build suddenly failed. It took long time until I realized that this was not because of my code or my `ftp server` but because of how travis has setup it's network layers. Read on here if you are interested: https://blog.travis-ci.com/2018-07-23-the-tale-of-ftp-at-travis-ci
+In the last article I wrote about how to publish a website with `travis` and FTP. First everything seemed fine but the nightly build suddenly failed. It took long time until I realized that this was not because of my code or my `ftp server` but because of how travis has setup it's network layers. Read on here if you are interested: https://blog.travis-ci.com/2018-07-23-the-tale-of-ftp-at-travis-ci
 
 But the fight is not lost! My webspace paket includes a PHP instance and thus I am able to write a small HTTP upload tool. A bit oversized I think but it enables me to continue using my webspace bundle.
 
 # The PHP fileupload
-Shame on me, it's been a long time since I programmed PHP. So I guess the following code is very quick and dirty.
+Shame on me, it's been a long time since I programmed PHP. So I guess the following code is written very quick and dirty.
 
 First I need a method for reading the `HTTP` Header to check a secret that I send along with the request.
 
@@ -66,7 +66,7 @@ if ($zip->open('test.zip') === TRUE) {
 # Zip & send the files with NodeJS
 For zipping the files I use [archiver](https://www.npmjs.com/package/archiver) and for making the upload request [request](https://www.npmjs.com/package/request).
 
-`archiver` is very straight forward and only needs a few lines of code:
+`archiver` is very straightforward and only needs a few lines of code:
 
 ```js
 // code/zip.js
@@ -113,7 +113,7 @@ form.append('zip-file', fs.createReadStream(path.join(__dirname, "..", 'test.zip
 ```
 
 # Summary
-I replaced the FTP deployment with a HTTP upload endpoint. The `/dist` directory is zipped and unzipped with `php`.
+I replaced the FTP deployment with a HTTP upload endpoint. The `/dist` directory is zipped and unzipped with `php`. This was required because FTP upload does not work with travis very well. 
 
 
 ----
