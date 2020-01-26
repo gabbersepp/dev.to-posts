@@ -1,0 +1,13 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "mocha-html-generator.js",
+  "scripts": {
+    "cy-open": "cd ../../project && npm run cy-open -- --project ./../cypress-3.8.3/project/",
+    "cy-run": "cd ../../project && npm run cy-run -- --project ./../cypress-3.8.3/project/",
+    "make-html": "node ./mocha-html-generator.js"
+  },
+  "author": "",
+  "license": "MIT"
+}
