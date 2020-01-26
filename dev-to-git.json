@@ -7,7 +7,7 @@
     { "id": 239589, "relativePathToArticle": "./blog-posts/private-page/travis-ftp/travis-ftp.md" },
     { "id": 231328, "relativePathToArticle": "./blog-posts/cypress-test-route-not-hit/cypress-test-route-not-hit.md" },
     { "id": 246735, "relativePathToArticle": "./blog-posts/private-page/fetch-tweets/fetch-tweets.md" },
-    { "id": 248320, "relativePathToArticle": "./blog-posts/private-page/travis-http-php/travis-http-php.md" }
-    
+    { "id": 248320, "relativePathToArticle": "./blog-posts/private-page/travis-http-php/travis-http-php.md" },
+    { "id": 249017, "relativePathToArticle": "./blog-posts/cypress-versions/cypress-3.8.3/cypress-3.8.3.md" }
 
 ]
