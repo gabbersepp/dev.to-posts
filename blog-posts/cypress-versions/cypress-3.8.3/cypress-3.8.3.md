@@ -1,10 +1,10 @@
 ---
-published: false
+published: true
 title: "New features in Cypress 3.8.3"
-cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/cypress-versions/cypress-3.8.3/assets/your-asset.png"
+cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/cypress-versions/cypress-3.8.3/assets/header.jpg"
 description: "What's new in Cypress 3.8.3? I show you the relevant (at least what is relevant for me) changes."
 tags: cypress, javascript, productivity, testing
-series:
+series: Cypress Release
 canonical_url:
 ---
 
@@ -34,7 +34,7 @@ This will helps us a lot with our work!
 
 # `File` property
 
-We use Jenkins to collect test results from cypress and jest. Cypress generates a HTML report for us. Unfortunately a failed tests looks like this:
+We use Jenkins to collect test results from cypress and jest. A custom script generates a HTML report for us. Unfortunately a failed tests looks like this:
 
 ![failed test without filename](./assets/html-before.jpg)
 
