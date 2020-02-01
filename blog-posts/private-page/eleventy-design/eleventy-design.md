@@ -8,12 +8,12 @@ series: private_page
 canonical_url:
 ---
 
-In the last articles I showed you how you can fetch tweets, their images and display them within your `eleventy` page. Also I modified my build process to upload the files through a HTTP upload endpoint.
+In the last articles I showed you how you can fetch tweets and their images and display them within your `eleventy` page. Also I modified my build process to upload the files through a HTTP upload endpoint.
 
-In this article you learn some `eleventy` basics that we will need in order to create a generic design.
+In this article I show you how my design might look like and you learn some `eleventy` basics that we will need in order to create this design.
 
 # My design draft
-Of course I am a bad designer. So I have problems choosing the right colors and combining the right ones to make it look great. But I know how my page should look like. At least I have some sort of idea that I want to try out.
+I am a bad designer which means I have problems choosing the right colors to make it look great. But I know how my page should look like. At least I have some sort of idea that I want to try out.
 
 ## The start screen
 It should show a picture of me and some text describing me and the content that can be found at this page. Somehow it should look like this:
@@ -27,12 +27,12 @@ I want to divide the page into three areas:
 + dev.to blog posts
 + Drawings
 
-I don't like a simple navigation bar for this task, also I want to make it easy for the viewer to see what every section contains. So I decided to display three horizontal `div` container, each containing a picture and some text.
+I want to make it easy for the viewer to see what every section contains. I utilize three horizontal `div` container, each containing a picture and some text, for this task.
 
 ![overview](./assets/Overview.png)
 
 ## The sub pages
-I want an unique look over all sections. Also every section will have some kind of title, description and image.
+I want an unique look in all sections. Every section will have some kind of title, description and image.
 
 ![subpage](./assets/subpage.png)
 
@@ -40,7 +40,7 @@ I want an unique look over all sections. Also every section will have some kind 
 With `eleventy` you can write your content with `markdown`. This is good if you have articles or something like that. But for a general page structure it is not enough. With `markdown` you can not place boxes next to each other and so on. So I decided to go with the template engine [`nunjucks`](https://mozilla.github.io/nunjucks/). Eleventy supports it out of the box.
 
 ## Composing templates
-Let's say, you have an `index.njk` file like this:
+Let's say, you have an `base.njk` file like this:
 
 ```html
 <html>
@@ -51,7 +51,7 @@ Let's say, you have an `index.njk` file like this:
 </html>
 ```
 
-and you want to have different views that should all be placed into this generic construct. For example this `me.njk`:
+And you want to have different views that should all be placed into this generic construct. For example this `index.njk`:
 
 ```html
 <p>I am a full stack developer</p>
@@ -86,7 +86,7 @@ layout: index
 [Check out the example!](https://github.com/gabbersepp/dev.to-posts/tree/master/blog-posts/private-page/eleventy-design/project)
 
 ## Using variables to set page title
-Of course you want a unique page title on every page. This can also be done using the frontmatter of the pages. First you insert the title tag into the `base.njk`:
+Of course you want a unique page title on every page. This can be done using the frontmatter of the pages. First you insert the title tag into the `base.njk`:
 
 ```html
     <head>
@@ -94,7 +94,7 @@ Of course you want a unique page title on every page. This can also be done usin
     </head>
 ```
 
-And in `index.njk` you can define the variable:
+And in `index.njk` you can define the variable `pageTitle` in the frontmatter:
 
 ```html
 ---
@@ -105,7 +105,7 @@ pageTitle: Index of my cool site
 ```
 
 ## Data cascade
-You can combine as much includes as you like and define variables in every include. All frontmatter data is merged. If a key appears twice, the first appearance wins.
+You can combine as much includes as you like and define variables in every include. All frontmatter data is merged. If a key appears twice, the first one wins.
 
 **Example:**
 Create a new file `cascade.njk` with following content:
@@ -194,8 +194,8 @@ This view inherits from `base.njk` and includes another `nunjuck` template. To e
 
 >**Note:** Of course you must set it before you include the other template file.
 
-# The base construct of my portfolio page
-
+# Summary
+I showed you how I would design my portfolio page and what `eleventy` techniques I need to implement it. In the next article I show you how I implemented it. Stay tuned!
 
 ----
 
