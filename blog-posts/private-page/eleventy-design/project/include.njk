@@ -1,0 +1,8 @@
+---
+layout: base
+pageTitle: Example of includes
+---
+{% set entries = collections.many_data_entries %}
+{% include '_includes/entries.njk' %}
+
+<p>This shows how you can include files using the nunjuck template engine and pass data to the included file</p>
