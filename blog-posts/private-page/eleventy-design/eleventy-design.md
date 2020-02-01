@@ -1,23 +1,21 @@
 ---
 published: false
-title: "Making a structured eleventy design for my portfolio page"
+title: "Eleventy basics you might need for creating a generic design"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/private-page/eleventy-design/assets/header.png"
-description: "How to create an generic eleventy design that can be used on all sub pages and how to use SASS in eleventy."
+description: "Before creating the final structure of the design I show you how to handle some basic use cases with eleventy."
 tags: eleventy, website, portfolio, design
 series: private_page
 canonical_url:
 ---
 
-In the last articles I showed you how you can fetch tweets, their images and display them within your eleventy page. Also I modified my build process to upload the files through a HTTP upload endpoint.
+In the last articles I showed you how you can fetch tweets, their images and display them within your `eleventy` page. Also I modified my build process to upload the files through a HTTP upload endpoint.
 
-In this article you learn how you can build a generic design that can be used on all sub pages. I do not know if this follows any best practices but at least it fits exactly my needs.
-
-Also I am using some sort of `Javascript` for navigation and this might be a problem for web crawlers.
+In this article you learn some `eleventy` basics that we will need in order to create a generic design.
 
 # My design draft
 Of course I am a bad designer. So I have problems choosing the right colors and combining the right ones to make it look great. But I know how my page should look like. At least I have some sort of idea that I want to try out.
 
-## The startscreen
+## The start screen
 It should show a picture of me and some text describing me and the content that can be found at this page. Somehow it should look like this:
 
 ![startscreen](./assets/Startscreen.png)
@@ -107,7 +105,7 @@ pageTitle: Index of my cool site
 ```
 
 ## Data cascade
-You can combine as much includes as you like and define variables in every include. All frontmatter data is merged. If a key appears twice, the first appeareance wins.
+You can combine as much includes as you like and define variables in every include. All frontmatter data is merged. If a key appears twice, the first appearance wins.
 
 **Example:**
 Create a new file `cascade.njk` with following content:
@@ -152,7 +150,7 @@ Even though `_includes/cascade.njk` defines another title, the result looks like
 
 So duplicate keys are ignored.
 
-## Including templates in Nunjuck
+## Including templates in nunjuck
 Inheritance by using the frontmatter `layout` property is handled by `eleventy`. But you are not restricted to this mechanism. YOu also can include templates within `nunjuck` files: `{% include 'example.njk' %}`
 
 ## Passing data to nunjuck includes
@@ -197,6 +195,7 @@ This view inherits from `base.njk` and includes another `nunjuck` template. To e
 >**Note:** Of course you must set it before you include the other template file.
 
 # The base construct of my portfolio page
+
 
 ----
 
