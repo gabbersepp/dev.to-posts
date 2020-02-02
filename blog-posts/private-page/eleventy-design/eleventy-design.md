@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 title: "Eleventy basics you might need for creating a generic design"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/private-page/eleventy-design/assets/header.png"
 description: "Before creating the final structure of the design I show you how to handle some basic use cases with eleventy."
@@ -151,7 +151,7 @@ Even though `_includes/cascade.njk` defines another title, the result looks like
 So duplicate keys are ignored.
 
 ## Including templates in nunjuck
-Inheritance by using the frontmatter `layout` property is handled by `eleventy`. But you are not restricted to this mechanism. YOu also can include templates within `nunjuck` files: `{% include 'example.njk' %}`
+Inheritance by using the frontmatter `layout` property is handled by `eleventy`. But you are not restricted to this mechanism. You also can include templates within `nunjuck` files: `{% include 'example.njk' %}`
 
 ## Passing data to nunjuck includes
 Let's say you have this `.eleventy.js` file:
