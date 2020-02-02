@@ -4,7 +4,7 @@ title: "Eleventy basics you might need for creating a generic design"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/private-page/eleventy-design/assets/header.png"
 description: "Before creating the final structure of the design I show you how to handle some basic use cases with eleventy."
 tags: eleventy, website, portfolio, design
-series: private_page
+series: creating_private_page
 canonical_url:
 ---
 
