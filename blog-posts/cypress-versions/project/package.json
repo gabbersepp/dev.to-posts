@@ -9,7 +9,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "cypress": "^3.8.3"
+    "cypress": "^4.0.0"
   },
   "devDependencies": {
     "handlebars": "4.7.2",
