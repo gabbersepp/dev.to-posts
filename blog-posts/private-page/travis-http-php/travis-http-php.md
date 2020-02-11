@@ -34,7 +34,7 @@ function getRequestHeaders() {
 
 $headers = getRequestHeaders();
 
-if ($headers['Secret'] != "<your secret>") {
+if ($headers['Secret'] !== "<your secret>") {
 	die("wrong secret");
 }
 ```
