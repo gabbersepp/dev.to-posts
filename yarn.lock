@@ -163,10 +163,10 @@ duplexer3@^0.1.4:
   resolved "https://registry.yarnpkg.com/duplexer3/-/duplexer3-0.1.4.tgz#ee01dd1cac0ed3cbc7fdbea37dc0a8f1ce002ce2"
   integrity sha1-7gHdHKwO08vH/b6jfcCo8c4ALOI=
 
-embedme@1.19.0:
-  version "1.19.0"
-  resolved "https://registry.yarnpkg.com/embedme/-/embedme-1.19.0.tgz#c2179e62b550b1019b675d285fe29738627361b2"
-  integrity sha512-t7Sf0isWP8jLFwGq+WlJ/ZRquZmfEn0b78MlH9OL2o7CS55QLYQ/Mf18+nE7Svpwz71meO/Ilwi01LbG6A8ygA==
+embedme@1.20.0:
+  version "1.20.0"
+  resolved "https://registry.yarnpkg.com/embedme/-/embedme-1.20.0.tgz#ed5eac0068d9b733e32d941d3f92fc48afab1438"
+  integrity sha512-VaNValjHyh6hZ1t6oOuQgdBhcLcAws9PR4MSR42jRQ1jfmgPlz7K8bnr8/GUBF+JizEk5qa74g4uoxjbSWrTiA==
   dependencies:
     chalk "3.0.0"
     commander "4.0.1"
