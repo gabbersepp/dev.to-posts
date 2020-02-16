@@ -13,6 +13,8 @@ The main character in my developer cartoons is `Herbert`.
 
 ----
 
+**The suffering of the young Herbert**
+
 ![Herberts birthday gift](./assets/1228974339942420480.jpg)
 
 Herbert got a `PHP` book for his birthday. Maybe not the best idea.
