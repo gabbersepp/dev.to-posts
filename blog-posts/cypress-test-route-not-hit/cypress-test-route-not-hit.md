@@ -4,11 +4,28 @@ title: "[Cypress] Testing that a route is not hit"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts//cypress-test-route-not-hit/assets/header.png"
 description: "How would you test that something does not happen? You may know how to do this but I show you a way you might not know."
 tags: cypress, testing, spy, javascript
-series:
+series: Cypress tricks
 canonical_url:
 ---
 
-You have a route
+This is a little series about tricks that I use in my daily work.
+
+# Problem
+
+Let's say you have a page and you want to test if a click onto a button triggers a `XHR` request. This is easy. Just use:
+
+```js
+cy.server()
+cy.route("GET", /.*search.php.*/).as("alias")
+cy.get("button").click().wait("@alias");
+```
+
+But imagine you want to check that the buton click does **NOT** trigger a request? How would you do this?
+
+# Solution
+
+You might come up with this idea:
+
 
 ----
 

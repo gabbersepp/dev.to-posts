@@ -1,0 +1,18 @@
+---
+pagination:
+  data: collections.manyData
+  size: 2
+  reverse: true
+---
+
+  {%- for item in pagination.items %}
+      <div style="background-color: red; margin: 10px; width: 100px;">{{ item.text }}</div>
+  {% endfor -%}
+
+  {% if pagination.href.previous %}
+      <span><a href="{{ pagination.href.previous }}">&lt;</a></span>
+  {% endif %}
+
+  {% if pagination.href.next %}
+      <span><a href="{{ pagination.href.next }}">&gt;</a></span>
+  {% endif %}
