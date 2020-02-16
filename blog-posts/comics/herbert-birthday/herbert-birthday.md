@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 title: "The suffering of the young Herbert"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/comics/herbert-birthday/assets/1228974339942420480.jpg"
 description: "The suffering of the young Herbert"
