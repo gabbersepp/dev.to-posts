@@ -1,0 +1,39 @@
+---
+pagination:
+  data: collections.manyData
+  size: 2
+  reverse: true
+---
+
+  {%- for item in pagination.items %}
+      <div style="background-color: red; margin: 10px; width: 100px;">{{ item.text }}</div>
+  {% endfor -%}
+
+  {% if pagination.href.previous %}
+      <span><a href="{{ pagination.href.previous }}">&lt;</a></span>
+  {% endif %}
+  {% set printBeginningDot = true %}
+  {% set printEndingDot = true %}
+
+  {% for pageEntry in pagination.pages %}
+
+              {% if pagination.hrefs[loop.index0] == page.url %}
+                      <span class="current"><span>{{ loop.index }}</span></span>
+              {% elif (loop.index0 == 0 or loop.index0 == pagination.pages.length - 1)
+                  or pagination.hrefs[loop.index0 + 1] == page.url
+                  or pagination.hrefs[loop.index0 - 1] == page.url %}
+                  <span class="pageinate"><a href="{{ pagination.hrefs[loop.index0] }}">{{ loop.index }}</a></span>
+              {% else %}
+                  {% if pagination.hrefs[loop.index0 + 2] == page.url and printBeginningDot == true %}
+                      {% set printBeginningDot = false %}
+                      <span class="dot">...</span>
+                  {% elif pagination.hrefs[loop.index0 - 2] == page.url and printEndingDot == true %}
+                        {% set printEndingDot = false %}
+                        <span class="dot">...</span>
+                  {% endif %}
+              {% endif %}
+
+  {% endfor %}
+  {% if pagination.href.next %}
+      <span><a href="{{ pagination.href.next }}">&gt;</a></span>
+  {% endif %}
