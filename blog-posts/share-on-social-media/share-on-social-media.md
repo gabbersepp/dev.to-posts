@@ -1,7 +1,7 @@
 ---
 published: false
 title: "Share a post on several social media platforms with IFTTT"
-cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/share-on-social-media/assets/header.png"
+cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/share-on-social-media/assets/header.jpg"
 description: "Learn how to publish an image once and share it in your business and private social media profiles. Control Facebook, Twitter and Instagram with IFTTT"
 tags: social, ifttt, blog, productivity
 series:
