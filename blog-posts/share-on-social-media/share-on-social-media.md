@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 title: "Share a post on several social media platforms with IFTTT"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/share-on-social-media/assets/header.jpg"
 description: "Learn how to publish an image once and share it in your business and private social media profiles. Control Facebook, Twitter and Instagram with IFTTT"
@@ -20,14 +20,14 @@ My workflow currently is:
 + Publish the post at [the KackDev Instagram account](https://www.instagram.com/kackdev)
 + Publish the same at [the KackDev Twitter account](https://twitter.com/KackDev)
 + Publish the same at [the KackDev Facebook page](https://www.facebook.com/KackDev/)
-+ Repost the twitter post [my twitter account](https://twitter.com/JosefBiehler)
-+ Repost the Insta in my story at [my private Instagram account](https://www.instagram.com/josefbiehler)
++ Repost the twitter post to [my twitter account](https://twitter.com/JosefBiehler)
++ Repost it in my story at [my private Instagram account](https://www.instagram.com/josefbiehler)
 + Publish the post at [my private Instagram account](https://www.instagram.com/josefbiehler)
 + Publish the post at [my private Facebook profile](https://www.facebook.com/KackDev)
 
 Wow! Many steps that has to be done manually before I can annoy everyone with my bad drawings! 
 
-I was asking myself if this can't be automated.
+I was asking myself if this can't be automated. Of course this is possible to some degree. I do not know if this can be done more efficient. Let me know!
 
 # IFTTT
 [**I**f **t**his **t**han **t**hat](https://ifttt.com) is a service where you can define workflows based upon start actions. E.g. "if I receive an email from xxx then send one to yyyy" and stuff like that.
@@ -36,10 +36,10 @@ It also provides Twitter, Instagram and Facebook integration. And it is free!
 
 **Accounts**
 
-`IFTTT` allows only one Twitter/Instagram/Facebook connection per IFTTT account. As we want to control two social media profiles per platform, we need two `IFTTT` acccounts. In this blog post I use the term `private IFTTT account` for that one that is connected to my private social media profiles. Accordingly I call my account that is linked to my `KackDev` social media profiles `KackDev IFTTT account`.
+`IFTTT` allows only one Twitter/Instagram/Facebook connection per IFTTT account. As we want to control two social media profiles per platform, we need two `IFTTT` accounts. In this blog post I use the term `private IFTTT account` for that one that is connected to my private social media profiles. Accordingly I call my account that is linked to my `KackDev` social media profiles `KackDev IFTTT account`.
 
 # Publishing to KackDev@Instagram
-I use Planoly for this task. But it is not required. Planoly allows me in the free tier to maintain one Instagram account and to create many hashtag sets. The later is the reason why I fall back on a third party tool. I do not want to search the hashtags manually all the time I make a post.
+I use `Planoly` for this task. But it is not required. `Planoly` allows me in the free tier to maintain one Instagram account and to create many hashtag sets. The later is the reason why I fall back on a third party tool. I do not want to search the hashtags manually all the time I make a post.
 
 # Publishing to KackDev@Twitter
 Now I need a `Instagram <-> Twitter` integration in my KackDev IFTTT account. Luckily someone has published such an applet at `IFTTT`.
@@ -53,7 +53,7 @@ Klick onto the magnifying glass at the top and type in "twitter". You will see m
 
 ![Results](./assets/ifttt-2.jpg)
 
-We are interested in the second applet "Tweet your Instargams as native photos on Twitter". Click onto it. Press the big "Connect" Toggle. Now `IFTTT` will redirect you to instagram which will ask you to authorize `IFTTT`. In my case I link  my KackDev Instagram account with my KackDev IFTTT account. Now You will be redirected to IFTTT which then redirects you to Twitter. Here I link my KackDev Twitter account.
+We are interested in the second applet "Tweet your Instagrams as native photos on Twitter". Click onto it. Press the big "Connect" Toggle. Now `IFTTT` will redirect you to Instagram which will ask you to authorize `IFTTT`. In my case I link  my KackDev Instagram account with my KackDev IFTTT account. Now You will be redirected to IFTTT which then redirects you to Twitter. Here I link my KackDev Twitter account.
 
 If you see following screen, everything works as expected:
 
@@ -67,7 +67,7 @@ This one is easy. I go to my KackDev IFTTT account and search for "Facebook":
 
 ![](./assets/ifttt-4.jpg)
 
-Click onto the applet "Post your Instagram photos to a Facebook page". Again IFTTT asks you to authenticate - this time against Facebook. In the next step you select the facebook page.
+Click onto the applet "Post your Instagram photos to a Facebook page". Again IFTTT asks you to authenticate - this time against Facebook. In the next step you select the Facebook page.
 
 ![](./assets/ifttt-5.jpg)
 
@@ -79,12 +79,12 @@ What you have until now:
 
 Following steps are missing, yet:
 + Repost the twitter post
-+ Repost the Insta in my private Instagram story
++ Repost the Instagram in my private Instagram story
 + Publish the post at my private Instagram account
-+ Pulish the post at Facebook
++ Publish the post at Facebook
 
-## Repost the tweet in my @JiosefBiehler twitter acocunt
-This is a bit more tricky. Twitter does not allow to define an applet that can retweet tweets of specific user. This can be solved by several ways. I prefere to write a small microservice that is triggered by IFTTT. You have to create or reuse existing tokens of your twitter developer account.
+## Repost the tweet in my @JosefBiehler twitter account
+This is a bit more tricky. Twitter does not allow to define an applet that can retweet tweets of specific user. This can be solved by several ways. I prefer to write a small microservice that is triggered by IFTTT. You have to create or reuse existing tokens of your twitter developer account.
 
 ```js
 const Twitter = require("twitter-lite");
@@ -135,7 +135,7 @@ The service is quite simple. It just accepts a `GET` request, containing the Twe
 
 ![](./assets/ifttt-platform-1.jpg)
 
->**Note**: Users in the free tier on IFTTT can create applets for free but they can not pulish them to other users.
+>**Note**: Users in the free tier on IFTTT can create applets for free but they can not publish them to other users.
 
 Create an applet with Twitter as Trigger and a Webhook as Action:
 
@@ -157,10 +157,13 @@ From now on every tweet from @KackDev is retweeted to my private twitter account
 
 ## Reposting the post to my private FB & Instagram account
 
-Well, due to breaking changes in the Facebook & Instagram API, no one is able to post to private FB and Instagram accounts anymore. That means I have to post it to my private instagram account manually. Also the post on the facebook page mujst be repostet manually.
+Well, due to breaking changes in the Facebook & Instagram API, no one is able to post to private FB and Instagram accounts anymore. That means I have to post it to my private Instagram account manually. Also the post on the Facebook page must be reposted manually.
 
 If you have an idea how this can be solved, let me know :-)
 
+# Summary
+
+I showed you how I utilize `IFTTT` to spread a post at my business Instagram account to other platforms. This reduces the effort for maintaining social media accounts. Also you may got an idea what is possible with `IFTTT`.
 ----
 
 # Found a typo?
