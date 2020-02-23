@@ -1,7 +1,7 @@
 ---
 published: false
 title: "Add pagination for dynamic data in Eleventy"
-cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/private-page/eleventy-create-pagination/assets/header.png"
+cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/private-page/eleventy-create-pagination/assets/header.jpg"
 description: "Creating pagination from dynamic data and add a useful navigation bar"
 tags: eleventy, javascript, blog, tutorial
 series: creating_private_page
