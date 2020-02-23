@@ -9,6 +9,9 @@
     { "id": 246735, "relativePathToArticle": "./blog-posts/private-page/fetch-tweets/fetch-tweets.md" },
     { "id": 248320, "relativePathToArticle": "./blog-posts/private-page/travis-http-php/travis-http-php.md" },
     { "id": 253153, "relativePathToArticle": "./blog-posts/private-page/eleventy-design/eleventy-design.md" },
+    { "id": 267329, "relativePathToArticle": "./blog-posts/private-page/eleventy-create-pagination/eleventy-create-pagination.md" },
+    { "id": 267330, "relativePathToArticle": "./blog-posts/private-page/eleventy-better-navigation/eleventy-better-navigation.md" },
+    
     { "id": 262454, "relativePathToArticle": "./blog-posts/comics/herbert-birthday/herbert-birthday.md" },
     { "id": 265628, "relativePathToArticle": "./blog-posts/share-on-social-media/share-on-social-media.md" },
 

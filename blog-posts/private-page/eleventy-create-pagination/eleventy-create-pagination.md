@@ -8,7 +8,7 @@ series: creating_private_page
 canonical_url:
 ---
 
-Eleventy has a nice feature for creating a pagination with ease. Continue reading if you want to break your single page with many items into many pages with only few items.
+`Eleventy` has a nice feature for creating a pagination with ease. Continue reading if you want to break your single page with many items into many pages with only few items.
 
 # Setup
 
@@ -53,7 +53,7 @@ pagination:
 
 As you can see, I am reversing the collection here. In this simple example, this is not very useful because I would be able to reverse the collection in the `.eleventy.js` config, too. In a subsequent blog post you will see why you might need this stuff.
 
-To iterate over the subcollection, eleventy provides you the `pagination` object that contains a property named `items`. It can be used as any other collection.
+To iterate over the subcollection, `eleventy` provides you the `pagination` object that contains a property named `items`. It can be used as any other collection.
 
 <!-- embedme project/index.njk#L8-L10 -->
 ```html
@@ -68,7 +68,7 @@ Result:
 
 # Simple Navigation
 
-The best pagination is worth nothing without a possibility to jump to the next page. Eleventy has a [very good documentation](https://www.11ty.dev/docs/pagination/nav/) about it. A very simple navigation are two arrows:
+The best pagination is worth nothing without a possibility to jump to the next page. `Eleventy` has a [very good documentation](https://www.11ty.dev/docs/pagination/nav/) about it. A very simple navigation consists of two arrows:
 
 <!-- embedme project/index.njk#L12-L18 -->
 ```html
@@ -87,7 +87,7 @@ Result:
 
 # Summary 
 
-Pagination done easily! You learned some basics about pagination in eleventy. Next time I introduce the powerful `tag` feature of eleventy to you and I show you how you can create a more sophistiated navigation bar.
+Pagination done easily! You learned some basics about pagination in `eleventy`. Next time I show you how you can create a more sophisticated navigation bar.
 
 ----
 

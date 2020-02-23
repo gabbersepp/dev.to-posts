@@ -12,26 +12,22 @@ pagination:
   {% if pagination.href.previous %}
       <span><a href="{{ pagination.href.previous }}">&lt;</a></span>
   {% endif %}
-  {% set printBeginningDot = true %}
-  {% set printEndingDot = true %}
 
   {% for href in pagination.hrefs %}
 
-              {% if href == page.url %}
-                      <span class="current"><span>{{ loop.index }}</span></span>
-              {% elif (loop.index0 == 0 or loop.index0 == pagination.pages.length - 1)
-                  or pagination.hrefs[loop.index0 + 1] == page.url
-                  or pagination.hrefs[loop.index0 - 1] == page.url %}
-                  <span class="pageinate"><a href="{{ href }}">{{ loop.index }}</a></span>
-              {% else %}
-                  {% if pagination.hrefs[loop.index0 + 2] == page.url and printBeginningDot == true %}
-                      {% set printBeginningDot = false %}
-                      <span class="dot">...</span>
-                  {% elif pagination.hrefs[loop.index0 - 2] == page.url and printEndingDot == true %}
-                        {% set printEndingDot = false %}
-                        <span class="dot">...</span>
-                  {% endif %}
-              {% endif %}
+    {% if href == page.url %}
+            <span class="current"><span>{{ loop.index }}</span></span>
+    {% elif (loop.index0 == 0 or loop.index0 == pagination.pages.length - 1)
+        or pagination.hrefs[loop.index0 + 1] == page.url
+        or pagination.hrefs[loop.index0 - 1] == page.url %}
+        <span class="pageinate"><a href="{{ href }}">{{ loop.index }}</a></span>
+    {% else %}
+        {% if pagination.hrefs[loop.index0 + 2] == page.url %}
+            <span class="dot">...</span>
+        {% elif pagination.hrefs[loop.index0 - 2] == page.url %}
+            <span class="dot">...</span>
+        {% endif %}
+    {% endif %}
 
   {% endfor %}
   {% if pagination.href.next %}
