@@ -12,4 +12,10 @@ module.exports = function(eleventyConfig) {
       resolve(results);
     })
   );
+
+  return {
+    dir: {
+      input: "./views"
+    }
+  }
 }

@@ -1,7 +1,7 @@
 ---
-published: false
+published: true
 title: "Add pagination for dynamic data in Eleventy"
-cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/private-page/eleventy-create-pagination/assets/header.jpg"
+cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/private-page/eleventy-create-pagination/assets/header.png"
 description: "Creating pagination from dynamic data and add a useful navigation bar"
 tags: eleventy, javascript, blog, tutorial
 series: creating_private_page
@@ -12,7 +12,7 @@ canonical_url:
 
 # Setup
 
-We simulate a asynchronous request that fetches many data from a server. To add a new collection in `eleventy` you have to provide a configuration and call `eleventyConfig.addCollection` within the function:
+We simulate a asynchronous request that fetches many data from a server. To add a new collection in `eleventy` you have to provide a configuration file (`.eleventy.js`) and call `eleventyConfig.addCollection`:
 
 ```js
 // project/.eleventy.js
@@ -31,6 +31,12 @@ module.exports = function(eleventyConfig) {
       resolve(results);
     })
   );
+
+  return {
+    dir: {
+      input: "./views"
+    }
+  }
 }
 
 ```

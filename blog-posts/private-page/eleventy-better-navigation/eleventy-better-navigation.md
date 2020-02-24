@@ -4,7 +4,7 @@ title: "Create a better navigation for your eleventy pagination"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/private-page/eleventy-better-navigation/assets/header.png"
 description: "Optimize the navigation bar of your eleventy pagination to make it look more appealing"
 tags: eleventy, productivity, blog, tutorial
-series:
+series: creating_private_page
 canonical_url:
 ---
 
