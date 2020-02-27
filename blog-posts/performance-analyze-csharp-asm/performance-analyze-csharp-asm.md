@@ -139,7 +139,11 @@ for(var i = 0; i < 1000000; i++)
 }
 ```
 
+The part within the `if` will never be executed. We know this but the CPU does not. But after a few iterations, the CPU understands the pattern and assumes, that the condition will never be true. So it will load the next instructions into memory under the assumption that `i is greater or equal 1000.000`. If the evaluation of the condition equals true, the memory has to be cleared and the instructions within the `if` have to be loaded.
 
+Branch prediction will save time if a condition often yields the same value by preloading the next most likely instructions.
+
+This maybe is enough to reduce the extra amount if time that is needed for the array bounds checks.
 
 ----
 
