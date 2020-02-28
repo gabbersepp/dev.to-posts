@@ -22,7 +22,7 @@ Consider this example:
 2: array[20] = 1;
 ```
 
-What will happen? An `IndexOutOfRange` exception will be thrown. This is possible because .NET ensures (were necessary) that the index is lower then the size of the array. Of course that check costs time so I wanted to know if I would be able to omit those checks.
+What will happen? An `IndexOutOfRange` exception will be thrown. This is possible because .NET ensures that the index is lower then the size of the array. Of course that check costs time so I wanted to know if I would be able to omit those checks.
 
 I put a breakpoint at line 2, switched to the `Release` profile and started debugging.
 
@@ -36,7 +36,7 @@ My breakpoint was skipped and I first I did not know why this happens.
 
 # Debugging in Release mode
 
-Well, this is possible. VS will warn you but you can continue, though.
+Well, this is possible. VS will warn you but you can continue debugging, though.
 
 Consider this example:
 
@@ -81,22 +81,21 @@ I added `Console.Read()`. Now the console must keep open. So I would be able to 
 
 ![](./assets/asm.jpg)
 
-So what is happening here:
+What is happening here:
 + **Line 5** executes the `new` operator. It's result (memory address of the array) is stored in the `EAX` register (mostly `EAX` is used for returning values)
-+ **Line 6** inserts `1` to the memory. The address is in `EAX`. Every managed object in .NET has some metadata. In this case the first 4 bytes are reserved for metadata. Position `0` in the array would be `[eax + 8]`, position `1` = `[eax + 12]` and our requested index `2` = `[eax + 16]`. This depends on your CPU architecture of course.
++ **Line 6** inserts `1` into the memory. The address is in `EAX`. Every managed object in .NET has some metadata. In this case the first 8 bytes are reserved for metadata. Position `0` in the array would be `[eax + 8]`, position `1` = `[eax + 12]` and our requested index `2` = `[eax + 16]`. This depends on your CPU architecture of course.
 + **Line 7-8** executes `Console.Write`
 
 Maybe you noticed the abstinence of our local variable `asd`? Also if you are not familiar with ASM code, you should realize that no local variables are involved here. And that is exactly the reason why the breakpoint was never hit. The JIT compiler understood that the local variable was not really necessary, omitted it and held the reference to the array in the register `EAX` all the time. Visual Studio now was not able anymore to map the executed code back to our source code and thus no breakpoint was hit.
 
 # The same in debug mode
 When you start your code in debug mode, you expect that the code does exactly what you have written. Visual Studio knows this and does no optimizations in the debug mode. This leads to local variables that are not necessary and so on.
-See the ASM code when the example above is executed in debug more:
 
 ![](./assets/debug.jpg)
 
 # Conclusion
 
-This simple example shows that the JIT compiler is clever enough to detect and avoid unnecessary code. But it also will make performance measurements more difficult. Just think about what would have happened if you have a more complex example with more local variables in a heavy loop or something else. You get completely wrong results if you were taking performance measures in debug mode!
+This simple example shows that the JIT compiler is clever enough to detect and avoid unnecessary code. But it also will make performance measurements more difficult. Just think about what would have happened if you have a more complex example with more local variables in a loop or something else. You get completely wrong results if you were taking performance measures in debug mode!
 
 ----
 
