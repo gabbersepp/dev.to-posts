@@ -1,18 +1,18 @@
 ---
 published: false
-title: "Intellisense for Cypress Fixture Files"
-cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/intellisense-for-cypress-fixture-files/assets/your-asset.png"
-description: "Introducing a VSCode extension that provides intellisense for cypress fixture file paths"
-tags: cypress, javascript, vscode, productivity
+title: "Differences between Release and Debug build [assembler code included]"
+cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/analyzing-performance-trap/assets/header.jpg"
+description: "If you ever want to investigate performance issues under the hood you should be aware of the differences between release and debug profile."
+tags: csharp, performance, assembler, debug
 series:
 canonical_url:
 ---
 
 A few days ago I stumbled across a performance issue in our app. It is written in C# and compiled against .NET 4.7.2. After doing some investigation I wanted to take a deeper look into the implicit array bounds checks of .NET. 
 
->If you want to read more about my process of analyzing that stuff, stay tuned! I will write more about it ina  few days!
+>If you want to read more about my process of analyzing that stuff, stay tuned! I will write more about it in a few days!
 
-So I tried to reproduce that behaviour in a very small console app but did not succeed. The key here was the optimizations that were done by the JIT compiler.
+So I tried to reproduce that behavior in a very small console app but did not succeed. The key here was the optimizations that were done by the JIT compiler.
 
 # Implicit array bounds checks
 Consider this example:
@@ -47,7 +47,7 @@ static void Main(string[] args)
 }
 ```
 
-The breakpoint is hit event though I am ina  release build.
+The breakpoint is hit event though I am in a release build.
 ![](./assets/img2.jpg)
 
 # Another example
@@ -63,9 +63,9 @@ First I thought this has something to do with the array bounds violation so I tr
 6:}
 ```
 
-I placed a breakpoint at line 5 and was sure that this time my breakpoint must be hit. But no. I started the program and it closes immediatelly. Very disappointing.
+I placed a breakpoint at line 5 and was sure that this time my breakpoint must be hit. But no. I started the program and it closes immediately. Very disappointing.
 
-# Nex try
+# Next try
 
 ```cs
 static void Main(string[] args)
@@ -86,9 +86,9 @@ So what is happening here:
 + **Line 6** inserts `1` to the memory. The address is in `EAX`. Every managed object in .NET has some metadata. In this case the first 4 bytes are reserved for metadata. Position `0` in the array would be `[eax + 8]`, position `1` = `[eax + 12]` and our requested index `2` = `[eax + 16]`. This depends on your CPU architecture of course.
 + **Line 7-8** executes `Console.Write`
 
-Maybe you noticed the abstinence of our local variable `asd`? Also if you are not familiar with ASM code, you should realize that no local variables are involved here. And that is exactly the reason why the breakpoint was never hit. The JIT compiler understood that the local variable was not realy necessary, ommitted it and held the refrerence to the arary in the register `EAX` all the time. Visual Studio now was not able anymore to map the executed code back to our source code and thus no breakpoint was hit.
+Maybe you noticed the abstinence of our local variable `asd`? Also if you are not familiar with ASM code, you should realize that no local variables are involved here. And that is exactly the reason why the breakpoint was never hit. The JIT compiler understood that the local variable was not really necessary, omitted it and held the reference to the array in the register `EAX` all the time. Visual Studio now was not able anymore to map the executed code back to our source code and thus no breakpoint was hit.
 
-# The same in debud mode
+# The same in debug mode
 When you start your code in debug mode, you expect that the code does exactly what you have written. Visual Studio knows this and does no optimizations in the debug mode. This leads to local variables that are not necessary and so on.
 See the ASM code when the example above is executed in debug more:
 
@@ -96,7 +96,7 @@ See the ASM code when the example above is executed in debug more:
 
 # Conclusion
 
-This simple example shows that the JIT compiler is clever enough to detect and avoid unnecessary code. But it also will make performance measurements more difficult. Just think about what would have happened if you have a more complexe example with more local variables in a heavy loop or something else. You get completly wrong results if you were taking performance measures in debug mode!
+This simple example shows that the JIT compiler is clever enough to detect and avoid unnecessary code. But it also will make performance measurements more difficult. Just think about what would have happened if you have a more complex example with more local variables in a heavy loop or something else. You get completely wrong results if you were taking performance measures in debug mode!
 
 ----
 

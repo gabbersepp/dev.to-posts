@@ -14,6 +14,7 @@
     
     { "id": 262454, "relativePathToArticle": "./blog-posts/comics/herbert-birthday/herbert-birthday.md" },
     { "id": 265628, "relativePathToArticle": "./blog-posts/share-on-social-media/share-on-social-media.md" },
+    { "id": 270799, "relativePathToArticle": "./blog-posts/analyzing-performance-trap/analyzing-performance-trap.md" },
 
     { "id": 249017, "relativePathToArticle": "./blog-posts/cypress-versions/cypress-3.8.3/cypress-3.8.3.md" }
 
