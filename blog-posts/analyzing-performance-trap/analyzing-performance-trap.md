@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 title: "Differences between Release and Debug build [assembler code included]"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/analyzing-performance-trap/assets/header.jpg"
 description: "If you ever want to investigate performance issues under the hood you should be aware of the differences between release and debug profile."
