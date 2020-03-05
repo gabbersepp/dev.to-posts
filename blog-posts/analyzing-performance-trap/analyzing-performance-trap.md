@@ -93,6 +93,32 @@ When you start your code in debug mode, you expect that the code does exactly wh
 
 ![](./assets/debug.jpg)
 
+# Analyzing the same example at IL level (Update 05.03)
+
+Optimizations are done at two levels. At IL Code level (C# -> .exe) and at machine code level (.exe -> RAM). We have taken a look at the latter here because I wanted to introduce you into that topic to make it easier to understand my following blog post that takes a deeper look.
+
+Of course, the local variable `asd` was already removed during IL Code generation. Let's look at the IL code of that example in both, release and debug build:
+
+```cs
+static void Main(string[] args)
+{
+    var asd = new int[10];
+    asd[2] = 1;
+    Console.Write(asd[2]);
+    Console.Read();
+}
+```
+
+Debug Build:
+
+![](./assets/il-debug.jpg)
+
+Release:
+
+![](./assets/il-release.jpg)
+
+As you can see, the local variable is missing already.
+
 # Conclusion
 
 This simple example shows that the JIT compiler is clever enough to detect and avoid unnecessary code. But it also will make performance measurements more difficult. Just think about what would have happened if you have a more complex example with more local variables in a loop or something else. You get completely wrong results if you were taking performance measures in debug mode!
