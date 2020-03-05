@@ -67,7 +67,7 @@ We have done this in the former blog post. You just have to check if a previous 
 {% endif %}
 ```
 
-<!-- embedme project/views/index.njk#L37-L39 -->
+<!-- embedme project/views/index.njk#L33-L35 -->
 ```html
 
 ```
