@@ -1,7 +1,7 @@
 ---
-published: false
+published: true
 title: "Why I made 29 PR's in the repository of 11ty's documentation"
-cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/pr-11ty-website/assets/header.png"
+cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/pr-11ty-website/assets/header.jpg"
 description: "Why I made 29 PR's in the repository of 11ty's documentation"
 series:
 tags: beginners,opensource,productivity,eleventy
