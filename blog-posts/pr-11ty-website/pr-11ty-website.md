@@ -42,7 +42,7 @@ In this case the only thing I have done was to add new JSON files like that one:
 
 They are used to build the list of pages that are [built with eleventy](https://www.11ty.dev/docs/sites/). There were about 50 issues that aimed to add a new site. About 20 issues were obsolete because the site they are about have been added i former committs. And for the remaining 30 issues I have created pull requests.
 
-You may think that this is some kind of stupid work with no intellectual claim. And you are right. But there is one fact that counts: **It costs time to implement all those issues**.
+You might think that this is stupid work with no intellectual claim. And you are right. But there is one fact that counts: **It costs time to implement all those issues**.
 
 Time the owner maybe does not have. So if you have some time and you see some issues that you can solve, please try it.
 
