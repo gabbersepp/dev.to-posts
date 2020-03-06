@@ -69,7 +69,9 @@ We have done this in the former blog post. You just have to check if a previous 
 
 <!-- embedme project/views/index.njk#L33-L35 -->
 ```html
-
+{% if pagination.href.next %}
+    <span><a href="{{ pagination.href.next }}">&gt;</a></span>
+{% endif %}
 ```
 
 # Iterating through all possible pages
