@@ -5,7 +5,7 @@
   },
   "devDependencies": {
     "jest": "25.1.0",
-    "jest-html-reporter": "2.8.0",
+    "jest-html-reporter": "2.8.2",
     "jest-junit": "10.0.0"
   }
 }
