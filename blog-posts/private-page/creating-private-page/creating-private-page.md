@@ -25,7 +25,7 @@ Yes I am one of those poor people who must handle GDPR because I am from Germany
     Of course people should be able to comment. A tutorial without interaction is senseless. So I will publish my blog posts regarding programming stuff here at dev.to and then link them at my website. No cookies, no accounts but fully functional!
 + **No advertisement**
 
-    In former times I experimented with different types of ads. But in the end this does not generate that much money. Also I would have to register a small business at my local givernment which would make my income tax return much more complicate. So there will be no ads at all.
+    In former times I experimented with different types of ads. But in the end this does not generate that much money. Also I would have to register a small business at my local government which would make my income tax return much more complicate. So there will be no ads at all.
 + **Publish my drawings I post on Twitter**
 
     Today I have to publish my drawings at two social media sites: Twitter and Instagram. Why should I publish them manually to a third platform? That does not make sense. So I want to fetch them from twitter and publish them.
