@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 title: "How to debug an unmanaged application with WinDbg"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/net-internals/how-to-debug-with-windbg/assets/header.jpg"
 description: "WinDbg is a nice tool if you like to debug an application but can not use your favorite IDE for that. I will show you how to debug a simple (unmanaged!) console app."
