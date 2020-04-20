@@ -1,7 +1,7 @@
 ---
 published: false
 title: "How to debug an unmanaged application with WinDbg"
-cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/net-internals/how-to-debug-with-windbg/assets/header.png"
+cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/net-internals/how-to-debug-with-windbg/assets/header.jpg"
 description: "WinDbg is a nice tool if you like to debug an application but can not use your favorite IDE for that. I will show you how to debug a simple (unmanaged!) console app."
 tags: clr,debug,internals,windbg
 series: WinDbg
@@ -11,7 +11,7 @@ canonical_url:
 # Why use WinDbg if I have Visual Studio with a more user friendly debugger?
 There are a few situations where this is necessary. At work we are developing a ASP.NET WebAPI. In the production environment you can not attach your Visual Studio to debug or analyze the memory. The latter is also a reason, you should make your familiar with WinDbg. It allows (of course as other tools, too) to analyze a memory dump, taken from any process.
 
-During my spare time the last week I started to write a .NET profiler with C++. This is a small DLL that is loaded along with a normal .NET application and allows you to monitor your .NET application. For example you get notifications for every function entry and so on. To debug that DLL I had to use WinDbg. For reasons I do not know I was not able to utilize Visual Studio for that. If you know more about this issue, let me know.
+During my spare time the last week I started to write a .NET profiler with C++. This is a small DLL that is loaded along with a normal .NET application and allows you to monitor your .NET application. For example you get notifications if a  class loads and so on. To debug that DLL I had to use WinDbg.
 
 # Get WinDbg
 You can get WinDbg from [here](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/debugger-download-tools).
@@ -96,7 +96,7 @@ This is the "normal" way of placing a breakpoint. You specify the name of the ap
 bp ConsoleApplication1!Program::GetId
 ```
 
-If you get no error message (the `invalid checksum` can be ignored), you sucessfully placed a breakpoint:
+If you get no error message (the `invalid checksum` can be ignored), you successfully  placed a breakpoint:
 
 ![](./assets/bp-1.jpg)
 
@@ -118,7 +118,7 @@ Obviously this function does not exist. Also the application name is wrong. What
 
 ![](./assets/bp-defered.jpg)
 
-A `deferred` or `unresolved` breakpoint is one that gets active as soon as the module `NonExistingApp` is loaded. If you use `bp` and specify a location that does not exist currentl, then `bp` does the same as `bu`.
+A `deferred` or `unresolved` breakpoint is one that gets active as soon as the module `NonExistingApp` is loaded. If you use `bp` and specify a location that does not exist currently, then `bp` does the same as `bu`.
 
 ### bm: Set breakpoints to symbols that match a pattern
 You also can specify a set of breakpoints by passing a pattern:
