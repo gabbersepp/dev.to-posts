@@ -16,6 +16,8 @@
     { "id": 265628, "relativePathToArticle": "./blog-posts/share-on-social-media/share-on-social-media.md" },
     { "id": 270799, "relativePathToArticle": "./blog-posts/analyzing-performance-trap/analyzing-performance-trap.md" },
     { "id": 275637, "relativePathToArticle": "./blog-posts/pr-11ty-website/pr-11ty-website.md" },
+    { "id": 315233, "relativePathToArticle": "./blog-posts/net-internals/how-to-debug-with-windbg/how-to-debug-with-windbg.md" },
+
 
     { "id": 249017, "relativePathToArticle": "./blog-posts/cypress-versions/cypress-3.8.3/cypress-3.8.3.md" }
 
