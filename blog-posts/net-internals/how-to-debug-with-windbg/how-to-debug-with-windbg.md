@@ -20,7 +20,7 @@ You can get WinDbg from [here](https://docs.microsoft.com/en-us/windows-hardware
 I created a very stupid C++ application. See <TODO add repo link> for the full example. See <TODO add link to ciompiled> for the compiled example. It consists of a class `Program`:
 
 ```cpp
-// ./code/Program.cpp
+// ./project/ConsoleApplication1/Program.cpp
 
 #include "Program.h";
 
@@ -30,13 +30,12 @@ Program::Program(int id) {
 int Program::GetId() {
 	return id;
 }
-
 ```
 
 And a file that contains the entry point:
 
 ```cpp
-// ./code/ConsoleApplication1.cpp
+// ./project/ConsoleApplication1/ConsoleApplication1.cpp
 
 #include <iostream>
 #include "Program.h";
@@ -51,7 +50,6 @@ int main()
     std::cout << pProgram->GetId();
     return 0;
 }
-
 ```
 
 # Use WinDbg
