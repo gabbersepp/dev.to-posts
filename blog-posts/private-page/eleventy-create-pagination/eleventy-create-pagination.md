@@ -47,7 +47,7 @@ The `addCollection` function accepts a function as parameter that must return an
 
 You need a `frontmatter` header that defines the collection, the size of each sub collection and some other stuff. 
 
-<!-- embedme project/index.njk#L1-L6 -->
+<!-- embedme project/views/index.njk#L1-L6 -->
 ```md
 ---
 pagination:
@@ -61,7 +61,7 @@ As you can see, I am reversing the collection here. In this simple example, this
 
 To iterate over the subcollection, `eleventy` provides you the `pagination` object that contains a property named `items`. It can be used as any other collection.
 
-<!-- embedme project/index.njk#L8-L10 -->
+<!-- embedme project/views/index.njk#L8-L10 -->
 ```html
 {%- for item in pagination.items %}
     <div style="background-color: red; margin: 10px; width: 100px;">{{ item.text }}</div>
@@ -76,7 +76,7 @@ Result:
 
 The best pagination is worth nothing without a possibility to jump to the next page. `Eleventy` has a [very good documentation](https://www.11ty.dev/docs/pagination/nav/) about it. A very simple navigation consists of two arrows:
 
-<!-- embedme project/index.njk#L12-L18 -->
+<!-- embedme project/views/index.njk#L12-L18 -->
 ```html
 {% if pagination.href.previous %}
     <span><a href="{{ pagination.href.previous }}">&lt;</a></span>
