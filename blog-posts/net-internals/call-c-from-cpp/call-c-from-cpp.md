@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 title: "Call a C library from C++"
 description: "How can you write a DLL in C and use it in C++."
 tags: c, cpp, library, beginner
@@ -27,7 +27,7 @@ __declspec(dllexport) void f()
 The keyword `__declspec(dllexport)` is only valid within the Microsoft compiler world and exports that function.
 
 # Compile C
-Open the Visual Studio Developer Command Prompt and navigate to the folder, where the C project is. Then simply type: `cl /LD lib.c`. This will create two files. A `lib.lib` and a `lib.dll`. The later is required in our C++ app.
+Open the Visual Studio Developer Command Prompt and navigate to the folder, where the C project is. Then simply type: `cl /LD lib.c`. This will create two files. A `lib.lib` and a `lib.dll`.
 
 # C++ Code
 Also nothing special. First we need the header file:
