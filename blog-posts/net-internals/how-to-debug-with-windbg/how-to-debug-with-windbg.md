@@ -17,7 +17,7 @@ During my spare time the last week I started to write a .NET profiler with C++. 
 You can get WinDbg from [here](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/debugger-download-tools).
 
 # Our sample app
-I created a very stupid C++ application. See <TODO add repo link> for the full example. See <TODO add link to ciompiled> for the compiled example. It consists of a class `Program`:
+I created a very stupid C++ application. Follow [this link](https://github.com/gabbersepp/dev.to-posts/tree/master/blog-posts/net-internals/how-to-debug-with-windbg/project) to get the full runnable example. [Here](https://github.com/gabbersepp/dev.to-posts/tree/master/blog-posts/net-internals/how-to-debug-with-windbg/exe) you get the compiled example. It consists of a class `Program`:
 
 ```cpp
 // ./project/ConsoleApplication1/Program.cpp
