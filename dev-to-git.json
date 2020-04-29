@@ -19,6 +19,7 @@
     { "id": 315233, "relativePathToArticle": "./blog-posts/net-internals/how-to-debug-with-windbg/how-to-debug-with-windbg.md" },
     { "id": 316495, "relativePathToArticle": "./blog-posts/net-internals/call-c-from-cpp/call-c-from-cpp.md" },
 
+    { "id": 322001, "relativePathToArticle": "./blog-posts/impact-of-branch-predictions/impact-of-branch-predictions.md" },
 
     { "id": 249017, "relativePathToArticle": "./blog-posts/cypress-versions/cypress-3.8.3/cypress-3.8.3.md" }
 
