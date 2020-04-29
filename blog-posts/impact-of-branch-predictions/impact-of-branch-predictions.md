@@ -9,7 +9,7 @@ canonical_url:
 ---
 
 # What are branch predictions?
-Let's say you are a taxi driver and you have to drive every day the same person to the same place. And every time the passenger asks you to turn left on a very big crossing. After a few days, you know that automatically. This will save you time because you can very early change the lane on the road. But what if the passenger suddenly asks you to turn right this time? Then you must "revert" your decision and change the loan again.
+Let's say you are a taxi driver and you have to drive every day the same person to the same place. Every time the passenger asks you to turn left on a very big crossing. After a few days, you know that automatically. This will save you time because you can very early change the lane on the road. But what if the passenger suddenly asks you to turn right this time? Then you must "revert" your decision and change the lane again.
 This is how branch predictions work. if the CPU detects a certain pattern within your `if` clauses, it will load the next commands into the memory. If the `if` evaluates to the expected result, this was a time saver because the expensive operation of loading something into the memory was already done. If the decision was wrong, the CPU had to load other instructions.
 
 # See this in action
@@ -17,7 +17,7 @@ Well, nobody of us can have a look into a CPU and monitor when a prediction took
 
 But we can build a setup that should take advantage of branch predictions.
 
->**Note:** You should compile the following C# code with the `Debug` profile to get exactly what we want. The `Release` build will optimize your code and thus have side effects. Read this short introduction if you want to know more about this:
+>**Note:** You should compile the following C# code with the `Debug` profile to get exactly what we have written down. The `Release` build will optimize your code and thus have side effects. Read this short introduction if you want to know more about this:
 {% link https://dev.to/gabbersepp/differences-between-release-and-debug-build-assembler-code-included-52k6 %}
 
 ```cs
@@ -101,7 +101,7 @@ different-branches: 44935, same-branch: 41419
 different-branches: 43378, same-branch: 39110
 ```
 
-In average the part with a successful branch prediction is about 10% faster then the other version.
+In average the part with a successful branch prediction is about 10% faster than the other version.
 
 # Conclusions
 I don't think that this is something that you have to be worried about in your daily work except you are working on some critical algorithms. But nevertheless this is something that should be in your mind when developing a new algorithm for something.
