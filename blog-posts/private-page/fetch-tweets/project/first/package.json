@@ -6,6 +6,6 @@
   },
   "devDependencies": {
     "@11ty/eleventy": "0.10.0",
-    "twitter-lite": "0.9.4"
+    "twitter-lite": "0.11.0"
   }
 }
