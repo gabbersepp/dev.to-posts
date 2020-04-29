@@ -1,7 +1,7 @@
 ---
 published: false
 title: "The impact of branch predictions in modern CPU architectures"
-cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/impact-of-branch-predictions/assets/your-asset.png"
+cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/impact-of-branch-predictions/assets/header.jpg"
 description: "Have you already heard of `branch predictions`? They may have a high impact on algorithms working on big datasets."
 tags: internals, performance, cpu, dotnet
 series:
