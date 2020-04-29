@@ -59,14 +59,14 @@ You all know what will happen here! We get an `IndexOutOfRangeException`! But wh
 var array = new int[10];
 unsafe
 {
-    fixed (int* ptr = &array[0])
+    fixed (int* ptr = array)
     {
-        ptr[10] = 1;
+        *(ptr + 100000) = 5;
     }
 }
 ```
 
-Guess what? No exception! Your program crashes.
+Guess what? If you make the index high enough this will raise a `System.AccessViolationException` and your program crashes immediately. It is likely that your memory is corrupt, so `try/catch` will not help here. 
 
 **Conclusion:** Getting an exception during accessing an array the good old way in csharp and seeing the program dying when using dirty shit means: `.NET` is doing implicit array bound checks. And this is what this article is about. I want to show you how you can see what your code really does and if it makes a difference if we disable those checks.
 
@@ -139,11 +139,31 @@ for(var i = 0; i < 1000000; i++)
 }
 ```
 
-The part within the `if` will never be executed. We know this but the CPU does not. But after a few iterations, the CPU understands the pattern and assumes, that the condition will never be true. So it will load the next instructions into memory under the assumption that `i is greater or equal 1000.000`. If the evaluation of the condition equals true, the memory has to be cleared and the instructions within the `if` have to be loaded.
+The part within the `if` will never be executed. We know this but the CPU does not. But after a few iterations, the CPU understands the pattern and assumes, that the condition will never be true. So the CPU will load the next instructions after the `if` branch into memory. If the evaluation of the condition equals true, the memory has to be cleared and the instructions within the `if` have to be loaded.
 
 Branch prediction will save time if a condition often yields the same value by preloading the next most likely instructions.
 
-This maybe is enough to reduce the extra amount if time that is needed for the array bounds checks.
+This maybe is enough to reduce the extra amount of time that is needed for the array bounds checks.
+
+Unfortunately this is a bit difficult to check. If you know how this can be measured, let me know!
+
+# Avoid implicit bounds checks with dirty code :-P
+
+Use the unsafe code again:
+
+```cs
+var array = new int[10];
+unsafe
+{
+    fixed (int* ptr = array)
+    {
+        *(ptr + 100000) = 5;
+    }
+}
+```
+Place a breakpoint at line `*(ptr + 100000) = 5`, start debugging and open the disasembly window:
+
+
 
 ----
 
