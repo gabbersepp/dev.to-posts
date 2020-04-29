@@ -21,7 +21,7 @@ But we can build a setup that should take advantage of branch predictions.
 {% link https://dev.to/gabbersepp/differences-between-release-and-debug-build-assembler-code-included-52k6 %}
 
 ```cs
-// ./code/Program.cs#L8-L60
+// ./code/Program.cs#L8-L69
 
 static void Main(string[] args)
 {
@@ -38,15 +38,20 @@ static void Main(string[] args)
     var differentBranchTime = sw.ElapsedMilliseconds;
 
     Console.WriteLine($"different-branches: {differentBranchTime}, same-branch: {sameBranchTime}");
+    Console.Read();
 }
 
 static int DifferentBranch()
 {
     int result = 0;
 
-    for (var i = 0; i < 100000000; i++)
+    for (var i = 0; i < 1000000000; i++)
     {
-        if (i > Random(0, 100000000))
+        if (i > Random(0, 1000000000))
+        {
+            result = i;
+        }
+        else
         {
             result = i;
         }
@@ -59,9 +64,13 @@ static int SameBranch()
 {
     int result = 0;
 
-    for (var i = 100000000; i < 200000000; i++)
+    for (var i = 1000000000; i < 2000000000; i++)
     {
-        if (i > Random(0, 100000000))
+        if (i > Random(0, 1000000000))
+        {
+            result = i;
+        }
+        else
         {
             result = i;
         }
