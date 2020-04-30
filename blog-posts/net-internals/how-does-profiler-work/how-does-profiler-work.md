@@ -11,9 +11,8 @@ canonical_url:
 >**[Get the code for this tutorial](https://github.com/gabbersepp/dev.to-posts/tree/master/blog-posts/net-internals/how-does-profiler-work/code/DevToNetProfiler)**
 
 # Introduction
-In the last article we build a small runnable example. Now we use this to analyze a few things. To start just use the template we created in the last article. If you don't have it yet, visit the article and download the sample code.
+In the last article we build a small runnable example. Now we use this to analyze a few things. To start just use the template we created in the last article. If you don't have it yet, visit the article and download the base profiler project.
 
-TODO:
 {% link https://dev.to/gabbersepp/create-a-net-profiler-with-the-profiling-api-start-of-an-unexpected-journey-198n %}
 
 >**Attention!** Most of the functions that are used to query information from the profiler return a `HRESULT`. You should check if this value is `0` (error) or not. For the sake of simplicity I will ommit all those checks because they make the code harder to understand. This counts for all following blog posts about this topic.
@@ -90,6 +89,8 @@ Now compile everything and execute `start.bat`:
 
 ![](./assets/first-exception.jpg)
 
+Congratulations, you created your first profiler!
+
 # Threading
 Let's see in which thread a profiler is executed. We keep the code from the sections above but adjust the `ExceptionThrown` callback a bit. I suggest to print the current thread id. This can be done by including `<thread>` and adjusting the message:
 
@@ -128,6 +129,9 @@ And this should be the result:
 ![](./assets/thread-id.jpg)
 
 Both components have the same thread id.
+
+# Summary
+This article showed the basics of a profiler. In the next articles I want fo focus on some use cases. Stay tuned if you want to see some assembler code! 
 
 ----
 
