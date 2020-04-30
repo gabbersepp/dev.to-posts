@@ -8,6 +8,8 @@ series: Net-Profiler
 canonical_url:
 ---
 
+>**[Get the code for this tutorial](https://github.com/gabbersepp/dev.to-posts/tree/master/blog-posts/net-internals/write-net-profiler/code/DevToNetProfiler)**
+
 # .NET Profiling API - What the hell?
 If you write an app in C# or VB you normally don't get an exe that contains machine code. Instead the binary is full of `IL` code. This **I**ntermediate **L**anguage is similar to machine code but is built solely for a stack based layout. It does not make any assumptions about the registers. The transformation of `IL Code` to machine code is done by the `CLR` which can be built for every hardware architecture.
 Here now come the Profiling API into play. It can hook into several parts of the CLR to notify you if a function is going to be executed or if an exception is thrown and so on.
@@ -664,6 +666,8 @@ OK. This was a lot of code. I will stop here and write another article for this 
 And again: Don't think about those ATL things. They are completely irrelevant.
 
 I see you in the next blog post when we are discussing how the profiler works.
+
+If you haven't seen the download link yet: [The full runnable example is here](https://github.com/gabbersepp/dev.to-posts/tree/master/blog-posts/net-internals/write-net-profiler/code/DevToNetProfiler)
 
 ----
 
