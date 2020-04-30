@@ -18,7 +18,7 @@ I also read through many issues and added a comment if I was sure that the issue
 
 I tried `11ty` about four or six weeks ago and I falled in love at the first sight. It is so easy to use with so many possibilities. Currently I have build two websites with eleventy. 
 
-My personal portfolio page where I agregate everything I do into one place:
+My personal portfolio page where I aggregate everything I do into one place:
 
 {% github gabbersepp/biehler-josef.de %}
 
