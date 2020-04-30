@@ -1,7 +1,6 @@
 ---
-published: false
+published: true
 title: "Create a .NET profiler with the Profiling API - Start of an unexpected journey"
-cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/net-internals/write-net-profiler/assets/header.jpg"
 description: "The Profiling API is a powerful beast that let's you do magic things with a .NET application. This article gives you a first insight."
 tags: dotnet, debug, tutorial, cpp
 series: Net-Profiler
@@ -14,6 +13,8 @@ canonical_url:
 If you write an app in C# or VB you normally don't get an exe that contains machine code. Instead the binary is full of `IL` code. This **I**ntermediate **L**anguage is similar to machine code but is built solely for a stack based layout. It does not make any assumptions about the registers. The transformation of `IL Code` to machine code is done by the `CLR` which can be built for every hardware architecture.
 Here now come the Profiling API into play. It can hook into several parts of the CLR to notify you if a function is going to be executed or if an exception is thrown and so on.
 
+>**Note:** In this blog post I show you what you need for a first runnable example. We will discuss the profiler in depths in subsequent blog posts. I just want to ensure that you have a runnable example before we start to understand everything. That makes experimenting a lot easier.
+ 
 # ICorProfilerCallback, ICorProfilerInfo, ....
 If you reading about that topic you will often read something about a so called `ICorProfilerCallback` interface or a `ICorProfilerInfo` interface. And you also will see those names with a numeric suffix, e.g. `ICorProfilerCallback2`.
 The `Profiling API` exists since version 1.x of the framework. Of course Microsoft sometimes added new functionality to those interfaces. So whenever you see a `2` or `3` ... this is a newer version of that interface.
