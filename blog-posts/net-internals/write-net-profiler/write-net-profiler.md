@@ -9,12 +9,12 @@ canonical_url:
 ---
 
 # .NET Profiling API - What the hell?
-If you write an app in C# or VB you normally don't get an exe that contains machine code. Instead the binary is full of `IL` code. An **I**ntermediate **L**anguage is similar to machine code but is built solely for a stack based layout. It does not make any assumptions about the registers. The transformation of `IL Code` to machine code is done by the `CLR` which can be built for every hardware architecture.
+If you write an app in C# or VB you normally don't get an exe that contains machine code. Instead the binary is full of `IL` code. This **I**ntermediate **L**anguage is similar to machine code but is built solely for a stack based layout. It does not make any assumptions about the registers. The transformation of `IL Code` to machine code is done by the `CLR` which can be built for every hardware architecture.
 Here now come the Profiling API into play. It can hook into several parts of the CLR to notify you if a function is going to be executed or if an exception is thrown and so on.
 
 # ICorProfilerCallback, ICorProfilerInfo, ....
 If you reading about that topic you will often read something about a so called `ICorProfilerCallback` interface or a `ICorProfilerInfo` interface. And you also will see those names with a numeric suffix, e.g. `ICorProfilerCallback2`.
-The `Profiling API` exists since version 1.x of the framework. Of course Microsoft sometimes added new functionality to those interfaces. So whenever you see a `2` or `3` ... this is a newer version of the interface.
+The `Profiling API` exists since version 1.x of the framework. Of course Microsoft sometimes added new functionality to those interfaces. So whenever you see a `2` or `3` ... this is a newer version of that interface.
 
 If you want to know if you can use version X for a specific target framework version, you can go to [the Microsoft documentation](https://docs.microsoft.com/de-de/dotnet/framework/unmanaged-api/profiling/icorprofilercallback-interface) and then select the version you are interested in:
 
@@ -27,7 +27,7 @@ For example click onto `ICorProfilerCallback8`. The documentation will tell you 
 # Use cases
 OK. Let's talk about some real world use cases. With the `Profiling API` you can:
 + measure the time between `function enter` and `function leave` which enables you to write a CPU profiler to track the total time of every function call
-+ notify you about every exception (except `StackOverflow`) which sometimes may help when exceptions are caught somewhere and not logged
++ notify you about every exception (except `StackOverflow`). Which sometimes may help when exceptions are caught somewhere and not logged
 + maintain the depth of function calls to warn you if a `StackOverflow` may occur
 + rewrite IL code to add functionality to an existing class. This enables you to override things that can't be overwritten in code. Some mocking frameworks use this approach
 + .....
@@ -38,7 +38,7 @@ You see, many things you can play with :-)
 You have to write the profiler with unmanaged code (mostly the people are using C++) because otherwise the profiler itself would trigger profiling events. As far as I know there is no possibility to write a profiler with managed code.
 
 # Some words about ATL
-You will see that we use an `ATL` project template. Do not expect some useful information about this kind of project. I just added as much code as required to get a runnable profiler. But you must not know any internals about an `ATL` project. just ignore that stuff around your profiler.
+You will see that we use an `ATL` project template. Do not expect some useful information about this kind of project. I just added as much code as required to get a runnable profiler. But you don't need to know any internals about an `ATL` project. Just ignore that stuff.
 
 # Implementing the profiler
 Now it's getting dirty! My screenshots are partially in German. But the necessary parts should be clear, though.
@@ -648,7 +648,7 @@ SET COMPLUS_ProfAPI_ProfilerCompatibilitySetting=EnableV2Profiler
 START TestApp/bin/Debug/TestApp.exe
 ```
 
-The first activates profiling, the second one passes the profiler ID. You can find it in the file `DevToNetProfiler.idl`. The third enables you to use `ICorProfilerCallback2` with .NET4. If you use the newest interface versions, those environment variable can be omitted. Save those lines as `start.bat` in the project root, execute it and you should get this result:
+The first activates profiling, the second one passes the profiler ID. You can find it in the file `DevToNetProfiler.idl`. The third enables you to use `ICorProfilerCallback2` with .NET4. If you use the newest interface versions, that environment variable can be omitted. Save those lines as `start.bat` in the project root, execute it and you should get this result:
 ![](./assets/first-run.jpg)
 
 Also you can check the windows event log:
@@ -656,11 +656,11 @@ Also you can check the windows event log:
 ![](./assets/event-log-success.jpg)
 
 
-## A word about that bunch of methods
-Don't be worried about those many functions. You just have to implement the interface so you need to add those stubs here. Just ignore all of them that you do not need.
+## A word about those many methods
+Don't be worried about those many functions. You just have to implement the interface thus you need to add those stubs here. Just ignore all of them that you do not need.
 
 # Summary
-OK. This was a lot of code. I will stop here and write another article for this series to keep the single posts very small. What have done so far? We created a profiler with just a minimum set of functionality. You can use this *template* from now on. I will also rerfer to it in the following articles.
+OK. This was a lot of code. I will stop here and write another article for this series to keep the single posts very small. What have done so far? We created a profiler with just a minimum set of functionality. You can use this *template* from now on. I will also refer to it in the following articles.
 And again: Don't think about those ATL things. They are completely irrelevant.
 
 I see you in the next blog post when we are discussing how the profiler works.
