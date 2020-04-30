@@ -16,7 +16,7 @@ Here now come the Profiling API into play. It can hook into several parts of the
 If you reading about that topic you will often read something about a so called `ICorProfilerCallback` interface or a `ICorProfilerInfo` interface. And you also will see those names with a numeric suffix, e.g. `ICorProfilerCallback2`.
 The `Profiling API` exists since version 1.x of the framework. Of course Microsoft sometimes added new functionality to those interfaces. So whenever you see a `2` or `3` ... this is a newer version of the interface.
 
-If you want to know if you can use version X for a specific target framework version, you can go to [the microsoft docu](https://docs.microsoft.com/de-de/dotnet/framework/unmanaged-api/profiling/icorprofilercallback-interface) and then select the version you are interested in:
+If you want to know if you can use version X for a specific target framework version, you can go to [the Microsoft documentation](https://docs.microsoft.com/de-de/dotnet/framework/unmanaged-api/profiling/icorprofilercallback-interface) and then select the version you are interested in:
 
 ![](./assets/icorprofilercallback-docu.jpg)
 
@@ -28,14 +28,14 @@ For example click onto `ICorProfilerCallback8`. The documentation will tell you 
 OK. Let's talk about some real world use cases. With the `Profiling API` you can:
 + measure the time between `function enter` and `function leave` which enables you to write a CPU profiler to track the total time of every function call
 + notify you about every exception (except `StackOverflow`) which sometimes may help when exceptions are caught somewhere and not logged
-+ maintain the depth of function calls to warn you if a `StackOverflow` may occure
++ maintain the depth of function calls to warn you if a `StackOverflow` may occur
 + rewrite IL code to add functionality to an existing class. This enables you to override things that can't be overwritten in code. Some mocking frameworks use this approach
 + .....
 
 You see, many things you can play with :-)
 
 # The (maybe) bad side
-You have to write the profiler with unmanaged code (mostly the people are using C++) because otherwise the profiler itself would trigger profiling events. As far as I know there is no possbility to write a profiler with managed code.
+You have to write the profiler with unmanaged code (mostly the people are using C++) because otherwise the profiler itself would trigger profiling events. As far as I know there is no possibility to write a profiler with managed code.
 
 # Some words about ATL
 You will see that we use an `ATL` project template. Do not expect some useful information about this kind of project. I just added as much code as required to get a runnable profiler. But you must not know any internals about an `ATL` project. just ignore that stuff around your profiler.
@@ -66,7 +66,7 @@ Normally the project is configured to get automatically registered in the regist
 Now we need some extra code to turn this project into a profiler. We go through every file that needs to be touched.
 
 + **framework.h:** Add `using namespace ATL;` at the end of the file.
-+ **Resource.h:** Add `#define IDR_PROFILER	102` somwhere.
++ **Resource.h:** Add `#define IDR_PROFILER	102` somewhere.
 + **DevToNetProfiler.cpp:** Delete the function `STDAPI DllInstall(BOOL bInstall, _In_opt_  LPCWSTR pszCmdLine)`.
 + **DevToNetProfiler.def:** Replace `LIBRARY` with `LIBRARY "DevToNetProfiler.dll"` and remove the line `DllInstall		PRIVATE`
 + **DevToNetProfiler.idl:** replace the whole file with this code:
@@ -656,7 +656,7 @@ Also you can check the windows event log:
 ![](./assets/event-log-success.jpg)
 
 
-## A word about that bunch of mnethods
+## A word about that bunch of methods
 Don't be worried about those many functions. You just have to implement the interface so you need to add those stubs here. Just ignore all of them that you do not need.
 
 # Summary
