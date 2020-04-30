@@ -8,11 +8,27 @@ import "oaidl.idl";
 import "ocidl.idl";
 
 [
-	uuid(103d660d-1cb4-4410-85dd-67b3aa489626),
-	version(1.0),
+  object,
+  uuid(103d660d-1cb4-4410-85dd-67b3aa489626),
+  helpstring("INetProfiler Interface"),
+  pointer_default(unique)
+]
+interface INetProfiler : IUnknown {
+};
+[
+  uuid(e0145544-414d-487e-9219-178b87ff0aaa),
+  version(1.0),
+  helpstring("NetProfiler 1.0 Type Library")
 ]
 library DevToNetProfilerLib
 {
-	importlib("stdole2.tlb");
+  importlib("stdole2.tlb");
+  [
+    uuid(b45048d5-6f44-4fbe-ae88-b468a5e4927a),
+    helpstring("Profiler Class")
+  ]
+  coclass NetProfiler
+  {
+    [default] interface IUnknown;
+  };
 };
-
