@@ -656,7 +656,14 @@ Also you can check the windows event log:
 ![](./assets/event-log-success.jpg)
 
 
-# Additional links
+## A word about that bunch of mnethods
+Don't be worried about those many functions. You just have to implement the interface so you need to add those stubs here. Just ignore all of them that you do not need.
+
+# Summary
+OK. This was a lot of code. I will stop here and write another article for this series to keep the single posts very small. What have done so far? We created a profiler with just a minimum set of functionality. You can use this *template* from now on. I will also rerfer to it in the following articles.
+And again: Don't think about those ATL things. They are completely irrelevant.
+
+I see you in the next blog post when we are discussing how the profiler works.
 
 ----
 
