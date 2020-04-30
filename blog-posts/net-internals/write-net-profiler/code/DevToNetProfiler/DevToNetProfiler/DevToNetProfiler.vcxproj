@@ -113,6 +113,7 @@
       <SubSystem>Windows</SubSystem>
       <ModuleDefinitionFile>.\DevToNetProfiler.def</ModuleDefinitionFile>
       <RegisterOutput>false</RegisterOutput>
+      <AdditionalDependencies>corguids.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

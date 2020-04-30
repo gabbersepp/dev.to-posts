@@ -64,6 +64,10 @@ Normally the project is configured to get automatically registered in the regist
 
 ![](./assets/linker-not-register.jpg)
 
+Also you must add additional dependencies to the linker. Right click onto the project, go to linker and set those dependencies: `corguids.lib;%(AdditionalDependencies)`. This is necessary that the linker can find the `ICorProfilerInfo` stuff.
+
+![](./assets/linker-add-deps.jpg)
+
 ## Add necessary code
 Now we need some extra code to turn this project into a profiler. We go through every file that needs to be touched.
 
