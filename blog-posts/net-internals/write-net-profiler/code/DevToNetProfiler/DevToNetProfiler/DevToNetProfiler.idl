@@ -1,0 +1,18 @@
+// DevToNetProfiler.idl: IDL-Quelle für DevToNetProfiler
+//
+
+// Diese Datei wird mit dem MIDL-Tool bearbeitet,
+// generieren die Typbibliothek (DevToNetProfiler.tlb) und den Marshallingcode.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	uuid(103d660d-1cb4-4410-85dd-67b3aa489626),
+	version(1.0),
+]
+library DevToNetProfilerLib
+{
+	importlib("stdole2.tlb");
+};
+
