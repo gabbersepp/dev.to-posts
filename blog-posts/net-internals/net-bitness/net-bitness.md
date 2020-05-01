@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 title: "Know the bitness of your .NET application"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/net-internals/net-bitness/assets/header.jpg"
 description: "A short post about bitness in .NET applications"
@@ -23,9 +23,9 @@ I see this all day long but never asked myself what this actually means. So I we
 ||X86 Windows|x64 Windows|
 |---|---|---|
 |Any CPU|32 Bit app|64 Bit app|
-|Any CPU (prefer 32Bit)|32 Bit app|WoW64 App (you know that simulation of 32Bit applications under Windows 64Bit)|
+|Any CPU (prefer 32Bit)|32 Bit app|WoW64 App (simulation of 32Bit applications under Windows 64Bit)|
 
-So using `Any CPU` you must not publish your app in two versions.
+So using `Any CPU` you need not to publish your app in two versions.
 
 # Prefer 32 Bit
 But what means `Prefer 32 Bit`? Right-click onto your project and go to `Properties > Build`. Here you should see a checkbox:
@@ -43,7 +43,7 @@ OK. You compiled your app with `Any CPU` and you execute it somewhere. How can y
 ![](./assets/taskmanager.jpg)
 
 # Installation paths
-You want to see the installed versions of .NET framework. On my Windows 10, the runtimes are installed in this path: `C:\Windows\Microsoft.NET`.
+You want to see the installed versions of .NET framework? On my Windows 10, the runtimes are installed in this path: `C:\Windows\Microsoft.NET`.
 
 ![](./assets/install-path.jpg)
 
