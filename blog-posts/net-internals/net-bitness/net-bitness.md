@@ -1,7 +1,7 @@
 ---
 published: false
 title: ".NET -> 32Bit || 64Bit?"
-cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/intellisense-for-cypress-fixture-files/assets/your-asset.png"
+cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/net-internals/net-bitness/assets/header.jpg"
 description: "A short post about bitness in .NET applications"
 tags: dotnet, csharp, tutorial, environment
 series:
