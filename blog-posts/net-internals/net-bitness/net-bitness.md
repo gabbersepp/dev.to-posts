@@ -1,6 +1,6 @@
 ---
 published: false
-title: ".NET -> 32Bit || 64Bit?"
+title: "32Bit - 64Bit - AnyCpu - What??"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/net-internals/net-bitness/assets/header.jpg"
 description: "A short post about bitness in .NET applications"
 tags: dotnet, csharp, tutorial, environment
