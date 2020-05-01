@@ -11,7 +11,7 @@ canonical_url:
 #  32Bit or 64Bit - Can  you tell?
 While developing a .NET profiler, I struggled a bit with the bitness of my test application. So I decided to write down my findings. If you want to read more about the profiler, you should follow my series about it:
 
-{% link https://dev.to/gabbersepp/create-a-net-profiler-with-the-profiling-api-start-of-an-unexpected-journey-198n }
+{% link https://dev.to/gabbersepp/create-a-net-profiler-with-the-profiling-api-start-of-an-unexpected-journey-198n %}
 
 # Any Cpu
 Do you know this `Any Cpu`, that is selected per default in Visual Studio:
