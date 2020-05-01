@@ -18,7 +18,7 @@ Do you know this `Any Cpu`, that is selected per default in Visual Studio:
 
 ![](./assets/any-cpu-jpg.JPG)
 
-I see this all day long but never asked myself what this actually means. So I went to stackoverflow and found a very good [answer](https://stackoverflow.com/a/41766077/9809950). When compiled with `Any CPU` the app will be executed as 32Bit or 64Bit process.
+I see this all day long but never asked myself what this actually means. So I went to stackoverflow and found a very good [answer](https://stackoverflow.com/a/41766077/9809950). When compiled with `Any CPU` the app will be executed as 32Bit or 64Bit process. This table shows how an app will be executed:
 
 ||X86 Windows|x64 Windows|
 |---|---|---|
