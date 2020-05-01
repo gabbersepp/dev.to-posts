@@ -1,6 +1,6 @@
 ---
 published: false
-title: "Know the bitness of your dotnet application"
+title: "Know the bitness of your .NET application"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/net-internals/net-bitness/assets/header.jpg"
 description: "A short post about bitness in .NET applications"
 tags: dotnet, csharp, tutorial, environment
@@ -13,7 +13,7 @@ While developing a .NET profiler, I struggled a bit with the bitness of my test 
 
 {% link https://dev.to/gabbersepp/create-a-net-profiler-with-the-profiling-api-start-of-an-unexpected-journey-198n %}
 
-# Any Cpu
+# Any CPU
 Do you know this `Any Cpu`, that is selected per default in Visual Studio:
 
 ![](./assets/any-cpu-jpg.JPG)
@@ -38,11 +38,11 @@ Above the checkbox you can set the bitness of your app explicitly in the `target
 ![](./assets/bitness-selection.jpg)
 
 # Proving the bitness
-OK. You compiled your app with `Any CPU` and you execute it somewhere. How can you determine the bitness? This is easy. Open the Taskmanager, find your process and read the content of the `platform` column:
+OK. You compiled your app with `Any CPU` and you execute it somewhere. How can you determine the bitness? This is easy. Open the task manager, find your process and read the content of the `platform` column:
 
 ![](./assets/taskmanager.jpg)
 
-# Installationpaths
+# Installation paths
 You want to see the installed versions of .NET framework. On my Windows 10, the runtimes are installed in this path: `C:\Windows\Microsoft.NET`.
 
 ![](./assets/install-path.jpg)
