@@ -10,26 +10,25 @@ canonical_url:
 >**[Get the code for this tutorial](https://github.com/gabbersepp/dev.to-posts/tree/master/blog-posts/net-internals/how-does-profiler-work/code/DevToNetProfiler)**
 
 # Introduction
-In the last article we build a small runnable example. Now we use this to analyze a few things. To start just use the template we created in the last article. If you don't have it yet, visit the article and download the base profiler project.
+In the last article we built a small runnable example. To start just use the template we created there. If you don't have it yet, visit the article and download the base profiler project.
 
 {% link https://dev.to/gabbersepp/create-a-net-profiler-with-the-profiling-api-start-of-an-unexpected-journey-198n %}
 
->**Attention!** Most of the functions that are used to query information from the profiler return a `HRESULT`. You should check if this value is `0` (error) or not. For the sake of simplicity I will omit all those checks because they make the code harder to understand. This counts for all following blog posts about this topic.
+>**Attention!** Most of the functions that are used to query information from the profiler return a `HRESULT`. You should check if this value is `0` (error) or not. For the sake of simplicity I will ommit all those checks because they make the code harder to understand. This counts for all following blog posts about this topic.
 
 # Profiler loading
-As mentioned in the first post, the profiler is loaded along with the application. If the profiler is called, it is called by the application's thread. If multiple threads are running in your app and every thread triggers events, all those events arrive "at the same time" at your profiler in different threads. So you have to ensure that your profiler is threadsafe.
-We will see this behavior in a later section.
+As mentioned in the first post, the profiler is loaded along with the application. If the profiler is called, it is called by the application's thread. If multiple threads are running in your app and every thread triggers events, all those events arive "at the same time" at your profiler in different threads. So you have to ensure that your profiler is threadsafe.
 
 ## ICorProfilerCallback
 Our profiler must implement that interface. Do you remember all those stubs we created? That are callbacks called by the CLR on certain events.
 
 ## ICorProfilerInfo
-While the profiler implements the `ICorProfilerCallback` interface it should request an instance of type `ICorProfilerInfo`. This object is a bridge between the profiler and the profiled app. You can request the function name for a given function id for example. We will see some of it's power in the next articles.
+The profiler should request an instance of type `ICorProfilerInfo`. This object is a bridge between the profiler and the profiled app. You can request the function name for a given function id for example. We will see some of it's power in the next articles.
 
 ## Lifecycle
 Well there are two functions that can somehow be identified as `Lifecyclefunctions`. 
-+ **Initialize** is called after the CLR has initialized and loaded up the profiler. This is a very important point in time because it is the only place where you can setup the profiler.
-+ **Shutdown** is called when the application gets closed
++ **Initialize()** is called after the CLR has initialized and loaded up the profiler. This is a very important point in time because it is the only place where you can setup the profiler.
++ **Shutdown()** is called when the application gets closed
 
 ## Initialize
 We will focus on **Initialize** because as already said, you must setup your profiler. 
@@ -38,12 +37,10 @@ What you must do:
 + set flags to tell the CLR which events you want to receive
 + maybe set some hooks (we will see this later)
 
-The `Initialize` receives a reference to an instance of `IUnknown`. As far as I know this has something to do with the `COM` model this `ATL` project is based on. 
-
 **Necessary steps:**
 
 + add `include <corprof.h>` 
-+ add `CComQIPtr<ICorProfilerInfo2> iCorProfilerInfo;` variable. 
++ add `CComQIPtr<ICorProfilerInfo2> iCorProfilerInfo;` variable to the outside of the class. 
 + add `pICorProfilerInfoUnk->QueryInterface(IID_ICorProfilerInfo2, (LPVOID*)&iCorProfilerInfo);` to `Initialize()`
 
 The `include` is required because it contains the definition of `IID_ICorProfilerInfo2`. The `iCorProfilerInfo` variable should not be an instance variable. This makes it much easier to handle. We need it later on to request metadata about the application.
@@ -144,11 +141,11 @@ Read this article, if you want to read more about bitness in .NET and `Visual St
 {% link https://dev.to/gabbersepp/know-the-bitness-of-your-net-application-1c6 %}
 
 ## What happens if we ignore the bitness?
-Let the profiler being compiled to 32Bit and set the TestApp to 64Bit. The printed message from the profiler is missing now:
+Let the profiler being compiled to 32Bit and set the TestApp to 64Bit. The message from the profiler is missing now:
 
 ![](./assets/wrong-bitness-output.jpg)
 
-Additionally we can find an error message in the windows event viewer:
+Additionaly we can find an error message in the windows event viewer:
 
 ![](./assets/wrong-bitness-event.jpg)
 
@@ -156,7 +153,7 @@ Additionally we can find an error message in the windows event viewer:
 # Summary
 This article showed the basics of a profiler. I think this is enough to get an insight. Do you miss some information that seems relevant to you? Let me know!
 
-In the next articles I want to focus on some use cases. Stay tuned if you want to see some assembler code! 
+In the next articles I want fo focus on some use cases. Stay tuned if you want to see some assembler code! 
 
 ----
 
