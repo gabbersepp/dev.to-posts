@@ -115,10 +115,10 @@ color-name@~1.1.4:
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.4.tgz#c2a09a87acbde69543de6f63fa3995c826c536a2"
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
 
-commander@4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-4.0.1.tgz#b67622721785993182e807f4883633e6401ba53c"
-  integrity sha512-IPF4ouhCP+qdlcmCedhxX4xiGBPyigb8v5NeUp+0LyhwLgxMqyp3S0vl7TAPfS/hiP7FC3caI/PB9lTmP8r1NA==
+commander@5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-5.1.0.tgz#46abbd1652f8e059bddaef99bbdcb2ad9cf179ae"
+  integrity sha512-P0CysNDQ7rtVw4QIQtm+MRxV66vKFSvlsQvGYXZWR3qFU0jlMKHZZZgw8e+8DSah4UDKMqnknRDQz+xuQXQ/Zg==
 
 commander@^2.20.0:
   version "2.20.3"
@@ -163,13 +163,13 @@ duplexer3@^0.1.4:
   resolved "https://registry.yarnpkg.com/duplexer3/-/duplexer3-0.1.4.tgz#ee01dd1cac0ed3cbc7fdbea37dc0a8f1ce002ce2"
   integrity sha1-7gHdHKwO08vH/b6jfcCo8c4ALOI=
 
-embedme@1.20.0:
-  version "1.20.0"
-  resolved "https://registry.yarnpkg.com/embedme/-/embedme-1.20.0.tgz#ed5eac0068d9b733e32d941d3f92fc48afab1438"
-  integrity sha512-VaNValjHyh6hZ1t6oOuQgdBhcLcAws9PR4MSR42jRQ1jfmgPlz7K8bnr8/GUBF+JizEk5qa74g4uoxjbSWrTiA==
+embedme@1.21.0:
+  version "1.21.0"
+  resolved "https://registry.yarnpkg.com/embedme/-/embedme-1.21.0.tgz#124004c9ff3b991765aff261c4831ba1d7499ae5"
+  integrity sha512-9OiUblCWa277k5M8DFNYQsMMScqBH8Dk45SgYxPZZCEnsArtrgUMAwW245g1i5r2duu7xuhSCJi0kE6iKxEstw==
   dependencies:
     chalk "3.0.0"
-    commander "4.0.1"
+    commander "5.1.0"
     gitignore-parser "~0.0.2"
     glob "~7.1.4"
 
