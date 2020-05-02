@@ -17,7 +17,7 @@ In the last article we built a small runnable example. To start just use the tem
 >**Attention!** Most of the functions that are used to query information from the profiler return a `HRESULT`. You should check if this value is `0` (error) or not. For the sake of simplicity I will ommit all those checks because they make the code harder to understand. This counts for all following blog posts about this topic.
 
 # Profiler loading
-As mentioned in the first post, the profiler is loaded along with the application. If the profiler is called, it is called by the application's thread. If multiple threads are running in your app and every thread triggers events, all those events arive "at the same time" at your profiler in different threads. So you have to ensure that your profiler is threadsafe.
+As mentioned in the first post, the profiler is loaded along with the application. If the profiler is called, it is called by the application's thread. If multiple threads are running in your app and every thread triggers events, all those events arrive "at the same time" at your profiler in different threads. So you have to ensure that your profiler is threadsafe.
 
 ## ICorProfilerCallback
 Our profiler must implement that interface. Do you remember all those stubs we created? That are callbacks called by the CLR on certain events.
@@ -145,7 +145,7 @@ Let the profiler being compiled to 32Bit and set the TestApp to 64Bit. The messa
 
 ![](./assets/wrong-bitness-output.jpg)
 
-Additionaly we can find an error message in the windows event viewer:
+Additionally we can find an error message in the windows event viewer:
 
 ![](./assets/wrong-bitness-event.jpg)
 
@@ -153,7 +153,7 @@ Additionaly we can find an error message in the windows event viewer:
 # Summary
 This article showed the basics of a profiler. I think this is enough to get an insight. Do you miss some information that seems relevant to you? Let me know!
 
-In the next articles I want fo focus on some use cases. Stay tuned if you want to see some assembler code! 
+In the next articles I want to focus on some use cases. Stay tuned if you want to see some assembler code! 
 
 ----
 
