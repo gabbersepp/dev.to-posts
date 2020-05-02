@@ -21,6 +21,12 @@ In the last article we build a small runnable example. Now we use this to analyz
 As mentioned in the first post, the profiler is loaded along with the application. If the profiler is called, it is called by the application's thread. If multiple threads are running in your app and every thread triggers events, all those events arive "at the same time" at your profiler in different threads. So you have to ensure that your profiler is threadsafe.
 We will see this behaviour in a later section.
 
+## ICorProfilerCallback
+Our profiler must implement that interface. Do you remember all those stubs we created? That are callbacks called by the CLR on certain events.
+
+## ICorProfilerInfo
+While the profiler implements the `ICorProfilerCallback` interface it should request an instance of type `ICorProfilerInfo`. This object is a bridge between the profiler and the profiled app. You can request the function name for a given function id for example. We will see some of it's power in the next articles.
+
 ## Lifecycle
 Well there are two functions that can somehow be identified as `Lifecyclefunctions`. 
 + **Initialize** is called after the CLR has initialized and loaded up the profiler. This is a very important point in time because it is the only place where you can setup the profiler.
@@ -130,8 +136,28 @@ And this should be the result:
 
 Both components have the same thread id.
 
+# Bitness
+As always when dealing with native code, you must take the bitness into consideration. This is especially true if you want to use `FunctionEnter/Leave` callbacks. 
+The simple rule is: If the .NET app runs as 32Bit app, your profiler must be compiled as 32Bit profiler and vice-versa.
+
+## .NET and bitness
+Read this article, if you want to read more about bitness in .NET and `Visual Studio`:
+{% link https://dev.to/gabbersepp/know-the-bitness-of-your-net-application-1c6 %}
+
+## What happens if we ignore the bitness?
+Let the profiler beeing compiled to 32Bit and set the TestApp to 64Bit. The printed message from the profiler is missing now:
+
+![](./assets/wrong-bitness-output.jpg)
+
+Additionaly we can find an error message in the windows event viewer:
+
+![](./assets/wrong-bitness-event.jpg)
+
+
 # Summary
-This article showed the basics of a profiler. In the next articles I want fo focus on some use cases. Stay tuned if you want to see some assembler code! 
+This article showed the basics of a profiler. I think this is enough to get an insight. Do you miss some information that seems relevant to you? Let me know!
+
+In the next articles I want fo focus on some use cases. Stay tuned if you want to see some assembler code! 
 
 ----
 
