@@ -53,6 +53,19 @@ The `include` is required because it contains the definition of `IID_ICorProfile
   iCorProfilerInfo->SetEventMask(COR_PRF_MONITOR_EXCEPTIONS);
 ```
 
+**The function now looks like this:**
+
+```cpp
+CComQIPtr<ICorProfilerInfo2> iCorProfilerInfo;
+HRESULT __stdcall ProfilerCallback::Initialize(IUnknown* pICorProfilerInfoUnk)
+{
+  pICorProfilerInfoUnk->QueryInterface(IID_ICorProfilerInfo2, (LPVOID*)&iCorProfilerInfo);
+  iCorProfilerInfo->SetEventMask(COR_PRF_MONITOR_EXCEPTIONS);
+
+  return S_OK;
+}
+```
+
 Depending on the flags you set you can use different callback methods (that are all those stubs we created in `ProfilerCallback.cpp`). In order to know which one you need, go the [the documentation](https://docs.microsoft.com/de-de/dotnet/framework/unmanaged-api/profiling/cor-prf-monitor-enumeration) and search for `COR_PRF_MONITOR_EXCEPTIONS`:
 
 ![](./assets/COR_PRF_MONITOR_EXCEPTIONS.jpg)
@@ -128,6 +141,7 @@ static void Main(string[] args)
 ```
 
 And this should be the result:
+
 ![](./assets/thread-id.jpg)
 
 Both components have the same thread id.
