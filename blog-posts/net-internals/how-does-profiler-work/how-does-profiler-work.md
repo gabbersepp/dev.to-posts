@@ -1,7 +1,6 @@
 ---
 published: false
 title: "How does a .NET profiler work?"
-cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/net-internals/how-does-profiler-work/assets/header.jpg"
 description: "Before doing cool stuff with your .NET profiler, we should understand a few principles"
 tags: dotnet, debug, tutorial, cpp
 series: Net-Profiler
