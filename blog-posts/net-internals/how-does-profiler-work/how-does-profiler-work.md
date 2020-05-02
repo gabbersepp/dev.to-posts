@@ -14,7 +14,7 @@ In the last article we built a small runnable example. To start just use the tem
 
 {% link https://dev.to/gabbersepp/create-a-net-profiler-with-the-profiling-api-start-of-an-unexpected-journey-198n %}
 
->**Attention!** Most of the functions that are used to query information from the profiler return a `HRESULT`. You should check if this value is `0` (error) or not. For the sake of simplicity I will ommit all those checks because they make the code harder to understand. This counts for all following blog posts about this topic.
+>**Attention!** Most of the functions that are used to query information from the profiler return a `HRESULT`. You should check if this value is `0` (error) or not. For the sake of simplicity I will omit all those checks because they make the code harder to understand. This counts for all following blog posts about this topic.
 
 # Profiler loading
 As mentioned in the first post, the profiler is loaded along with the application. If the profiler is called, it is called by the application's thread. If multiple threads are running in your app and every thread triggers events, all those events arrive "at the same time" at your profiler in different threads. So you have to ensure that your profiler is threadsafe.
