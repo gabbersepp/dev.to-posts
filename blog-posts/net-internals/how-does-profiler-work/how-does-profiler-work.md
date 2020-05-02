@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 title: "How does a .NET profiler work?"
 description: "Before doing cool stuff with your .NET profiler, we should understand a few principles"
 tags: dotnet, debug, tutorial, cpp
