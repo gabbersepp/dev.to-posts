@@ -15,7 +15,7 @@ While [writing my own .NET profiler](https://dev.to/gabbersepp/create-a-net-prof
 In this article, we build a small runnable example with two-way communication and a very very simple protocol.
 
 # Named vs anonymous pipes
-I have choosen named pipes, because I want to setup a bidirectional channel. The pipe server (C# application) should be able to send a configuration to the pipe client (C++) and after this first data exchange, only the client is sending data.
+I have chosen named pipes, because I want to setup a bidirectional channel. The pipe server (C# application) should be able to send a configuration to the pipe client (C++) and after this first data exchange, only the client is sending data.
 [Anonymous pipes are one-way only](https://docs.microsoft.com/en-us/windows/win32/ipc/anonymous-pipes) as stated by Microsoft.
 
 # Pipe Server (C#)
