@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 title: "IPC between C# and C++ by using named pipes"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/ipc-by-named-pipes-cpp-csharp/assets/header.jpg"
 description: "Use named pipes to setup inter process communication between a C++ DLL and a C# application."
