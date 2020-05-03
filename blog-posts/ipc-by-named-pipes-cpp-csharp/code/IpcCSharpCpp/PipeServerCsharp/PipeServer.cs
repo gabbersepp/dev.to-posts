@@ -12,8 +12,22 @@ namespace PipeServerCsharp
     public PipeServer()
     {
       namedPipeServer = new NamedPipeServerStream("my-very-cool-pipe-example", PipeDirection.InOut, 1, PipeTransmissionMode.Message);
-      namedPipeServer.WaitForConnection();
       streamReader = new StreamReader(namedPipeServer);
+    }
+
+    public void Init()
+    {
+      namedPipeServer.WaitForConnection();
+    }
+
+    public void SendData(string data)
+    {
+      var writer = new StreamWriter(namedPipeServer);
+      writer.Write(data);
+      // attention: sending char not int! int = 4 bytes!
+      writer.Write((char)0);
+      writer.Flush();
+      namedPipeServer.WaitForPipeDrain();
     }
 
     public string ReadLine()

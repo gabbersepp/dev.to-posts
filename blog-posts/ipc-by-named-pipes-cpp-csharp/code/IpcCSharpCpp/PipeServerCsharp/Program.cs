@@ -11,9 +11,11 @@ namespace PipeServerCsharp
         static void Main(string[] args)
         {
           var server = new PipeServer();
-          Console.WriteLine(server.ReadLine());
+          server.Init();
+          server.SendData("Hello from c#");
+
+          Console.WriteLine($"read from pipe client: {server.ReadLine()}");
           server.Dispose();
-          Console.Read();
         }
     }
 }
