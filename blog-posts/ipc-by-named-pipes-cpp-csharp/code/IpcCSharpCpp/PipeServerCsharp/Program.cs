@@ -1,7 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
+using System.IO.Pipes;
 using System.Threading.Tasks;
 
 namespace PipeServerCsharp
@@ -10,12 +9,28 @@ namespace PipeServerCsharp
     {
         static void Main(string[] args)
         {
-          var server = new PipeServer();
-          server.Init();
-          server.SendData("Hello from c#");
+          var instances = new Task[5];
 
-          Console.WriteLine($"read from pipe client: {server.ReadLine()}");
-          server.Dispose();
+          for (int i = 0; i < instances.Length; i++)
+          {
+            instances[i] = Task.Run(() =>
+            {
+              var namedPipeServer = new NamedPipeServerStream("my-very-cool-pipe-example", PipeDirection.InOut, 5, PipeTransmissionMode.Byte);
+              var streamReader = new StreamReader(namedPipeServer);
+              namedPipeServer.WaitForConnection();
+
+              var writer = new StreamWriter(namedPipeServer);
+              writer.Write("Hello from c#");
+              writer.Write((char)0);
+              writer.Flush();
+              namedPipeServer.WaitForPipeDrain();
+
+              Console.WriteLine($"read from pipe client: {streamReader.ReadLine()}");
+              namedPipeServer.Dispose();
+            });
+          }
+
+          Task.WaitAll(instances);
         }
     }
 }
