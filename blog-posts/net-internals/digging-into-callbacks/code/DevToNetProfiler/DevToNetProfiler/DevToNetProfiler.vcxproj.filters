@@ -40,6 +40,9 @@
     <ClInclude Include="ProfilerCallback.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DevToNetProfiler.cpp">
@@ -55,6 +58,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="ProfilerCallback.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

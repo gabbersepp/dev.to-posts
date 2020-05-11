@@ -22,33 +22,14 @@ HRESULT __stdcall ProfilerCallback::Initialize(IUnknown* pICorProfilerInfoUnk)
 {
   pICorProfilerInfoUnk->QueryInterface(IID_ICorProfilerInfo2, (LPVOID*)&iCorProfilerInfo);
   iCorProfilerInfo->SetEventMask(COR_PRF_MONITOR_EXCEPTIONS);
-
+  utils = new Utils(iCorProfilerInfo);
   return S_OK;
 }
 
-void GetClassName(ObjectID objectId, char* output, ULONG outputLength) {
-  ClassID classId;
-  ModuleID moduleId;
-  mdTypeDef typeDefToken;
-  IMetaDataImport* metadata;
-  wchar_t* className = new wchar_t[100];
-  ULONG read = 0;
-
-  iCorProfilerInfo->GetClassFromObject(objectId, &classId);
-  iCorProfilerInfo->GetClassIDInfo(classId, &moduleId, &typeDefToken);
-  iCorProfilerInfo->GetModuleMetaData(moduleId, ofRead, IID_IMetaDataImport, (IUnknown**)&metadata);
-  metadata->GetTypeDefProps(typeDefToken, className, outputLength, &read, NULL, NULL);
-  metadata->Release();
-
-  memset(output, 0, 100);
-  wcstombs(output, className, 100);
-  delete[] className;
-}
-
 HRESULT __stdcall ProfilerCallback::ExceptionThrown(ObjectID thrownObjectID)
-{ // header: pragma disable warnign 
+{
   char* className = new char[100];
-  GetClassName(thrownObjectID, className, 100);
+  utils->GetClassName(thrownObjectID, className, 100);
   cout << "\t\nfrom profiler: exception thrown: " << className << "\r\n";
   delete[] className;
   return S_OK;

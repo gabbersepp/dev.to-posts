@@ -1,17 +1,18 @@
-#pragma warning (disable : 4996)
-
 #pragma once
 
 #include "cor.h"
 #include "corprof.h"
 #include "framework.h"
 #include "DevToNetProfiler_i.h"
+#include "Utils.h"
 
 class ATL_NO_VTABLE ProfilerCallback :
   public CComObjectRootEx<CComSingleThreadModel>,
   public CComCoClass<ProfilerCallback, &CLSID_NetProfiler>,
   public ICorProfilerCallback2
 {
+private:
+  Utils* utils;
 public:
   ProfilerCallback();
 
