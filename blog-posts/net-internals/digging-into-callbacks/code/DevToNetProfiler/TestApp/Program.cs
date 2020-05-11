@@ -9,15 +9,17 @@ namespace TestApp
         {
           try
           {
-            throw new Exception();
+            throw new CoronaException();
           }
           catch
           {
-
           }
 
-          Console.WriteLine($"from app:\tthread id: {AppDomain.GetCurrentThreadId()}");
           Console.Read();
         }
+    }
+
+    class CoronaException : Exception
+    {
     }
 }
