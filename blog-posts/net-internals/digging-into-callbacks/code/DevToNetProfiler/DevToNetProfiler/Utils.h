@@ -8,7 +8,8 @@
 class Utils {
 public:
   Utils(ICorProfilerInfo2* info);
-  void GetClassName(ObjectID objectId, char* output, ULONG outputLength);
+  bool GetClassNameByObjectId(ObjectID objectId, char* output, ULONG outputLength);
+  bool GetClassNameByClassId(ClassID classId, char* output, ULONG outputLength);
 private:
   ICorProfilerInfo2* iCorProfilerInfo;
 };

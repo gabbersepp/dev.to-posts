@@ -7,6 +7,8 @@ namespace TestApp
     {
         static void Main(string[] args)
         {
+          new Program();
+
           try
           {
             throw new CoronaException();

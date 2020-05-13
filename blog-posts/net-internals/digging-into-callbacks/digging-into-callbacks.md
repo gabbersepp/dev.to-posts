@@ -1,6 +1,6 @@
 ---
 published: false
-title: "Digging into several callbacks, its parameters and how you can obtain more information about an event."
+title: "Digging into several callbacks and how you can obtain more information about an event"
 description: "I list some callbacks, what can be done with them and how you can obtain more information about an event."
 tags: dotnet, debug, tutorial, cpp
 series: Net-Profiler
@@ -23,25 +23,35 @@ I create an own class for the methods that retrive more information about an eve
 ## Get class name by object ID
 
 ```cpp
-// ./code/DevToNetProfiler/DevToNetProfiler/Utils.cpp#L10-L27
+// ./code/DevToNetProfiler/DevToNetProfiler/Utils.cpp#L10-L37
 
-void Utils::GetClassName(ObjectID objectId, char* output, ULONG outputLength) {
+bool Utils::GetClassNameByObjectId(ObjectID objectId, char* output, ULONG outputLength) {
   ClassID classId;
+  iCorProfilerInfo->GetClassFromObject(objectId, &classId);
+  return this->GetClassNameByClassId(classId, output, outputLength);
+}
+
+bool Utils::GetClassNameByClassId(ClassID classId, char* output, ULONG outputLength) {
   ModuleID moduleId;
   mdTypeDef typeDefToken;
   IMetaDataImport* metadata;
-  wchar_t* className = new wchar_t[100];
+  wchar_t* className = new wchar_t[outputLength];
   ULONG read = 0;
 
-  iCorProfilerInfo->GetClassFromObject(objectId, &classId);
-  iCorProfilerInfo->GetClassIDInfo(classId, &moduleId, &typeDefToken);
-  iCorProfilerInfo->GetModuleMetaData(moduleId, ofRead, IID_IMetaDataImport, (IUnknown**)&metadata);
-  metadata->GetTypeDefProps(typeDefToken, className, outputLength, &read, NULL, NULL);
+  HRESULT hresult = iCorProfilerInfo->GetClassIDInfo(classId, &moduleId, &typeDefToken);
+
+  if (hresult < 0 || moduleId == 0) {
+    return false;
+  }
+
+  hresult = iCorProfilerInfo->GetModuleMetaData(moduleId, ofRead, IID_IMetaDataImport, (IUnknown**)&metadata);
+  hresult = metadata->GetTypeDefProps(typeDefToken, className, outputLength, &read, NULL, NULL);
   metadata->Release();
 
-  memset(output, 0, 100);
-  wcstombs(output, className, 100);
+  memset(output, 0, outputLength);
+  wcstombs(output, className, outputLength);
   delete[] className;
+  return true;
 }
 ```
 
@@ -62,11 +72,42 @@ static void Main(string[] args)
 }
 ```
 
+And this callback implementation:
+```cpp
+// ./code/DevToNetProfiler/DevToNetProfiler/ProfilerCallback.cpp#L29-L36
+
+HRESULT __stdcall ProfilerCallback::ExceptionThrown(ObjectID thrownObjectID)
+{
+  char* className = new char[100];
+  utils->GetClassNameByObjectId(thrownObjectID, className, 100);
+  cout << "\t\nfrom profiler: exception thrown: " << className << "\r\n";
+  delete[] className;
+  return S_OK;
+}
+```
+
 I'm getting that output:
 
 ![](./assets/exception-name.jpg)
 
+# ObjectAllocated 
+Set following flags to get notified about very allocated object: `COR_PRF_MONITOR_OBJECT_ALLOCATED | COR_PRF_ENABLE_OBJECT_ALLOCATED`. 
 
+Implement the callback:
+
+```cpp
+// ./code/DevToNetProfiler/DevToNetProfiler/ProfilerCallback.cpp#L38-L46
+
+HRESULT __stdcall ProfilerCallback::ObjectAllocated(ObjectID objectID, ClassID classID)
+{
+  char* className = new char[1000];
+  if (utils->GetClassNameByClassId(classID, className, 1000)) {
+    cout << "\t\nfrom profiler: class allocated: " << className << "\r\n";
+  }
+  delete[] className;
+  return S_OK;
+}
+```
 
 
 ----

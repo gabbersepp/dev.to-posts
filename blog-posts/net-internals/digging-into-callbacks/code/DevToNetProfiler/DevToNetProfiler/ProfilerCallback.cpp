@@ -21,7 +21,7 @@ void ProfilerCallback::FinalRelease()
 HRESULT __stdcall ProfilerCallback::Initialize(IUnknown* pICorProfilerInfoUnk)
 {
   pICorProfilerInfoUnk->QueryInterface(IID_ICorProfilerInfo2, (LPVOID*)&iCorProfilerInfo);
-  iCorProfilerInfo->SetEventMask(COR_PRF_MONITOR_EXCEPTIONS);
+  iCorProfilerInfo->SetEventMask(COR_PRF_MONITOR_EXCEPTIONS | COR_PRF_MONITOR_OBJECT_ALLOCATED | COR_PRF_ENABLE_OBJECT_ALLOCATED);
   utils = new Utils(iCorProfilerInfo);
   return S_OK;
 }
@@ -29,8 +29,18 @@ HRESULT __stdcall ProfilerCallback::Initialize(IUnknown* pICorProfilerInfoUnk)
 HRESULT __stdcall ProfilerCallback::ExceptionThrown(ObjectID thrownObjectID)
 {
   char* className = new char[100];
-  utils->GetClassName(thrownObjectID, className, 100);
+  utils->GetClassNameByObjectId(thrownObjectID, className, 100);
   cout << "\t\nfrom profiler: exception thrown: " << className << "\r\n";
+  delete[] className;
+  return S_OK;
+}
+
+HRESULT __stdcall ProfilerCallback::ObjectAllocated(ObjectID objectID, ClassID classID)
+{
+  char* className = new char[1000];
+  if (utils->GetClassNameByClassId(classID, className, 1000)) {
+    cout << "\t\nfrom profiler: class allocated: " << className << "\r\n";
+  }
   delete[] className;
   return S_OK;
 }
@@ -261,11 +271,6 @@ HRESULT __stdcall ProfilerCallback::RuntimeThreadResumed(ThreadID threadID)
 }
 
 HRESULT __stdcall ProfilerCallback::MovedReferences(ULONG cmovedObjectIDRanges, ObjectID oldObjectIDRangeStart[], ObjectID newObjectIDRangeStart[], ULONG cObjectIDRangeLength[])
-{
-  return S_OK;
-}
-
-HRESULT __stdcall ProfilerCallback::ObjectAllocated(ObjectID objectID, ClassID classID)
 {
   return S_OK;
 }
