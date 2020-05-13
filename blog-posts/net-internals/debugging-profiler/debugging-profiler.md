@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 title: "How to debug a .NET profiler"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/net-internals/debugging-profiler/assets/header.jpg"
 description: "A profiler can not so easily be debugged. In this article I show you how this can be achieved by using WinDbg"
@@ -26,7 +26,7 @@ I just copied the [code from the last article](https://github.com/gabbersepp/dev
 
 ![](./assets/breakpoiont-hit.jpg)
 
-+ go to `View > Locals` to list all local variables, includind parameters:
++ go to `View > Locals` to list all local variables, including parameters:
 
 ![](./assets/locals.jpg)
 
