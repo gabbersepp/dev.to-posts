@@ -22,6 +22,7 @@
 
     { "id": 322762, "relativePathToArticle": "./blog-posts/net-internals/write-net-profiler/write-net-profiler.md" },
     { "id": 322785, "relativePathToArticle": "./blog-posts/net-internals/how-does-profiler-work/how-does-profiler-work.md" },
+    { "id": 333930, "relativePathToArticle": "./blog-posts/net-internals/debugging-profiler/debugging-profiler.md" },
 
     { "id": 322001, "relativePathToArticle": "./blog-posts/impact-of-branch-predictions/impact-of-branch-predictions.md" },
     { "id": 326459, "relativePathToArticle": "./blog-posts/ipc-by-named-pipes-cpp-csharp/ipc-by-named-pipes-cpp-csharp.md" },
