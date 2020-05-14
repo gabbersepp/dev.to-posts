@@ -35,3 +35,18 @@ bool Utils::GetClassNameByClassId(ClassID classId, char* output, ULONG outputLen
   delete[] className;
   return true;
 }
+
+bool Utils::GetFunctionNameById(FunctionID functionId, char* output, ULONG outputLength) {
+  IMetaDataImport* metadata;
+  mdMethodDef methodToken;
+  mdTypeDef typeDefToken;
+  wchar_t* functionName = new wchar_t[1000];
+  ULONG wcbCount;
+  memset(functionName, 0, 1000);
+  iCorProfilerInfo->GetTokenAndMetaDataFromFunction(functionId, IID_IMetaDataImport, (IUnknown**)&metadata, &methodToken);
+  metadata->GetMethodProps(methodToken, &typeDefToken, functionName, 1000, &wcbCount, NULL, NULL, NULL, NULL, NULL);
+  wcstombs(output, functionName, outputLength);
+  metadata->Release();
+  delete[] functionName;
+  return true;
+}

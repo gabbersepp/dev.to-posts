@@ -4,3 +4,4 @@ SET COR_PROFILER_PATH=Debug/DevToNetProfiler.dll
 SET COMPLUS_ProfAPI_ProfilerCompatibilitySetting=EnableV2Profiler
 
 START TestApp/bin/Debug/TestApp.exe
+#START C:\Tools\WinDbg\windbg.exe
