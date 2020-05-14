@@ -10,7 +10,7 @@ canonical_url:
 # A few callbacks explained
 Until now we setup a simple profiler that is capable of logging every exception. Do you remember the output? It was just `exception thrown`, which may be useful but surely it will be much more useful if the exception name would be printed.
 
-If you looked at several callback methods, you may have noticed, that often you get only an id. E.g. a `FunctionId` or a `ClassId` and such things. This makes sense as passing more information to the callbacks will increase the overall CPU & RAM load. On the other hand, you have to call a few methods to get more information. Unfortunately it is often not very obviously what kind of method you have to use. At least I found it a bit confusing. But maybe the whole process is documented somewhere in the .NET documentation :-)
+If you looked at several callback methods, you may have noticed, that often you get only an id. E.g. a `FunctionId` or a `ClassId` and such things. This makes sense as passing more information to the callbacks will increase the overall CPU & RAM load. On the other hand, you have to call a few methods to get more information. Unfortunately it is often not very obviously what kind of method you have to use. At least I found it a bit confusing. But maybe the whole process is documented somewhere in the .NET documentation :smile:
 
 To make your life easier, I will show you some use cases. I will not write too much about it. I mean, I'm only calling some functions in a very stupid manner. So if you have questions, please ask and I'll try to answer them.
 
@@ -18,9 +18,10 @@ To make your life easier, I will show you some use cases. I will not write too m
 Let's take the example project from the last lesson. There we implemented the `ExceptionThrown` callback. As parameter you only get an `ObjectID`. Wouldn't it be nice if we could print the name of the exception? Let's do this.
 
 ## Utils
-I create an own class for the methods that retrieve more information about an event. Let's call it `Utils`. You should be aware that I will not write the most performant code and you may encounter a lot of things than could be improved. But be sure this was all done for an easier understanding.
+I create an own class for the methods that retrieve more information about an event. Let's call it `Utils`. You should be aware that I will not write the most performant code and you may encounter a lot of things that could be improved. But be sure that all of this has been done for easier understanding.
 
 ## Get class name by object ID
+To get more information about an event, utilize the instance of type `ICorProfilerInfo`. 
 
 ```cpp
 bool Utils::GetClassNameByObjectId(ObjectID objectId, char* output, ULONG outputLength) {
@@ -53,24 +54,8 @@ bool Utils::GetClassNameByClassId(ClassID classId, char* output, ULONG outputLen
 }
 ```
 
-Using this code:
+The callback needs to call the utility class:
 
-```cs
-static void Main(string[] args)
-{
-    try
-    {
-    throw new CoronaException();
-    }
-    catch
-    {
-    }
-
-    Console.Read();
-}
-```
-
-And this callback implementation:
 ```cpp
 HRESULT __stdcall ProfilerCallback::ExceptionThrown(ObjectID thrownObjectID)
 {
@@ -82,14 +67,14 @@ HRESULT __stdcall ProfilerCallback::ExceptionThrown(ObjectID thrownObjectID)
 }
 ```
 
-I'm getting that output:
+And this is the output:
 
 ![](./assets/exception-name.jpg)
 
-# ObjectAllocated 
-Set following flags to get notified about very allocated object: `COR_PRF_MONITOR_OBJECT_ALLOCATED | COR_PRF_ENABLE_OBJECT_ALLOCATED`. 
+# ObjectAllocated callback
+We can use the newly created utility method to print every allocated object. Set following flags: `COR_PRF_MONITOR_OBJECT_ALLOCATED | COR_PRF_ENABLE_OBJECT_ALLOCATED`. 
 
-Implement the callback:
+And implement the callback:
 
 ```cpp
 HRESULT __stdcall ProfilerCallback::ObjectAllocated(ObjectID objectID, ClassID classID)
@@ -114,15 +99,17 @@ You must use the flag `COR_PRF_ENABLE_STACK_SNAPSHOT` to be able to request snap
 ```
 
 ## Signature of DoStackSnapshot
+
 ```cpp
 DoStackSnapshot( 
-/* [in] */ ThreadID thread,
-/* [in] */ StackSnapshotCallback *callback,
-/* [in] */ ULONG32 infoFlags,
-/* [in] */ void *clientData,
-/* [size_is][in] */ BYTE context[  ],
-/* [in] */ ULONG32 contextSize)
+ThreadID thread,
+StackSnapshotCallback *callback,
+ULONG32 infoFlags,
+void *clientData,
+BYTE context[  ],
+ULONG32 contextSize)
 ```
+
 + **thread:** You can pass `0` which means you want to retrieve the stacktrace of the current thread.
 + **callback:** See the discussion below
 + **infoFlags:** Indicates whether a context containing the CPU state should be passed to the callback. In our simple example we don't care, so use `COR_PRF_SNAPSHOT_DEFAULT` here 
@@ -150,6 +137,7 @@ DoStackSnapshotCallback(
 + **clientData:** exactly that thing you could pass in `DoStackSnapshot`.
 
 ## Getting the function name based on the `FunctionID`
+
 Add a new function to `Utils.cpp`:
 
 ```cpp
@@ -171,6 +159,7 @@ bool Utils::GetFunctionNameById(FunctionID functionId, char* output, ULONG outpu
 I assumed that the last parameters of `GetMethodProps` are all optional. At least this compiles and runs without errors :-)
 
 ## Gimme the code - ObjectAllocated
+
 We slightly adjust the `ObjectAllocated` callback:
 
 ```cpp
@@ -199,6 +188,7 @@ HRESULT __stdcall ProfilerCallback::ObjectAllocated(ObjectID objectID, ClassID c
   return S_OK;
 }
 ```
+
 `SnapshotClientData` is a struct created by me to transport the `Utils` object and a pointer to the stack char array:
 
 ```cpp
@@ -209,6 +199,7 @@ struct SnapshotClientData {
 ```
 
 ## Gimme the code - DoStackSnapshotCallback
+
 ```cpp
 HRESULT __stdcall DoStackSnapshotCallback(
   FunctionID funcId,
@@ -238,12 +229,14 @@ I manipulated the pointer `output` to append the next frame to `output` plus a `
 Please note that I added the callback not to the `ProfilerCallback` class because I did not succeed in passing a pointer to a member function into `DoStackSnapshot`.
 
 ## Outcome
+
 Given a weird and senseless program with some nested calls I get this output:
 
 ![](./assets/stacktrace.jpg)
 
 
 # Additional Links
+
 [DoStackSnapshot](https://docs.microsoft.com/de-de/dotnet/framework/unmanaged-api/profiling/icorprofilerinfo2-dostacksnapshot-method)
 
 ----
