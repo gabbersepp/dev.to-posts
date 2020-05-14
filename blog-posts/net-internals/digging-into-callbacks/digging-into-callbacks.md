@@ -10,7 +10,7 @@ canonical_url:
 # A few callbacks explained
 Until now we setup a simple profiler that is capable of logging every exception. Do you remember the output? It was just `exception thrown`, which may be useful but surely it will be much more useful if the exception name would be printed.
 
-If you looked at several callback methods, you may have noticed, that often you get only an id. E.g. a `FunctionId` or a `ClassId` and such things. This makes sense as passing more information to the callbacks will increase the overall CPU & RAM load. On the other hand, you have to call a few methods to get more information. Unfortunatelly it is often not very obviously what kind of method you have to use. At least I found it a bit confusing. But maybe the whole process is documented somewhere in the .NET documentation :-)
+If you looked at several callback methods, you may have noticed, that often you get only an id. E.g. a `FunctionId` or a `ClassId` and such things. This makes sense as passing more information to the callbacks will increase the overall CPU & RAM load. On the other hand, you have to call a few methods to get more information. Unfortunately it is often not very obviously what kind of method you have to use. At least I found it a bit confusing. But maybe the whole process is documented somewhere in the .NET documentation :-)
 
 To make your life easier, I will show you some use cases. I will not write too much about it. I mean, I'm only calling some functions in a very stupid manner. So if you have questions, please ask and I'll try to answer them.
 
@@ -18,7 +18,7 @@ To make your life easier, I will show you some use cases. I will not write too m
 Let's take the example project from the last lesson. There we implemented the `ExceptionThrown` callback. As parameter you only get an `ObjectID`. Wouldn't it be nice if we could print the name of the exception? Let's do this.
 
 ## Utils
-I create an own class for the methods that retrive more information about an event. Let's call it `Utils`. You should be aware that I will not write the most performant code and you may encounter a lot of things than could be improoved. But be sure this was all done for an easier understanding.
+I create an own class for the methods that retrieve more information about an event. Let's call it `Utils`. You should be aware that I will not write the most performant code and you may encounter a lot of things than could be improved. But be sure this was all done for an easier understanding.
 
 ## Get class name by object ID
 
@@ -103,8 +103,8 @@ HRESULT __stdcall ProfilerCallback::ObjectAllocated(ObjectID objectID, ClassID c
 }
 ```
 
-# Retriving stacktraces
-Let's say you want to observe all allocations of type `CatBowlEmptyException` and print out the stacktrace so you know where this happened. Fortunatelly the Profiler API provides you the `ICorProfilerInfo2::DoStackSnapshot` method which requests a stacktrace of the current thread (or of another one, but I won't cover this here). It awaits a pointer to a function that is called for every frame in the stacktrace. The requesting and the providing of the frames are synchronous which means, the next line after `DoStackSnapshot` is executed after the last frame was reported.
+# Retrieving stacktraces
+Let's say you want to observe all allocations of type `CatBowlEmptyException` and print out the stacktrace so you know where this happened. Fortunately the Profiler API provides you the `ICorProfilerInfo2::DoStackSnapshot` method which requests a stacktrace of the current thread (or of another one, but I won't cover this here). It awaits a pointer to a function that is called for every frame in the stacktrace. The requesting and the providing of the frames are synchronous which means, the next line after `DoStackSnapshot` is executed after the last frame was reported.
 
 ## Activate
 You must use the flag `COR_PRF_ENABLE_STACK_SNAPSHOT` to be able to request snapshots:
@@ -123,11 +123,11 @@ DoStackSnapshot(
 /* [size_is][in] */ BYTE context[  ],
 /* [in] */ ULONG32 contextSize)
 ```
-+ **thread:** You can pass `0` which means you want to retrive the stacktrace of the current thread.
++ **thread:** You can pass `0` which means you want to retrieve the stacktrace of the current thread.
 + **callback:** See the discussion below
 + **infoFlags:** Indicates whether a context containing the CPU state should be passed to the callback. In our simple example we don't care, so use `COR_PRF_SNAPSHOT_DEFAULT` here 
 + **clientData:** This is a pointer to anything you want to pass to the `callback`. You can use `0` if you don't want to pass anything.
-+ **context:** `0` if you want to retrive the stacktrace of the current thread
++ **context:** `0` if you want to retrieve the stacktrace of the current thread
 + **contextSize:** also `0`
 
 ## Signature of the Callback
@@ -145,7 +145,7 @@ DoStackSnapshotCallback(
 
 + **funcId:** The `FunctionId` which can be used to get the function name. It is `0` if the current frame is an unmanaged function call. For this blog post I skip that frame in those cases.
 + **ip**: Instruction pointer
-+ **frameInfo**: To be honest, I have no idea what data reists in that struct and I have not found any definition of that struct.
++ **frameInfo**: To be honest, I have no idea what data resists in that struct and I have not found any definition of that struct.
 + **contextSize, context:** both will be null because we don't request them for this blog post
 + **clientData:** exactly that thing you could pass in `DoStackSnapshot`.
 
@@ -233,12 +233,12 @@ HRESULT __stdcall DoStackSnapshotCallback(
 }
 ```
 
-I manipulated the pointer `output` to append the next frame to `output` plus a `new line`. Not sure if this is considered to be best practise in `C++` :sweat_smile:
+I manipulated the pointer `output` to append the next frame to `output` plus a `new line`. Not sure if this is considered to be best practice in `C++` :sweat_smile:
 
 Please note that I added the callback not to the `ProfilerCallback` class because I did not succeed in passing a pointer to a member function into `DoStackSnapshot`.
 
 ## Outcome
-Given a weird and senseles program with some nested calls I get this output:
+Given a weird and senseless program with some nested calls I get this output:
 
 ![](./assets/stacktrace.jpg)
 
