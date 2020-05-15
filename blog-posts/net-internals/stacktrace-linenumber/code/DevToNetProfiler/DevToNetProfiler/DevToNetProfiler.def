@@ -1,0 +1,9 @@
+; DevToNetProfiler.def: Deklariert die Modulparameter.
+
+LIBRARY "DevToNetProfiler.dll"
+
+EXPORTS
+	DllCanUnloadNow		PRIVATE
+	DllGetClassObject	PRIVATE
+	DllRegisterServer	PRIVATE
+	DllUnregisterServer	PRIVATE
