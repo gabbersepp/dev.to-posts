@@ -14,11 +14,14 @@ If you looked at several callback methods, you may have noticed, that often you 
 
 To make your life easier, I will show you some use cases. I will not write too much about it. I mean, I'm only calling some functions in a very stupid manner. So if you have questions, please ask and I'll try to answer them.
 
+
 # ExceptionThrown callback
 Let's take the example project from the last lesson. There we implemented the `ExceptionThrown` callback. As parameter you only get an `ObjectID`. Wouldn't it be nice if we could print the name of the exception? Let's do this.
 
+
 ## Utils
 I create an own class for the methods that retrieve more information about an event. Let's call it `Utils`. You should be aware that I will not write the most performant code and you may encounter a lot of things that could be improved. But be sure that all of this has been done for easier understanding.
+
 
 ## Get class name by object ID
 To get more information about an event, utilize the instance of type `ICorProfilerInfo`. 
@@ -71,8 +74,9 @@ And this is the output:
 
 ![](./assets/exception-name.jpg)
 
+
 # ObjectAllocated callback
-We can use the newly created utility method to print every allocated object. Set following flags: `COR_PRF_MONITOR_OBJECT_ALLOCATED | COR_PRF_ENABLE_OBJECT_ALLOCATED`. 
+We can use the newly created utility method to print **every allocated object**. Set following flags: `COR_PRF_MONITOR_OBJECT_ALLOCATED | COR_PRF_ENABLE_OBJECT_ALLOCATED`. 
 
 And implement the callback:
 
@@ -88,6 +92,7 @@ HRESULT __stdcall ProfilerCallback::ObjectAllocated(ObjectID objectID, ClassID c
 }
 ```
 
+
 # Retrieving stacktraces
 Let's say you want to observe all allocations of type `CatBowlEmptyException` and print out the stacktrace so you know where this happened. Fortunately the Profiler API provides you the `ICorProfilerInfo2::DoStackSnapshot` method which requests a stacktrace of the current thread (or of another one, but I won't cover this here). It awaits a pointer to a function that is called for every frame in the stacktrace. The requesting and the providing of the frames are synchronous which means, the next line after `DoStackSnapshot` is executed after the last frame was reported.
 
@@ -97,6 +102,7 @@ You must use the flag `COR_PRF_ENABLE_STACK_SNAPSHOT` to be able to request snap
 ```cpp
  iCorProfilerInfo->SetEventMask(.... | COR_PRF_ENABLE_STACK_SNAPSHOT);
 ```
+
 
 ## Signature of DoStackSnapshot
 
@@ -117,6 +123,7 @@ ULONG32 contextSize)
 + **context:** `0` if you want to retrieve the stacktrace of the current thread
 + **contextSize:** also `0`
 
+
 ## Signature of the Callback
 
 ```cpp
@@ -135,6 +142,7 @@ DoStackSnapshotCallback(
 + **frameInfo**: To be honest, I have no idea what data resists in that struct and I have not found any definition of that struct.
 + **contextSize, context:** both will be null because we don't request them for this blog post
 + **clientData:** exactly that thing you could pass in `DoStackSnapshot`.
+
 
 ## Getting the function name based on the `FunctionID`
 
@@ -157,6 +165,7 @@ bool Utils::GetFunctionNameById(FunctionID functionId, char* output, ULONG outpu
 }
 ```
 I assumed that the last parameters of `GetMethodProps` are all optional. At least this compiles and runs without errors :-)
+
 
 ## Gimme the code - ObjectAllocated
 
@@ -198,6 +207,7 @@ struct SnapshotClientData {
 };
 ```
 
+
 ## Gimme the code - DoStackSnapshotCallback
 
 ```cpp
@@ -228,6 +238,7 @@ I manipulated the pointer `output` to append the next frame to `output` plus a `
 
 Please note that I added the callback not to the `ProfilerCallback` class because I did not succeed in passing a pointer to a member function into `DoStackSnapshot`.
 
+
 ## Outcome
 
 Given a weird and senseless program with some nested calls I get this output:
@@ -238,6 +249,7 @@ Given a weird and senseless program with some nested calls I get this output:
 # Summary
 
 I showed you some use cases and how you can handle them. I hope you got a little insight into the process of event handling. In one of the next article we are taking a look at `FunctionEnter` and `FunctionLeave` stuff. But be aware to see some ASM code :smile: 
+ 
  
 # Additional Links
 
