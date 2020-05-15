@@ -1,6 +1,6 @@
 ---
-published: false
-title: "Digging into several callbacks and how you can obtain more information about an event"
+published: true
+title: "Digging into a few callbacks and how you can obtain more information about an event"
 description: "I list some callbacks, what can be done with them and how you can obtain more information about an event."
 tags: dotnet, debug, tutorial, cpp
 series: Net-Profiler
@@ -248,9 +248,9 @@ Given a weird and senseless program with some nested calls I get this output:
 
 # Summary
 
-I showed you some use cases and how you can handle them. I hope you got a little insight into the process of event handling. In one of the next article we are taking a look at `FunctionEnter` and `FunctionLeave` stuff. But be aware to see some ASM code :smile: 
+I showed you some use cases and how you can handle them. I hope you got a little insight into the process of event handling. In one of the next article we are taking a look at `FunctionEnter` and `FunctionLeave` stuff. But be aware to see some ASM code :smile: Also I try to retrieve the line number from a stack frame. We'll see if that works.
  
- 
+
 # Additional Links
 
 [DoStackSnapshot](https://docs.microsoft.com/de-de/dotnet/framework/unmanaged-api/profiling/icorprofilerinfo2-dostacksnapshot-method)
