@@ -1,16 +1,16 @@
 ---
 published: false
 title: "Doing native clicks with Cypress.io and open file dialog"
-cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/intellisense-for-cypress-fixture-files/assets/your-asset.png"
-description: "Introducing a VSCode extension that provides intellisense for cypress fixture file paths"
-tags: cypress, javascript, vscode, productivity
+cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/cypress-native-event/assets/header.jpg"
+description: "Using native click events to open the file dialog in chrome by code."
+tags: cypress, javascript, debug, test
 series:
 canonical_url:
 ---
 
->**Note**: Get the code here: <todo>
+>**Note**: Get the code [here](https://github.com/gabbersepp/dev.to-posts/tree/master/blog-posts/cypress-native-event/code)
 
-There are some rare cases where `cy.get(...).click()` won't work properly. If you encounter such a situation, you should give this approach a try. In this post we are opening the fila chooser programatically by click.
+There are some rare cases where `cy.get(...).click()` won't work properly. If you encounter such a situation, you should give this approach a try. In this post we are opening the fila chooser programmatically by click.
 
 # Application under test
 We use a very simple HTML construct:
@@ -46,7 +46,7 @@ Opening the file chooser by code has been disabled due to security reasons, whic
 
 # Native events vs. synthetic events
 
-`Synthetic events` are called that ones you call normally in your code, like `$el.click()`. They are simulated and produced by `Javascript`. `Native events` are produced by the browser. The latter simulate the user behaviour better but lack the possibility that synthetic events provide. 
+`Synthetic events` are called that ones you call normally in your code, like `$el.click()`. They are simulated and produced by `Javascript`. `Native events` are produced by the browser. The latter simulate the user behavior better but lack the possibility that synthetic events provide. 
 
 Using a native click event you can instruct the browser to **click onto the screen at position x:y** whereas using a synthetic click you can instruct to **trigger a click event on element `div[id='test']`**. So what is the difference? Imagine a `button` that is covered completely by a `div` whose `z-index` is higher. Doing a native click onto the button won't arrive at the button because the `div` receives it. Doing a synthetic click onto the `button` will trigger the button's click event handler.
 
@@ -117,7 +117,7 @@ cy.get("input").then($elements => {
 })
 ```
 
-Unfortunatelly this is not correct:
+Unfortunately this is not correct:
 
 ![](./assets/wrong-rect.jpg)
 
@@ -127,7 +127,7 @@ In the picture it shows `0` for both, x and y. But `(0|0)` would produce a click
 
 But a native click event does not know what an `iframe` is. And the application does not know that there is a world outside of it. 
 
-To solve this issue you can select the iframe containing `div` with the class `size-container`, retrive its `x` and `y` and adding them onto the element's `x` and `y`. But keep in mind that there are `iframes` involved so you must choose the right one:
+To solve this issue you can select the iframe containing `div` with the class `size-container`, retrieve its `x` and `y` and adding them onto the element's `x` and `y`. But keep in mind that there are `iframes` involved so you must choose the right one:
 
 ```js
 // ./code/cypress/integration/spec.js#L10-L19
