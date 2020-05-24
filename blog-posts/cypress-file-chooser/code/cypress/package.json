@@ -1,0 +1,12 @@
+{
+  "name": "cypress-native-event",
+  "version": "1.0.0",
+  "description": "Use native events in your tests",
+  "scripts": {
+    "cypress:open": "cypress open"
+  },
+  "dependencies": {
+    "chrome-remote-interface": "^0.28.2",
+    "cypress": "^4.5.0"
+  }
+}
