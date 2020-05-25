@@ -2,7 +2,7 @@
 published: false
 title: "Controlling the file chooser within a Cypress.io test"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/cypress-native-event/assets/header.jpg"
-description: "You were told that you can not control the "open file" dialog in Cypress? I can tell you, that you were fooled!"
+description: "You were told that you can not control the 'open file' dialog in Cypress? I can tell you, that you were fooled!"
 tags: cypress, javascript, csharp, testing
 series: Real File Upload Test
 canonical_url:
