@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 title: "Controlling the file chooser within a Cypress.io test"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/cypress-native-event/assets/header.jpg"
 description: "You were told that you can not control the 'open file' dialog in Cypress? I can tell you, that you were fooled!"
@@ -17,7 +17,7 @@ OK. So you decided to do a real file upload test in Cypress? I appreciate your d
 Now I have to warn you: **This solution will only work on Windows!**
 
 # My solution - quick and dirty
-I make use of the fact that Chrome uses the system file dialog and not it's own. Due to that we can rely on the Windows Messaging system and can control the dialog by Win32 API calls. I won't go too much into the details because there are a bunch of good tutorials out there that describe the Win32 API and the Windows Messages better than I ever could. :smile:
+I make use of the fact that Chrome uses the system file dialog and not something own. Due to that we can rely on the Windows Messaging system and can control the dialog by Win32 API calls. I won't go too much into the details because there are a bunch of good tutorials out there that describe the Win32 API and the Windows Messages better than me ever could. :smile:
 
 # Using Win32 API Calls in CSharp
 To use functions like `SendMessage` and `FindWindowEx` you have to load `user32.dll`. To make your `C#` life easier, I recommend the usage of [PInvoke.net](http://pinvoke.net/default.aspx/user32.FindWindowEx), a collection of many calls into the system DLLs and often with some example code!
@@ -25,17 +25,17 @@ To use functions like `SendMessage` and `FindWindowEx` you have to load `user32.
 In my case I was able to copy & paste the example for `SendMessage` and `FindWindowEx` without adjustments.
 
 # File Dialog Handles
-Let's examine the Window structure of the dialog. I use `Microsoft Spy++` for this task. You can find it in your `Visual Studiuo` installation path:
+Let's examine the Window structure of the dialog. I use `Microsoft Spy++` for this task. You can find it in your `Visual Studio` installation path:
 ```
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\Common7\Tools\spyxx_amd64.exe
 ```
 
 First we look for a Window whose title is *Öffnen / Open*:
+
 ![](./assets/dialog-handle.jpg)
 
->**Attention:** If you have two file dialogs open, the outcome of that search is not deterministic!
-
 Now as we have the parent handle, we can successively go downwards and select the `ComboBoxEx32 > ComboBox > Edit`:
+
 ![](./assets/edit-handel.jpg)
 
 The code is very simple:
@@ -132,12 +132,19 @@ cy.get("input").first().then($element => {
 })
 ```
 
+# Caveats
++ If you have two file dialogs open, the outcome of that search is not deterministic! If this is the case in your setup you have to adjust the code that looks for the dialog handle. I just made it very simple. You can of course adjust the search logic just as you need it.
++ Use backslashes in the path! Otherwise the file dialog won't accept the path!
+
 # Additional Links
 [Microsoft Spy++](https://docs.microsoft.com/de-de/visualstudio/debugger/how-to-start-spy-increment?view=vs-2019)
 [Windows Messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/messages-and-message-queues)
 [WM_LBUTTONDOWN](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondown)
 [WM_LBUTTONUP](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttonup)
 [PInvoke.net: Win32 API Calls in .NET](http://pinvoke.net)
+
+# Summary
+I showed you how you can control the File Dialog. Using this approach you can build very realistic file upload test scenarios. This approach can be extended to other use cases as well. Let me know if you have another use case for that!
 
 ----
 
