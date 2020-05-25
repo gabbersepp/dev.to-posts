@@ -3,10 +3,6 @@ describe('Test', () => {
     cy.task('resetCRI').visit('./../index.html')
   })
 
-  it("file dialog open fails", () => {
-    cy.get("input").click();
-  })
-
   it('file dialog open succeeds', () => {
     const sizeContainer = window.frames["parent"].document.querySelector(".size-container");
     const cypressAppFrameContainerRect = sizeContainer.getBoundingClientRect();
@@ -20,7 +16,13 @@ describe('Test', () => {
       const element = $element[0];
       element.scrollIntoView();
       var rect = element.getBoundingClientRect();
-      cy.task("nativeClick", {x: parseInt(rect.x) + addX, y: parseInt(rect.y) + addY });
+      // wait only needed for demonstration purposes
+      cy.task("nativeClick", {x: parseInt(rect.x) + addX, y: parseInt(rect.y) + addY })
+      .wait(1000)
+      .task("selectFile", "C:\\git\\dev.to-posts\\blog-posts\\cypress-file-chooser\\code\\cypress\\package.json")
+      .wait(1000)
+      .get("div", { timeout: 10000 })
+      .should("contain", "package.json")
     })
   })
 })

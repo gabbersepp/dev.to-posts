@@ -4,7 +4,7 @@ title: "Doing native clicks with Cypress.io and open file dialog"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/cypress-native-event/assets/header.jpg"
 description: "Using native click events to open the file dialog in chrome by code."
 tags: cypress, javascript, debug, testing
-series:
+series: Real File Upload Test
 canonical_url:
 ---
 
