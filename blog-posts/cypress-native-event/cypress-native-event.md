@@ -1,16 +1,16 @@
 ---
-published: false
+published: true
 title: "Doing native clicks with Cypress.io and open file dialog"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/cypress-native-event/assets/header.jpg"
 description: "Using native click events to open the file dialog in chrome by code."
-tags: cypress, javascript, debug, test
-series:
+tags: cypress, javascript, debug, testing
+series: Real File Upload Test
 canonical_url:
 ---
 
 >**Note**: Get the code [here](https://github.com/gabbersepp/dev.to-posts/tree/master/blog-posts/cypress-native-event/code)
 
-There are some rare cases where `cy.get(...).click()` won't work properly. If you encounter such a situation, you should give this approach a try. In this post we are opening the fila chooser programmatically by click.
+There are some rare cases where `cy.get(...).click()` won't work properly. If you encounter such a situation, you should give this approach a try. In this post we are opening the file chooser programmatically by click.
 
 # Application under test
 We use a very simple HTML construct:
@@ -34,13 +34,13 @@ We use a very simple HTML construct:
 
 ```
 
-So nothing special. Let's now write a test that clicks onto that button.
+So nothing special. Let's now write a test that clicks into that button.
 
 # Open file dialog
 
 We do a simple `cy.get("input").click();`. You should now see nothing. Open the DevTools and you should see a warning:
 
-[](./assets/warning.jpg)
+![](./assets/warning.jpg)
 
 Opening the file chooser by code has been disabled due to security reasons, which makes sense of course.
 
@@ -48,7 +48,7 @@ Opening the file chooser by code has been disabled due to security reasons, whic
 
 `Synthetic events` are called that ones you call normally in your code, like `$el.click()`. They are simulated and produced by `Javascript`. `Native events` are produced by the browser. The latter simulate the user behavior better but lack the possibility that synthetic events provide. 
 
-Using a native click event you can instruct the browser to **click onto the screen at position x:y** whereas using a synthetic click you can instruct to **trigger a click event on element `div[id='test']`**. So what is the difference? Imagine a `button` that is covered completely by a `div` whose `z-index` is higher. Doing a native click onto the button won't arrive at the button because the `div` receives it. Doing a synthetic click onto the `button` will trigger the button's click event handler.
+Using a native click event you can instruct the browser to **click onto the screen at position x:y** whereas using a synthetic click you can instruct to **trigger a click event on element `div[id='test']`**. So what is the difference? Imagine a `button` that is covered completely by a `div` whose `z-index` is higher. Doing a native click onto the button won't have an effect because the `div` receives it. Doing a synthetic click onto the `button` will trigger the button's click event handler.
 
 # Trigger native events
 
@@ -97,9 +97,9 @@ The method for emitting a mouse event is called [Input.dispatchMouseEvent](https
 }
 ```
 
-When releasing it you must set `buttons` to `1` which tells chrome that when sending the `Release` event, the left mouse button is pressed. Leaving this optional parameter empty did not work for me.
+When releasing it you must set `buttons` to `1` which tells chrome that when sending the `Release` event, the left mouse button is pressed. Leaving this optional parameter empty did not work for me. 
 
-**x** and **y** are relative to the top left edge in the viewport:
+The **x** and **y** coordinates are relative to the top left edge in the viewport:
 
 ![](./assets/top-left.jpg)
 
@@ -110,7 +110,6 @@ You might come up with the idea to do this to get the X/Y coordinates:
 ```js
 cy.get("input").then($elements => {
   var first = $elements[0];
-  first.scrollIntoView();
   var rect = first.getBoundingClientRect();
   var x = rect.x;
   var y = rect.y;
@@ -127,25 +126,37 @@ In the picture it shows `0` for both, x and y. But `(0|0)` would produce a click
 
 But a native click event does not know what an `iframe` is. And the application does not know that there is a world outside of it. 
 
-To solve this issue you can select the iframe containing `div` with the class `size-container`, retrieve its `x` and `y` and adding them onto the element's `x` and `y`. But keep in mind that there are `iframes` involved so you must choose the right one:
+To solve this issue you can select the `div` with the class `size-container` (it contains the `iframe`), retrieve its `x` and `y` and adding them onto the element's `x` and `y`. But keep in mind that there are `iframes` involved so you must choose the right one:
 
 ```js
-// ./code/cypress/integration/spec.js#L10-L19
+// ./code/cypress/integration/spec.js#L10-L25
 
-('file dialog open succeeds', () => {
-const sizeContainer = window.frames["parent"].document.querySelector(".size-container");
-const cypressAppFrameContainerRect = sizeContainer.getBoundingClientRect();
-const marginLeft = parseFloat(getComputedStyle(sizeContainer).marginLeft);
+it('file dialog open succeeds', () => {
+  const sizeContainer = window.frames["parent"].document.querySelector(".size-container");
+  const cypressAppFrameContainerRect = sizeContainer.getBoundingClientRect();
+  const marginLeft = parseFloat(getComputedStyle(sizeContainer).marginLeft);
 
-// pixel values passed to chrome debugger protocol must be integer
-const addX = Math.ceil(cypressAppFrameContainerRect.x + marginLeft);
-const addY = Math.ceil(cypressAppFrameContainerRect.y);
+  // pixel values passed to chrome debugger protocol must be integer
+  const addX = Math.ceil(cypressAppFrameContainerRect.x + marginLeft);
+  const addY = Math.ceil(cypressAppFrameContainerRect.y);
 
-cy.get("input").first().then($element => {
+  cy.get("input").first().then($element => {
+    const element = $element[0];
+    element.scrollIntoView();
+    var rect = element.getBoundingClientRect();
+    cy.task("nativeClick", {x: parseInt(rect.x) + addX, y: parseInt(rect.y) + addY });
+  })
+})
 ```
 
+`element.scrollIntoView();` is necessary because we can't do a native click onto an element that is not within the visible area!
+
+You also have to add the left-margin:
+
+![](./assets/left-margin.jpg)
+
 # Sending the event
-based upon the logic from the mentioned blog post we add a new Cypress task:
+Based upon the logic from the mentioned blog post we add a new Cypress task:
 
 ```js
 // ./code/cypress/plugins/index.js#L30-L35
@@ -157,6 +168,11 @@ nativeClick: async({ x, y }) => {
   return Promise.resolve(true);
 },
 ```
+
+# Result
+Of course this code will open the file dialog :smile:
+
+![](./assets/example.gif)
 
 # Troubleshooting
 When using this approach you should close the DevTools because otherwise the click event may be received by the DevTool Window. I haven't investigated this yet but maybe the command chooses the first available window to be fired on. If you need the DevTools to be opened during that command you should consider to take a look into the [Chrome DevTools protocol](https://chromedevtools.github.io/devtools-protocol/) to find a way to choose the right window.

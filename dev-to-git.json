@@ -7,7 +7,8 @@
     { "id": 239589, "relativePathToArticle": "./blog-posts/private-page/travis-ftp/travis-ftp.md" },
     { "id": 231328, "relativePathToArticle": "./blog-posts/cypress-test-route-not-hit/cypress-test-route-not-hit.md" },
     { "id": 342174, "relativePathToArticle": "./blog-posts/cypress-native-event/cypress-native-event.md" },
-    
+    { "id": 343642, "relativePathToArticle": "./blog-posts/cypress-file-chooser/cypress-file-chooser.md" },
+
     { "id": 246735, "relativePathToArticle": "./blog-posts/private-page/fetch-tweets/fetch-tweets.md" },
     { "id": 248320, "relativePathToArticle": "./blog-posts/private-page/travis-http-php/travis-http-php.md" },
     { "id": 253153, "relativePathToArticle": "./blog-posts/private-page/eleventy-design/eleventy-design.md" },

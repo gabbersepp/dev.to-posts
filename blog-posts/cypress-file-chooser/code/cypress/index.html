@@ -1,0 +1,19 @@
+<html>
+<head>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <input type="file">Choose your file!</input>
+    <div></div>
+    <script>
+      document.querySelector("input").addEventListener("change", (event) => {
+        document.querySelector("div").innerHTML = event.target.files[0].name;
+      })
+    </script>
+</body>
+</html>
