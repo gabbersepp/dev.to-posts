@@ -2,7 +2,7 @@
 published: false
 title: "[Win32 / Hooks / Spy++] How I got rid of those useless mouse buttons using Windows Hooks"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/get-rid-of-mouse-buttons/assets/header.jpg"
-description: "Introducing a VSCode extension that provides intellisense for cypress fixture file paths"
+description: "Blocking mouse buttons with Win32 Hooks"
 tags: cpp, win32, hook
 series:
 canonical_url:
@@ -10,7 +10,7 @@ canonical_url:
 
 >**Note:** Get the code here: [Full runnable example](https://github.com/gabbersepp/dev.to-posts/tree/master/blog-posts/get-rid-of-mouse-buttons/code)
 
-A few months ago my computer mouse stopped working so I bought one of those cheap ones. It is workign like a charm but unfortunatelly it has two very very anoying side buttons:
+A few months ago my computer mouse stopped working so I bought one of those cheap ones. It is working like a charm but unfortunately it has two very very annoying side buttons:
 
 ![](./assets/photo.jpg)
 
@@ -75,21 +75,21 @@ You now have a bunch of new messages. I wish you luck in finding the right one :
 Of course, just an assumption.
 
 # Hooking 
-We have to differentiate between a `local hook` and a `global hook`. As statet in [the official documentation](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-hooks#hook-procedures) a global hook can monitor all events in all threads and must be placed into a own DLL.
+We have to differentiate between a `local hook` and a `global hook`. As stated in [the official documentation](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-hooks#hook-procedures) a global hook can monitor all events in all threads and must be placed into a own DLL.
 
 To register a hook, we use `[SetWindowsHookEx](https://docs.microsoft.com/de-de/windows/win32/api/winuser/nf-winuser-setwindowshookexa)`. It requires the `type of the hook` as first parameter. To get a full list of possible values, refer [to the official documentation](https://docs.microsoft.com/de-de/windows/win32/api/winuser/nf-winuser-setwindowshookexa?redirectedfrom=MSDN#parameters).
 
 # Blocking a message
-We are interested in `WH_GETMESSAGE`. Whenever a windows application calls `GetMessage()` to retrive the next message for dispatching (every application is doing this all the time :smile:), `WH_GETMESSAGE` is emitted. This is the only place where [you can modify the message](https://docs.microsoft.com/de-de/previous-versions/windows/desktop/legacy/ms644981(v=vs.85)#remarks). After returning from the hook callback, the message is passed to the application that calls `GetMessage()`. So whatever you write into the message will be visible to callee. This means, here we can adjust the message to prevent `WM_XBUTTONDOWN` being processed.
+We are interested in `WH_GETMESSAGE`. Whenever a windows application calls `GetMessage()` to retrieve the next message for dispatching (every application is doing this all the time :smile:), `WH_GETMESSAGE` is emitted. This is the only place where [you can modify the message](https://docs.microsoft.com/de-de/previous-versions/windows/desktop/legacy/ms644981(v=vs.85)#remarks). After returning from the hook callback, the message is passed to the application that calls `GetMessage()`. So whatever you write into the message will be visible to callee. This means, here we can adjust the message to prevent `WM_XBUTTONDOWN` being processed. To do so, replace the original message with `WM_NULL`.
 
 # Writing the start application
-My intention is, to have a small application, staying in the systray, that provides three functions:
+My intention is, to have a small application, staying in the `systray`, that provides three functions:
 + Enable Buttons
 + Disable Buttons
 + Close App
 
 ## Calling unmanaged code from C#
-As already mentioned, we need a DLL to make this happen. I am writing the DLL in C++ and thus we need to call unmanaged code from our managed application. Fortunatelly C#/.NET makes it easy for us to do so! Let's say there exist two methods: `SetHook` and `RemoveHook` (with std calling convention) and the dll will be named *DLL1.dll*, then you simple have to put those two `DllImport` statements at the root of the application's class:
+As already mentioned, we need a DLL to make this happen. I am writing the DLL in C++ and thus we need to call unmanaged code from our managed application. Fortunately C#/.NET makes it easy for us to do so! Let's say there exist two methods: `SetHook` and `RemoveHook` (with `std calling convention`) and the DLL will be named *DLL1.dll*, then you simple have to put those two `DllImport` statements at the root of the application's class:
 
 ```cs
 [DllImport("Dll1.dll", CallingConvention = CallingConvention.StdCall)]
@@ -108,12 +108,79 @@ Result:
 ![](./assets/systray.jpg)
 
 # Writing the DLL
+I just created a new `DLL project` in `Visual Studio` and deleted everything I don't need. This is what was left:
 
+```cpp
+// ./code/Dll1/dllmain.cpp#L1-L16
 
+#include "pch.h"
 
-wichtig beim wechsel des buildprofiesl: hinzufügend er def.def
+HHOOK hkKey = NULL;
+HINSTANCE hInstHookDll = NULL;
+LRESULT CALLBACK GetMsgProc(int code, WPARAM wParam, LPARAM lParam);
 
-# Header
+BOOL APIENTRY DllMain(HANDLE hModule, DWORD  reasonForCall, LPVOID lpReserved)
+{
+    switch (reasonForCall)
+    {
+    case DLL_PROCESS_ATTACH:
+        hInstHookDll = (HINSTANCE)hModule;
+        break;
+    }
+    return TRUE;
+}
+```
+
+Then we need a function that can set the hook:
+
+```cpp
+// ./code/DLL1/dllmain.cpp#L18-L21
+
+void __stdcall SetHook()
+{
+    if (hkKey == NULL)
+        hkKey = SetWindowsHookEx(WH_GETMESSAGE, GetMsgProc, hInstHookDll, 0);
+```
+
+And one that can remove the hook:
+
+```cpp
+// ./code/DLL1/dllmain.cpp#L24-L29
+
+void __stdcall RemoveHook()
+{
+    if (hkKey != NULL)
+        UnhookWindowsHookEx(hkKey);
+    hkKey = NULL;
+}
+```
+
+The main part surely is the hook callback:
+
+```cpp
+// ./code/DLL1/dllmain.cpp#L31-L41
+
+LRESULT CALLBACK GetMsgProc(int code, WPARAM wParam, LPARAM lParam)
+{
+    if (code >= 0 && code == HC_ACTION)
+    {
+        MSG* msg = (MSG*)lParam;
+        if (msg->message == WM_XBUTTONDOWN || msg->message == WM_XBUTTONUP) {
+            msg->message = WM_NULL;
+        }
+    }
+    return CallNextHookEx(hkKey, code, wParam, lParam);
+}
+```
+
+What happens in this few line of code:
++ `int code`: according to the [Microsoft documentation](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms644981(v=vs.85)#parameters) we can forward this call to the next hook if `code <> HC_ACTION`
++ `lParam` contains a pointer to a `MSG` struct
++ if the message is equal to `WM_XBUTTONDOWN` or `WM_BUTTONUP` replace the message with `WM_NULL` 
+
+# 22 Bit vs. 64 Bit
+
+dummy
 
 ----
 
