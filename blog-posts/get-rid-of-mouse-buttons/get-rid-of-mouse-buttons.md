@@ -3,7 +3,7 @@ published: false
 title: "[Win32 / Hooks / Spy++] How I got rid of those useless mouse buttons using Windows Hooks"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/get-rid-of-mouse-buttons/assets/header.jpg"
 description: "Blocking mouse buttons with Win32 Hooks"
-tags: cpp, win32, hook
+tags: cpp, win32, csharp, windows
 series:
 canonical_url:
 ---
@@ -178,9 +178,11 @@ What happens in this few line of code:
 + `lParam` contains a pointer to a `MSG` struct
 + if the message is equal to `WM_XBUTTONDOWN` or `WM_BUTTONUP` replace the message with `WM_NULL` 
 
-# 22 Bit vs. 64 Bit
+# 32 Bit vs. 64 Bit
+The hook DLL is injected into every process. The hook code is executed within the context of the hooked application. This means that using a 32 Bit DLL will block the XButtons in 32Bit applications but not in 64Bit applications. If you want to block the buttons in all applications, you must create a 32Bit and a 64Bit DLL.
 
-dummy
+# Summary
+I showed you how you can block mouse buttons using only a few lines of code. This approach can be extended to many other use cases, too.
 
 ----
 
