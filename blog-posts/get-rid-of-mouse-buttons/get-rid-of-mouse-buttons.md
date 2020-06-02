@@ -23,7 +23,7 @@ So I always wanted to get rid of them, but:
 + removing the buttons from the mouse is not really a satisfactory solution for that problem
 
 # The very last solution
-Today I scanned my bookshelf and suddenly an old book, bought and read about 12 years ago, catches the eye:
+Today I scanned my bookshelf and suddenly an old book, bought and read about 12 years ago, catches my eye:
 
 ![](./assets/book.jpg)
 
@@ -31,15 +31,13 @@ After reading the table of contents:
 
 ![](./assets/toc.jpg)
 
-I saw the part with *Hooks*. And suddenly something I've done several years ago came back into my mind. Windows is based upon a [message system](https://docs.microsoft.com/en-us/windows/win32/winmsg/messages-and-message-queues) and there is a powerful function that let's you inspect every message. And in one case you are also able to modify the messages. So maybe you got my idea: Listen to a specific message and omit it so that the mouse clicks never reaches any application.
+I saw the part with *Hooks*. And suddenly something I've done several years ago came back into my mind. Windows is based upon a [message system](https://docs.microsoft.com/en-us/windows/win32/winmsg/messages-and-message-queues) and there is a powerful function that let's you inspect every message. And in one case you are also able to modify the messages. So maybe you got my idea: Listen to a specific message and omit it so that the mouse click message never reaches any application.
 
 # Windows Message
-If you press a key, some sends somewhere a `*WM_CHAR*` message. If you press the left mouse button, a `*WM_LBUTTONDOWN*` is sent. Those events are fetched by applications that respond to them or omit them.
-E.g. having a WPF application with just a single button:
+If you press a key, someone sends somewhere a `WM_CHAR` message. If you press the left mouse button, a `WM_LBUTTONDOWN` is sent. Those events are fetched by applications that respond to them or skip them.
+E.g. having a WPF application with just a single button introduces a consumer of `WM_LBUTTOMDOWN` events and of course it also consumes the corresponding `WM_LBUTTONUP` events.
 
 ![](./assets/wpf-single-btn.jpg)
-
-Introduces a consumer of `*WM_LBUTTOMDOWN*` events and of course it also consumes the corresponding `*WM_LBUTTONUP*` events.
 
 # See windows messages in action
 If you have `Visual Studio` installed, you have access to a little tool from Microsoft, called `Spy++`. You find it in the installation directory, e.g.:
@@ -48,7 +46,7 @@ If you have `Visual Studio` installed, you have access to a little tool from Mic
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\Common7\Tools
 ```
 
-The folder contains two versions, a 32 Bit and a 64 Bit version. You must choose it based on the bitness of the application you want to inspect. The WPF application is JITed as 32Bit application so I open that version. Click onto the button I've marked red in this screenshot. A new window appears:
+The folder contains two versions, a 32 Bit and a 64 Bit version. You must choose it based on the bitness of the application you want to inspect. The WPF application is executed as 32Bit application so I open that version. Click onto the button I've marked red in this screenshot. A new window appears:
 
 ![](./assets/spypp-1.jpg)
 ![](./assets/spypp-2.jpg)
@@ -102,9 +100,106 @@ public static extern void RemoveHook();
 Very easy! 
 
 ## Systray Icon
-I suggest you to take a look at the source code. There is nothing special. I used a WinForms application type because there it is much easier than with a WPF application.
+There is nothing special about the code. I used a WinForms application type because there it is much easier to setup a systray icon than with a WPF application.
+
+```cs
+// ./code/App/Program.cs
+
+﻿using System;
+using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+
+namespace App
+{
+    static class Program
+    {
+        private static NotifyIcon notifyIcon;
+
+        [DllImport("Dll1.dll", CallingConvention = CallingConvention.StdCall)]
+        public static extern void SetHook();
+    
+        [DllImport("Dll1.dll", CallingConvention = CallingConvention.StdCall)] 
+        public static extern void RemoveHook();
+
+        private static void SetText(bool? disabled = null)
+        {
+            notifyIcon.Text = "Disable XButton App";
+
+            if (disabled == true)
+            {
+                notifyIcon.Text += " [Disabled]";
+            } 
+            else if (disabled == false)
+            {
+                notifyIcon.Text += " [Enabled]";
+            }
+        }
+
+        private static void InitIcon()
+        {
+            notifyIcon = new NotifyIcon();
+            notifyIcon.Icon = new Icon("example.ico");
+            SetText();
+            notifyIcon.Visible = true;
+            notifyIcon.ContextMenuStrip = GetContextMenu();
+        }
+
+        private static ContextMenuStrip GetContextMenu()
+        {
+            var cm = new ContextMenuStrip();
+            var item = new ToolStripMenuItem();
+            item.Text = "Disable buttons";
+            item.Click += DisableClick;
+            cm.Items.Add(item);
+            
+            item = new ToolStripMenuItem();
+            item.Text = "Enable buttons";
+            item.Click += EnableClick;
+            cm.Items.Add(item);
+            cm.Items.Add(new ToolStripSeparator());
+
+            item = new ToolStripMenuItem();
+            item.Text = "Close";
+            item.Click += CloseClick;
+            cm.Items.Add(item);
+
+            return cm;
+        }
+
+        private static void CloseClick(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private static void EnableClick(object sender, EventArgs e)
+        {
+            SetText(false);
+            RemoveHook();
+        }
+
+        private static void DisableClick(object sender, EventArgs e)
+        {
+            SetText(true);
+            SetHook();
+        }
+
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            InitIcon();
+            Application.Run();
+            notifyIcon.Dispose();
+        }
+    }
+}
+
+```
 
 Result:
+
 ![](./assets/systray.jpg)
 
 # Writing the DLL
