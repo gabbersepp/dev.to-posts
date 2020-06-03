@@ -276,6 +276,16 @@ What happens in this few line of code:
 # 32 Bit vs. 64 Bit
 The hook DLL is injected into every process. The hook code is executed within the context of the hooked application. This means that using a 32 Bit DLL will block the XButtons in 32Bit applications but not in 64Bit applications. If you want to block the buttons in all applications, you must create a 32Bit and a 64Bit DLL.
 
+# Troubleshooting
+If you are not able to call `SetHook`and `RemoveHook` you should check if you exported the functions correctly. To do this, open the `Developer Command Prompt for VS`, change the working directory to the folder where your DLL was filed and execute:
+```
+dumpbin /exports dll1.dll
+```
+
+The result should look similar to this:
+
+![](./assets/dumpbin.jpg)
+
 # Summary
 I showed you how you can block mouse buttons using only a few lines of code. This approach can be extended to many other use cases, too.
 
