@@ -279,6 +279,10 @@ The hook DLL is injected into every process. The hook code is executed within th
 # Summary
 I showed you how you can block mouse buttons using only a few lines of code. This approach can be extended to many other use cases, too.
 
+# Additional Links
+[System-Wide-Hooking-for-the-WM-CHAR-Message](https://www.codeproject.com/Articles/50397/System-Wide-Hooking-for-the-WM-CHAR-Message)
+[Hook on Mouse with Win32 api](https://causeyourestuck.io/2015/12/27/set-a-mouse-hook-with-win32api-2/)
+
 ----
 
 # Found a typo?
