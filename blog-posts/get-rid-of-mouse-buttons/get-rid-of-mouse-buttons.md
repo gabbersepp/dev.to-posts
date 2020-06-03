@@ -1,8 +1,8 @@
 ---
-published: false
+published: true
 title: "[Win32 / Hooks / Spy++] How I got rid of those useless mouse buttons using Windows Hooks"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/get-rid-of-mouse-buttons/assets/header.jpg"
-description: "Blocking mouse buttons with Win32 Hooks"
+description: "[Win32 / Hooks / Spy++] Blocking mouse buttons with Win32 Hooks, controlled by a little systray icon tool written in C#"
 tags: cpp, win32, csharp, windows
 series:
 canonical_url:

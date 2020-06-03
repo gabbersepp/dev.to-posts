@@ -3,11 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BlockMouse", "BlockMouse\BlockMouse.vcxproj", "{9ACCA48E-08F0-4D52-8D6B-082A00476E56}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dll1", "Dll1\Dll1.vcxproj", "{16A2C5DB-171F-4AB6-B306-EDF883D752D8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockMouseApp", "BlockMouseApp\BlockMouseApp.csproj", "{F500A7FE-F7FC-4570-B190-4833C8625DC3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App", "App\App.csproj", "{1085093B-B13E-45C8-8FAE-6574C0600A6D}"
 EndProject
@@ -21,16 +17,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9ACCA48E-08F0-4D52-8D6B-082A00476E56}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{9ACCA48E-08F0-4D52-8D6B-082A00476E56}.Debug|x64.ActiveCfg = Debug|x64
-		{9ACCA48E-08F0-4D52-8D6B-082A00476E56}.Debug|x64.Build.0 = Debug|x64
-		{9ACCA48E-08F0-4D52-8D6B-082A00476E56}.Debug|x86.ActiveCfg = Debug|Win32
-		{9ACCA48E-08F0-4D52-8D6B-082A00476E56}.Debug|x86.Build.0 = Debug|Win32
-		{9ACCA48E-08F0-4D52-8D6B-082A00476E56}.Release|Any CPU.ActiveCfg = Release|Win32
-		{9ACCA48E-08F0-4D52-8D6B-082A00476E56}.Release|x64.ActiveCfg = Release|x64
-		{9ACCA48E-08F0-4D52-8D6B-082A00476E56}.Release|x64.Build.0 = Release|x64
-		{9ACCA48E-08F0-4D52-8D6B-082A00476E56}.Release|x86.ActiveCfg = Release|Win32
-		{9ACCA48E-08F0-4D52-8D6B-082A00476E56}.Release|x86.Build.0 = Release|Win32
 		{16A2C5DB-171F-4AB6-B306-EDF883D752D8}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{16A2C5DB-171F-4AB6-B306-EDF883D752D8}.Debug|x64.ActiveCfg = Debug|x64
 		{16A2C5DB-171F-4AB6-B306-EDF883D752D8}.Debug|x64.Build.0 = Debug|x64
@@ -41,18 +27,6 @@ Global
 		{16A2C5DB-171F-4AB6-B306-EDF883D752D8}.Release|x64.Build.0 = Release|x64
 		{16A2C5DB-171F-4AB6-B306-EDF883D752D8}.Release|x86.ActiveCfg = Release|Win32
 		{16A2C5DB-171F-4AB6-B306-EDF883D752D8}.Release|x86.Build.0 = Release|Win32
-		{F500A7FE-F7FC-4570-B190-4833C8625DC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F500A7FE-F7FC-4570-B190-4833C8625DC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F500A7FE-F7FC-4570-B190-4833C8625DC3}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{F500A7FE-F7FC-4570-B190-4833C8625DC3}.Debug|x64.Build.0 = Debug|Any CPU
-		{F500A7FE-F7FC-4570-B190-4833C8625DC3}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{F500A7FE-F7FC-4570-B190-4833C8625DC3}.Debug|x86.Build.0 = Debug|Any CPU
-		{F500A7FE-F7FC-4570-B190-4833C8625DC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F500A7FE-F7FC-4570-B190-4833C8625DC3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F500A7FE-F7FC-4570-B190-4833C8625DC3}.Release|x64.ActiveCfg = Release|Any CPU
-		{F500A7FE-F7FC-4570-B190-4833C8625DC3}.Release|x64.Build.0 = Release|Any CPU
-		{F500A7FE-F7FC-4570-B190-4833C8625DC3}.Release|x86.ActiveCfg = Release|Any CPU
-		{F500A7FE-F7FC-4570-B190-4833C8625DC3}.Release|x86.Build.0 = Release|Any CPU
 		{1085093B-B13E-45C8-8FAE-6574C0600A6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1085093B-B13E-45C8-8FAE-6574C0600A6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1085093B-B13E-45C8-8FAE-6574C0600A6D}.Debug|x64.ActiveCfg = Debug|Any CPU
