@@ -1,0 +1,3 @@
+LIBRARY DLL1
+EXPORTS
+	TestFunction
