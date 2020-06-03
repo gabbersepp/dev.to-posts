@@ -8,7 +8,10 @@ series:
 canonical_url:
 ---
 
-# Header
+# Additional links
+[ICustomMarshaler](https://docs.microsoft.com/de-de/dotnet/api/system.runtime.interopservices.icustommarshaler)
+[Long Marshaler](https://limbioliong.wordpress.com/2013/11/23/example-custom-marshaler-the-long-marshaler/)
+[Understanding Custom Marshaling](https://limbioliong.wordpress.com/2013/11/03/understanding-custom-marshaling-part-1/)
 
 ----
 
