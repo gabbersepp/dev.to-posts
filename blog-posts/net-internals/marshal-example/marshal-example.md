@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 title: "Call function in unmanaged DLL from C# and pass custom data types [Marshal]"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/net-internals/marshal-example/assets/header.jpg"
 description: "This article shows how you can write a custom marshaler in order to call into unmanaged DLL's and pass custom data to the functions."
