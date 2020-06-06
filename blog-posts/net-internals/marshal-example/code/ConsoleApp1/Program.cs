@@ -29,11 +29,10 @@ namespace ConsoleApp1
         return IntPtr.Zero;
       }
 
-      var bytes = Encoding.UTF8.GetBytes(casted.PropertyB);
       var ptr = Marshal.AllocHGlobal(sizeof(int) + Marshal.SizeOf(typeof(IntPtr)));
-      var strPtr = Marshal.AllocHGlobal(bytes.Length + 1);
-      var strPtr2 = Marshal.StringToCoTaskMemAnsi(casted.PropertyB);
       Marshal.WriteInt32(ptr, casted.PropertyA);
+      var bytes = Encoding.UTF8.GetBytes(casted.PropertyB);
+      var strPtr = Marshal.AllocHGlobal(bytes.Length + 1);
       Marshal.Copy(bytes, 0, strPtr, bytes.Length);
       Marshal.WriteByte(strPtr + bytes.Length, 0);
       Marshal.WriteIntPtr(ptr + sizeof(int), strPtr);
