@@ -79,39 +79,39 @@ void __stdcall TestFunction(TestFnParams* p) {
 First we define the class:
 
 ```cs
-// ./code/ConsoleApp1/Program.cs#L71-L75
+// ./code/ConsoleApp1/Program.cs#L70-L74
 
-  {
-    public int PropertyA { get; set; }
-    public string PropertyB { get; set; }
-  }
+public class TestFnParams
+{
+  public int PropertyA { get; set; }
+  public string PropertyB { get; set; }
 }
 ```
 
 And the main function:
 
 ```cs
-// ./code/ConsoleApp1/Program.cs#L59-L68
+// ./code/ConsoleApp1/Program.cs#L58-L67
 
+static void Main(string[] args)
+{
+  var obj = new TestFnParams
   {
-    var obj = new TestFnParams
-    {
-      PropertyA = 100,
-      PropertyB = "Hello from managed object"
-    };
-    TestFunction(obj);
-    Console.Read();
-  }
+    PropertyA = 100,
+    PropertyB = "Hello from managed object"
+  };
+  TestFunction(obj);
+  Console.Read();
 }
 ```
 
 Now specify the `DllImport` attribute with a small difference to the normal usage:
 
 ```cs
-// ./code/ConsoleApp1/Program.cs#L56-L57
+// ./code/ConsoleApp1/Program.cs#L55-L56
 
-
-
+[DllImport("Dll1.dll", CallingConvention = CallingConvention.StdCall)]
+public static extern void TestFunction([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(CustomMarshaler))] TestFnParams p);
 ```
 
 By using the `MarshalAs` attribute we can easily tell .NET to use our own marshaler.
