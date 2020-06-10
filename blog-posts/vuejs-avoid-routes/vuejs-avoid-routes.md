@@ -1,7 +1,6 @@
 ---
 published: false
 title: "Prevent routing if unsaved changes exist [VueJS]"
-cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/vuejs-avoid-routes/assets/header.jpg"
 description: "Apply a very small hack to prevent the user from accidentally switching to another page without saving changes [VueJS]"
 tags: vue, javascript, webdev, beginners
 series:
