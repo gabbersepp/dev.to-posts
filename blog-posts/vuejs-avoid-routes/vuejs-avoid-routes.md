@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 title: "Prevent routing if unsaved changes exist [VueJS]"
 description: "Apply a very small hack to prevent the user from accidentally switching to another page without saving changes [VueJS]"
 tags: vue, javascript, webdev, beginners
@@ -19,25 +19,55 @@ Find the full runnable example here: [Click me!](https://github.com/gabbersepp/d
 First, define a new global function:
 
 ```ts
-// ./code/example/src/utils/Global.ts
+let isRouteChangeBlocked: boolean = false;
+
+export function blockRouteChange(set?: boolean): boolean {
+    if (arguments.length == 1) {
+        isRouteChangeBlocked = !!set;
+        return isRouteChangeBlocked;
+    }
+
+    return isRouteChangeBlocked;
+}
+
 ```
 
 Then use it to set the flag after the user make some input:
 
 ```ts
-// ./code/example/src/views/Home.vue#L16-L23
+  @Watch("input")
+  private inputChange(to: string) {
+    if (to && to.length > 0) {
+      blockRouteChange(true);
+    } else {
+      blockRouteChange(false);
+    }
+  }
 ```
 
 After a successful saving, reset the flag:
 
 ```ts
-// ./code/example/src/views/Home.vue#L25-L28
+  private save() {
+    blockRouteChange(false);
+    alert("saved");
+  }
 ```
 
 Now replace the router's `push` function:
 
 ```ts
-// ./code/example/src/router/index.ts#L23-L33
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function(location: RawLocation) {
+    if (blockRouteChange()) {
+        if (confirm("There are unsaved changes, do you want to continue?")) {
+            blockRouteChange(false);
+            return originalPush.call(this, location) as any;
+        }
+        return;
+    }
+    return originalPush.call(this, location) as any;
+};
 ```
 
 # Result
