@@ -35,7 +35,6 @@
     { "id": 322001, "relativePathToArticle": "./blog-posts/impact-of-branch-predictions/impact-of-branch-predictions.md" },
     { "id": 326459, "relativePathToArticle": "./blog-posts/ipc-by-named-pipes-cpp-csharp/ipc-by-named-pipes-cpp-csharp.md" },
 
-    { "id": 249017, "relativePathToArticle": "./blog-posts/cypress-versions/cypress-3.8.3/cypress-3.8.3.md" }
-
-
+    { "id": 249017, "relativePathToArticle": "./blog-posts/cypress-versions/cypress-3.8.3/cypress-3.8.3.md" },
+    { "id": 352645, "relativePathToArticle": "./blog-posts/vuejs-avoid-routes/vuejs-avoid-routes.md" }
 ]
