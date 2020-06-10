@@ -14,7 +14,7 @@ Let's say you have a input field and routes configured:
 
 How can you avoid that the user navigates to a route if the inputfield contains unsaved text? I made a few tries to find a solution for that but did not found anything. So here is what I have done to solve this problem.
 
-Find the full runnable example here: <todo>
+Find the full runnable example here: [Click me!](https://github.com/gabbersepp/dev.to-posts/tree/master/blog-posts/vuejs-avoid-routes/code/example)
 
 # Solution
 First, define a new global function:
