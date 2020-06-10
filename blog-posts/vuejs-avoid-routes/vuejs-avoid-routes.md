@@ -76,7 +76,7 @@ Here is what I got:
 ![](./assets/vuejs-route.gif)
 
 # Conclusion
-This workaround works really well but I'm wondering whether there isn't a better possibility? Do you know how this can be achieved using a native solution? Maybe I just was not cleevr enough to type in the correct search terms into google :sweat_smile: Just let me know.
+This workaround works really well but I'm wondering whether there isn't a better possibility? Do you know how this can be achieved using a native solution? Maybe I just was not clever enough to type in the correct search terms into google :sweat_smile: Just let me know.
 
 ----
 
