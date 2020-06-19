@@ -2,30 +2,11 @@
 
 #include "cor.h"
 #include "corprof.h"
-#include "framework.h"
-#include "DevToNetProfiler_i.h"
-#include "Utils.h"
 
-class ATL_NO_VTABLE ProfilerCallback :
-  public CComObjectRootEx<CComSingleThreadModel>,
-  public CComCoClass<ProfilerCallback, &CLSID_NetProfiler>,
-  public ICorProfilerCallback2
+class ICorProfilerCallbackDefaultImpl :  public ICorProfilerCallback2
 {
 private:
-  Utils* utils;
 public:
-  ProfilerCallback();
-
-  DECLARE_REGISTRY_RESOURCEID(IDR_PROFILER)
-  BEGIN_COM_MAP(ProfilerCallback)
-    COM_INTERFACE_ENTRY(ICorProfilerCallback)
-    COM_INTERFACE_ENTRY(ICorProfilerCallback2)
-  END_COM_MAP()
-  DECLARE_PROTECT_FINAL_CONSTRUCT()
-
-  HRESULT FinalConstruct();
-  void FinalRelease();
-
   // ICorProfilerCallback interface implementation
   virtual HRESULT __stdcall Initialize(IUnknown* pICorProfilerInfoUnk);
   virtual HRESULT __stdcall Shutdown();
@@ -107,5 +88,3 @@ public:
   virtual HRESULT __stdcall HandleCreated(GCHandleID handleId, ObjectID initialObjectId);
   virtual HRESULT __stdcall HandleDestroyed(GCHandleID handleId);
 };
-
-OBJECT_ENTRY_AUTO(__uuidof(NetProfiler), ProfilerCallback)
