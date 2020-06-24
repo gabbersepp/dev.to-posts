@@ -66,6 +66,11 @@ void __declspec(naked) FnTailcallCallback(FunctionID funcId,
 }
 ```
 
+>**Note:** Die einzelnen Parameter können in der Doku nachgelesen werden. Den `TailCallCallback` werde ich links liegen lassen, da dieser, nach allem was ich gelesen habe, auch nicht genutzt wird.  
+
+Was ist der Sinn von `ret 16`? Nun, sowohl die Enter- als auch der Leavecallback bekommen vier Parameter übergeben. Die Übergabe erfolgt im Stack. Da es keinen Epilog gibt, müssen wir uns selber um das Aufräumen des Stacks kümmern, andernfalls wäre der Stack beim Aufrufer nach der Ausf+hrung der Funktion kaputt. Da jeder Parameter vier Bytes grioß ist, müssen wir 4*4 = 16 Bytes vom Stack entfernen. Das geht mit `ret` ganz einfach. Die Zahl dahinter gibt an, um wieviel Bytes der STackpointer verschoben werden soll.+
+
+
 # Additional Links
 [Official example about how to write Enter/Leave callbacks](https://github.com/Microsoft/clr-samples/blob/master/ProfilingAPI/ELTProfiler/CorProfiler.cpp#L27)
 [Another example for Enter/Leave](https://searchcode.com/codesearch/view/777153/)
