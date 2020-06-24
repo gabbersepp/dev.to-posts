@@ -1,9 +1,6 @@
 #pragma once
 
-#include "Resource.h"
-#include "cor.h"
-#include "corprof.h"
-#include "framework.h"
+#include "pch.h"
 #include "DevToNetProfiler_i.h"
 #include "ICorProfilerCallbackDefaultImpl.h"
 #include "Utils.h"

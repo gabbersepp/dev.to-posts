@@ -7,17 +7,9 @@ namespace TestApp
     {
         static void Main(string[] args)
         {
-          new Program();
-
-          try
-          {
-            Fn1();
-          }
-          catch
-          {
-          }
-
-          Console.Read();
+          Console.ReadLine();
+          Fn1();
+          Console.ReadLine();
         }
 
         static void Fn1()
@@ -32,11 +24,7 @@ namespace TestApp
 
         static void Fn3()
         {
-          throw new CatBowlEmptyException();
-        }
-    }
 
-    class CoronaException : Exception
-    {
+        }
     }
 }

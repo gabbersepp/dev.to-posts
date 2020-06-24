@@ -1,6 +1,4 @@
 #include "pch.h"
-#include "cor.h"
-#include "corprof.h"
 #include "Utils.h"
 
 Utils::Utils(ICorProfilerInfo2* info) {

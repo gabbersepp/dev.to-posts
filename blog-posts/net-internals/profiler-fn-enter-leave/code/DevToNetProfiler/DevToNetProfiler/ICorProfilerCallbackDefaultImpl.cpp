@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "ICorProfilerCallbackDefaultImpl.h"
-#include<corprof.h>
 
 HRESULT __stdcall ICorProfilerCallbackDefaultImpl::Initialize(IUnknown* pICorProfilerInfoUnk) {
   return S_OK;

@@ -2,8 +2,7 @@
 
 #pragma once
 
-#include "cor.h"
-#include "corprof.h"
+#include "pch.h"
 
 class Utils {
 public:

@@ -9,5 +9,8 @@
 
 // Fügen Sie hier Header hinzu, die vorkompiliert werden sollen.
 #include "framework.h"
+#include "cor.h"
+#include <corprof.h>
+#include "Resource.h"
 
 #endif //PCH_H

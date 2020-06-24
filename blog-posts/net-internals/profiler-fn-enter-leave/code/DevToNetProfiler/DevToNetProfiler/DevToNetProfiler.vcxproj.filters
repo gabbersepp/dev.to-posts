@@ -46,6 +46,9 @@
     <ClInclude Include="ProfilerConcreteImpl.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="Naked32Bit.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DevToNetProfiler.cpp">
@@ -67,6 +70,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="ProfilerConcreteImpl.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Naked32Bit.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

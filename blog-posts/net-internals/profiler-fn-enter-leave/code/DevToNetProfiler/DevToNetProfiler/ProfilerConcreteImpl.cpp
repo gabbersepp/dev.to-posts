@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ProfilerConcreteImpl.h"
 #include<iostream>
-#include <corprof.h>
+#include "Naked32Bit.h"
 
 using namespace std;
 CComQIPtr<ICorProfilerInfo2> iCorProfilerInfo;
@@ -35,7 +35,10 @@ HRESULT __stdcall ProfilerConcreteImpl::Initialize(IUnknown* pICorProfilerInfoUn
   iCorProfilerInfo->SetEventMask(COR_PRF_MONITOR_EXCEPTIONS | COR_PRF_MONITOR_OBJECT_ALLOCATED
     | COR_PRF_ENABLE_OBJECT_ALLOCATED | COR_PRF_ENABLE_STACK_SNAPSHOT
     | COR_PRF_MONITOR_ENTERLEAVE);
-  
+
+  cout << "adress: " << &FnEnterCallback;
+  iCorProfilerInfo->SetEnterLeaveFunctionHooks2((FunctionEnter2*)&FnEnterCallback, (FunctionLeave2*)FnLeaveCallback, (FunctionTailcall2*)FnTailcallCallback);
+
   utils = new Utils(iCorProfilerInfo);
   return S_OK;
 }

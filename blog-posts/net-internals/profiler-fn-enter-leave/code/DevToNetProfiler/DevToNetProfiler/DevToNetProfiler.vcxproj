@@ -71,13 +71,13 @@
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>true</LinkIncremental>
     <OutDir>bin\$(Configuration)\</OutDir>
-    <IntDir>obj</IntDir>
+    <IntDir>obj\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>true</LinkIncremental>
     <OutDir>bin\$(Configuration)\</OutDir>
-    <IntDir>obj</IntDir>
+    <IntDir>obj\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
@@ -223,6 +223,7 @@
     <ClInclude Include="DevToNetProfiler_i.h" />
     <ClInclude Include="dllmain.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="Naked32Bit.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ICorProfilerCallbackDefaultImpl.h" />
     <ClInclude Include="ProfilerConcreteImpl.h" />
@@ -261,6 +262,7 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="ICorProfilerCallbackDefaultImpl.cpp" />
+    <ClCompile Include="Naked32Bit.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

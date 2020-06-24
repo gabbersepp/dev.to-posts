@@ -2,8 +2,6 @@
 
 
 #include "pch.h"
-#include "framework.h"
-#include "resource.h"
 #include "DevToNetProfiler_i.h"
 #include "dllmain.h"
 
