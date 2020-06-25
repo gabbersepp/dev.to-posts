@@ -1,14 +1,14 @@
 ---
 published: false
-title: "Trace 'function enter/leave' events with a .NET profiler"
+title: "Trace 'function enter/leave' events with a .NET profiler + detect StackOverflow. Assembler code included!"
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/net-internals/profiler-fn-enter-leave/assets/header.jpg"
-description: "Using the 'function enter/leave' event can"
+description: "Trace 'function enter/leave' events with a .NET profiler + detect StackOverflow. Assembler code included!"
 tags: dotnet, cpp, asm, tutorial
 series:
 canonical_url:
 ---
 
->**Note:** Get the full running example here: <TODO>
+>**Note:** Get the full running example here: [Click me!](https://github.com/gabbersepp/dev.to-posts/tree/master/blog-posts/net-internals/profiler-fn-enter-leave/code/DevToNetProfiler)
 
 The last time I showed some of the callbacks from `ICorProfilerCallback` and how you can obtain more information about the event. This time we want to take a look at the `Function Enter/Leave` callbacks.
 
@@ -23,20 +23,12 @@ If we look into the documentation of [FunctionEnter2](https://docs.microsoft.com
 
 ![](assets/fnenter2-paragraph.jpg)
 
-`naked` advices the compiler to neither insert function prologue nor the epilogue at machine code level. The `prologue` consists of a few lines of code that prepares the CPU registers and the stack for the use within the function while the `epilogue` is the counterpart that restores the stack and registers before the function is left. 
+`naked` advices the compiler to neither insert function prologue nor the epilogue at machine code level. The `prologue` consists of a few lines of code that prepares the CPU registers and the stack for the use within the function while the `epilogue` is the counterpart that restores the stack and registers before the function is left. This means, we should write our callbacks using `inline assembler` code. For those who immediately think that under `x64` there is no `inline assembler`: Yes you are right. We will have a look at this in another blog post. In this I want to focus on 32 bit.
 
---    
-Das wurde so gebaut, damit man den Code mit inline Assembler schreiben kann, um so nur soviel Opcodes wie nötig zu erzeugen. Benötigt man z.b. nur das Register EAX, reicht es, auch nur dieses auf dem Stack zu sichern. Mit den anderen Aufrufkonventionen wäre dies so nicht möglich. Durch die Reduzierung auf den minimalsten Code soll verhindert werden, dass die Performance zu stark darunter leidet.
-
-Wer nun bei `inline Assembler` sofort dran denken muss, dass C++ für die X64 platform kein inline Assembler anbietet, dem sei gesagt, dass wir das noch betrachten werden. Im Folgenden werden wir uns zuerst auf X32 fokussieren :smile:
-
-Doch wie muss dieser Inline Assembler Code aussehen? Natürlich könnte man sich das alles selbst überlegen, oder man schaut in ein [offizielles MS Beispiel](https://github.com/Microsoft/clr-samples/blob/master/ProfilingAPI/ELTProfiler/CorProfiler.cpp#L27) und holt sich Anregungen :smile:
-
-Um die Übersicht zu wahren, habe ich eine neue Datei - `naked32Bit.cpp` -  angelegt, welche die Callbacks beinhaltet.
+Well, how should this assembler code look like? You can, of course, try it on your own. I took a look into the [official Microsoft example](https://github.com/Microsoft/clr-samples/blob/master/ProfilingAPI/ELTProfiler/CorProfiler.cpp#L27) to get a clue how this should work. For the sake of a better overview I put all the inline assembler code into an own file (named `naked32Bit.cpp`).
 
 # Base Assembler Code
-
-Das Grundgerüst sieht folgendermaßen aus:
+The base code is very simple:
 
 ```cpp
 void __declspec(naked) FnEnterCallback(
@@ -68,12 +60,12 @@ void __declspec(naked) FnTailcallCallback(FunctionID funcId,
 }
 ```
 
->**Note:** Die einzelnen Parameter können in der Doku nachgelesen werden. Den `TailCallCallback` werde ich links liegen lassen, da dieser, nach allem was ich gelesen habe, auch nicht genutzt wird.  
+>**Note:** The meaning of the parameter can be looked up in the documentation. The `TailCallCallback` is nothing I care about here because from what I have read this is not used (at least not very often).
 
-Was ist der Sinn von `ret 16`? Nun, sowohl die Enter- als auch der Leavecallback bekommen vier Parameter übergeben. Die Übergabe erfolgt im Stack. Da es keinen Epilog gibt, der Aufrufer aber erwartet, dass wir den Stack aufräumen, müssen wir die übergebenen Argumente vom Stack nehmen, andernfalls wäre der Stack beim Aufrufer nach der Ausführung der Funktion kaputt. Da jeder Parameter vier Bytes grioß ist, müssen wir 4*4 = 16 Bytes vom Stack entfernen. Das geht mit `ret` ganz einfach. Die Zahl dahinter gibt an, um wieviel Bytes der STackpointer verschoben werden soll.+
+What is the sense of `ret 16`? Well, both callbacks get four arguments passed into by pushing them onto the stack. As already mentioned, there is no epilogue that is capable of removing them from the stack again. So it's on us to clear the stack. Four parameters where each has a size of four bytes results in 16 bytes that must be removed from the stack.
 
 ## Accessing the callback's arguments
-Funktionsargumente werden vor dem Aufruf auf den Stack gepusht, wobei der letzte Parameter in der Defnition zuerst gepusht wird. Beim Aufruf von `CALL` wird noch die Adrsse des nächsten Opcodes gepusht. In der Funktion angekommen, zeigt der Stackpointer somit auf den nächsten auszuührenden Befehl. Wir wollen das auf die Schnelle verifizieren und schreiben ein kleines Konsolenprogramm:
+When pusing function arguments onto the stack, the last parameter in the function definition gets pushed first. Calling the assembler command `CALL` results in another decrease of the stack pointer (SP) because the address of the next opcode that should be executed after the function is pushed, too. This means that after arriving in the function, the SP must be raised by four bytes, to get the first parameter (was pushed directly before `CALL` occurred). To see this in action, w can create a small console application:
 
 ```cpp
 #include<iostream>
@@ -99,11 +91,11 @@ int main()
 }
 ```
 
-Zu beachten ist für diesen Test, dass die Funktion mit der Calling Convention `stdcall` versehen wird, um genau das Verhalten zu simulieren, welches wir später im Profiler haben werden. Dort nämlich muss sich der aufgerufene um den Stack kümmern, was im wesentlichen der **stdcall** Konvention entspricht. Da wir die Funktion selber im Code aufrufen, müssen wir dem Compiler sagen, dass wir **stdcall** nutzen wollen.
+Please note the **__stdcall**. This means that we clean up the stack on our own, exactly as we would do it in our callbacks. If you omitt this keyword, the compiler applies **cdecl** calling convention, which means that the caller cleans up the stack.
 
-**Wieso wird das erste Arguent mit [ESP+12] geladen?** Nun, `ESP` zeigt auf die R+cksprungadresse. Dann folgen zwei `PUSH`Befehle. Um also zum ersten Argument zu kommen, müssen wir `ESP` um 3*4 Bytes nach oben schieben.
+Why do we need **[ESP + 12] to get the first argument**? Well, SP points to the next execution address. In the function we see two `push` commands, which decrease the SP by another 2*4 = 8 bytes. So in the end we have to increase SP by 12 bytes to get the first argument.
 
-Übrigens könnte man auch genauso die Namen der Funktionsparameter nutzen:
+By the way: You also would be able to use the names of the function parameters:
 
 ```cpp
 #include<iostream>
@@ -115,7 +107,7 @@ __declspec(naked) void __stdcall Test(int input, int* output) {
         push EAX
         push EBX
 
-        mov EAX, input
+        mov EAX, input ; <--- variable name
         mov EBX, output
         mov [EBX], EAX
 
@@ -134,7 +126,7 @@ int main()
 }
 ```
 
-Das funktioniert, weil der COmpiler die Funktionsargumente mit den erwarteten Positionen im Stack übersetzt:
+This is working because the compiler assumes where on the stack the arguments are:
 
 ```asm
 _TEXT	SEGMENT
@@ -155,10 +147,10 @@ _output$ = 12						; size = 4
   00005	8b 45 08	 mov	 eax, DWORD PTR _input$[ebp]
 ```
 
-In Zeile zwei und drei wird die Position im Stack definiert. Wieso der Compiler automatisch bei 8 startet statt bei 4, liegt vermutlich daran, dass er ein `PUSH EBP` am Anfang der Funktion vermutet. Ich hab das aber nicht weiter recherchiert.
+In line 2 and 3 the position in the stack is defined. We see that `input` is accessible by [ESP:8]. I think the compiler assumes that we do a `PUSH EBP` and thus have to use the offset of **8** instead of **4**, but I haven't investigated more about this.
 
 ## A very simple approach to reduce the ASM code to as few lines as possible
-Die einfachste Variante dieser Callbacks könnte einfach eine in C++ geschriebene Funktion aufrufen. Das einzige, was dann beachtet werden muss, ist die verwendete Callingconvention:
+If you want to reduce the necessary amount of assember code to a minimum, you can call a C++ function from assembler. Please pay attention which calling convention you choose. To see if all arguments are passed in the right order, I added a second parameter:
 
 ```cpp
 void _stdcall EnterCpp(
@@ -183,7 +175,7 @@ void __declspec(naked) FnEnterCallback(
 ```
 
 ## Use more ASM code
-I also want to show you an example that makes "heavy" use of Assembler code. Angenommen man möchte in einem profiler das Loggen von Enter/Leave zur zeitweise aktivieren. Da die Callbacks bereits während der Initialisierung angegebene werden müssen, sind diese immer "aktiv", d.h. werden immer aufgerufen. Um nun per Flag das verarbeiten des Aufrufs zu steuern, könnte man ASM code schreiben, welcher ein Flag überprüft.
+I also want to show you an example that makes "heavy" use of Assembler code. Let's say you want to log function enter/leave only sometimes. As you must specify the callbacks during `Initialize()`, you can not completely deactivate the callbacks. So you might come up with the idea to use a flag that can be set from outside during the profiler session.
 
 First we have to introduce a flag. This code should be in the same file where the Assembler code is:
 
@@ -208,7 +200,7 @@ HRESULT __stdcall ProfilerConcreteImpl::Initialize(IUnknown* pICorProfilerInfoUn
 }
 ```
 
-Was nun folgt ist simpler Assemblercode:
+Now add some simple ASM code that comparse the flag's content with `1` ( = true) and if the check fails, it skips the processing of the *function enter* callback:
 
 ```cpp
 void __declspec(naked) FnEnterCallback(
@@ -234,12 +226,10 @@ void __declspec(naked) FnEnterCallback(
 }
 ```
 
-Bitte beachten: Durch die verwendung von `EBX` als Zwischenspeicher, musste ich dies im Stack sichern und somit den ESP um vier weitere bytes nach oben schieben, um den `FunctionID` Parameter zu erhalten.
+**:exclamation:Please note:exclamation:**: By using `EBX` to hold the flag's pointer, we have to increase ESP by another four bytes to get the `FunctionID` parameter.
 
 ## Stackoverflow detection
-Was könnte man nun damit noch anstellen? Nun, in .NEt Framework ist die Stackoverflow Exception der Tod einer Applikation. Aus meiner erfahrung heraus ist es auch nur manchmalk so, dass man einen Crashdump erhält. Was also tun? Man könnte mit der Kombination FunctionEnter/leave eine Art Erkennung entwickeln.
-
-Dazu legen wir zuerst mal ein Integer array an. Dieses dient als "HashMap", welche eine FunctionID auf einen Counter mappt:
+What else could we do with it? Well, in .NET Framework a `StackOverflowException` is the wirst case scenario. The application will crash immediatelly, mostly with no crash dumps available. The enter/leave notifications gives us a possibility to detect a SO, at least it can tell us where one might happen. First we create a integer array which serves as some kind of **HashMap**. It maps a `FunctionID` to the amount of calls to this function:
 
 ```cpp
 bool* activateCallbacks;
@@ -253,7 +243,7 @@ void InitEnterLeaveCallbacks(bool* activate) {
 }
 ```
 
-Den Code zur behandlung des Stackoverflows würde ich mit CPP entwickeln, da man dort vermutlich irgendwelche Interaktionen machen muss, welche mit ASM zu aufwendig wären:
+As the real SO handling will be much more complex (maybe), I call a C++ function if a SO is detected:
 
 ```cpp
 void _stdcall StackOverflowDetected(FunctionID funcId, int count) {
@@ -261,7 +251,7 @@ void _stdcall StackOverflowDetected(FunctionID funcId, int count) {
 }
 ```
 
-Den obigen Code, welcher das Flag prüft, erweitern wir adäquat:
+Extend the already existing code by checking the amount of calls:
 
 ```cpp
 void __declspec(naked) FnEnterCallback(
@@ -303,7 +293,8 @@ void __declspec(naked) FnEnterCallback(
   }
 }
 ```
-Ich denke, der Code sollte soweit klar sein. Mittels einer Modulooperation berechnen wir den Hash der `FunctionID` und können so die Aufruftiefe mittracken. Allerdings fehlt noch das Aufräumen im Falle eins Returns der Funktion. Schließlich könnte man die Funktion auch in einer Schleife zig mal aufrufen, was hier fälschlicherweise auch einen SO erkennen würde:
+
+The code is not hard to understand, I think. By using a modulo operation we calculate the hash of the `FunctionID` and trace the depth of the call. But we also should decrease the amount of calls if the function returns:
 
 ```cpp
 void __declspec(naked) FnLeaveCallback(
@@ -331,8 +322,6 @@ void __declspec(naked) FnLeaveCallback(
   }
 }
 ```
-
-Hier passiert quasi das gleiche, nur dass der Vergleich wegfällt und `dec` statt `inc` benutzt wird.
 
 # Summary
 I showed you how you can use the Enter/Leave callbacks on a x86 platform. In the next article we are going to extend this to 64 bit. This differs a bit because there is no inline asembler support for 64 bit platforms. So stay tuned!

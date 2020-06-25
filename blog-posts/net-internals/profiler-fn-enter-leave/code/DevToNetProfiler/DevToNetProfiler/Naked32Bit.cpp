@@ -66,6 +66,21 @@ void __declspec(naked) FnLeaveCallback(
   COR_PRF_FRAME_INFO func,
   COR_PRF_FUNCTION_ARGUMENT_INFO* argumentInfo) {
   __asm {
+    push ebx
+    mov ebx, [activateCallbacks]
+    cmp byte ptr[ebx], 1
+    JNE skipCallback
+
+    mov ebx, [hashMap]
+    mov eax, [ESP + 8]
+    xor edx, edx
+    div dword ptr [mapSize]
+    add ebx, edx
+    dec dword ptr [ebx]
+
+    skipCallback:
+
+    pop ebx
     ret 16
   }
 }
