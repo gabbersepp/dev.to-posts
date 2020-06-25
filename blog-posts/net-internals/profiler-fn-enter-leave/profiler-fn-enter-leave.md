@@ -32,7 +32,7 @@ Doch wie muss dieser Inline Assembler Code aussehen? Natürlich könnte man sich
 
 Um die Übersicht zu wahren, habe ich eine neue Datei - `naked32Bit.cpp` -  angelegt, welche die Callbacks beinhaltet.
 
-# Asm Code
+# Assembler Code
 
 Das Grundgerüst sieht folgendermaßen aus:
 
@@ -68,7 +68,93 @@ void __declspec(naked) FnTailcallCallback(FunctionID funcId,
 
 >**Note:** Die einzelnen Parameter können in der Doku nachgelesen werden. Den `TailCallCallback` werde ich links liegen lassen, da dieser, nach allem was ich gelesen habe, auch nicht genutzt wird.  
 
-Was ist der Sinn von `ret 16`? Nun, sowohl die Enter- als auch der Leavecallback bekommen vier Parameter übergeben. Die Übergabe erfolgt im Stack. Da es keinen Epilog gibt, müssen wir uns selber um das Aufräumen des Stacks kümmern, andernfalls wäre der Stack beim Aufrufer nach der Ausf+hrung der Funktion kaputt. Da jeder Parameter vier Bytes grioß ist, müssen wir 4*4 = 16 Bytes vom Stack entfernen. Das geht mit `ret` ganz einfach. Die Zahl dahinter gibt an, um wieviel Bytes der STackpointer verschoben werden soll.+
+Was ist der Sinn von `ret 16`? Nun, sowohl die Enter- als auch der Leavecallback bekommen vier Parameter übergeben. Die Übergabe erfolgt im Stack. Da es keinen Epilog gibt, der Aufrufer aber erwartet, dass wir den Stack aufräumen, müssen wir die übergebenen Argumente vom Stack nehmen, andernfalls wäre der Stack beim Aufrufer nach der Ausführung der Funktion kaputt. Da jeder Parameter vier Bytes grioß ist, müssen wir 4*4 = 16 Bytes vom Stack entfernen. Das geht mit `ret` ganz einfach. Die Zahl dahinter gibt an, um wieviel Bytes der STackpointer verschoben werden soll.+
+
+# Accessing the callback's arguments
+Funktionsargumente werden vor dem Aufruf auf den Stack gepusht, wobei der letzte Parameter in der Defnition zuerst gepusht wird. Beim Aufruf von `CALL` wird noch die Adrsse des nächsten Opcodes gepusht. In der Funktion angekommen, zeigt der Stackpointer somit auf den nächsten auszuührenden Befehl. Wir wollen das auf die Schnelle verifizieren und schreiben ein kleines Konsolenprogramm:
+
+```cpp
+#include<iostream>
+
+__declspec(naked) void __stdcall Test(int input, int* output) {
+    __asm {
+        push EAX
+        push EBX
+        mov EAX, [ESP + 12] ;input
+        mov EBX, [ESP + 16] ;output
+        mov [EBX], EAX
+        pop EBX
+        pop EAX
+        ret 12
+    }
+}
+
+int main()
+{
+    int output = 0;
+    Test(100, &output);
+    std::cout << output;
+}
+```
+
+Zu beachten ist für diesen Test, dass die Funktion mit der Calling Convention `stdcall` versehen wird, um genau das Verhalten zu simulieren, welches wir später im Profiler haben werden. Dort nämlich muss sich der aufgerufene um den Stack kümmern, was im wesentlichen der **stdcall** Konvention entspricht. Da wir die Funktion selber im Code aufrufen, müssen wir dem Compiler sagen, dass wir **stdcall** nutzen wollen.
+
+**Wieso wird das erste Arguent mit [ESP+12] geladen?** Nun, `ESP` zeigt auf die R+cksprungadresse. Dann folgen zwei `PUSH`Befehle. Um also zum ersten Argument zu kommen, müssen wir `ESP` um 3*4 Bytes nach oben schieben.
+
+Übrigens könnte man auch genauso die Namen der Funktionsparameter nutzen:
+
+```cpp
+#include<iostream>
+
+__declspec(naked) void __stdcall Test(int input, int* output) {
+    __asm {
+        push EBP
+        mov EBP, ESP
+        push EAX
+        push EBX
+
+        mov EAX, input
+        mov EBX, output
+        mov [EBX], EAX
+
+        pop EBX
+        pop EAX
+        pop EBP
+        ret 8
+    }
+}
+
+int main()
+{
+    int output = 0;
+    Test(100, &output);
+    std::cout << output;
+}
+```
+
+Das funktioniert, weil der COmpiler die Funktionsargumente mit den erwarteten Positionen im Stack übersetzt:
+
+```asm
+_TEXT	SEGMENT
+_input$ = 8						; size = 4
+_output$ = 12						; size = 4
+?Test@@YGXHPAH@Z PROC					; Test, COMDAT
+; 4    :     __asm {
+; 5    :         push EBP
+  00000	55		 push	 ebp
+; 6    :         mov EBP, ESP
+  00001	8b ec		 mov	 ebp, esp
+; 7    :         push EAX
+  00003	50		 push	 eax
+; 8    :         push EBX
+  00004	53		 push	 ebx
+; 9    : 
+; 10   :         mov EAX, input
+  00005	8b 45 08	 mov	 eax, DWORD PTR _input$[ebp]
+```
+
+In Zeile zwei und drei wird die Position im Stack definiert. Wieso der Compiler automatisch bei 8 startet statt bei 4, liegt vermutlich daran, dass er ein `PUSH EBP` am Anfang der Funktion vermutet. Ich hab das aber nicht weiter recherchiert.
+
 
 
 # Additional Links

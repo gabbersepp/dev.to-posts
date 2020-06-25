@@ -1,6 +1,8 @@
 #pragma once
 #include "pch.h"
 
+//void Test(int a, int b, int* output);
+
 void FnEnterCallback(FunctionID funcId,
   UINT_PTR clientData,
   COR_PRF_FRAME_INFO func,
