@@ -29,6 +29,8 @@ HRESULT ProfilerConcreteImpl::FinalConstruct()
 void ProfilerConcreteImpl::FinalRelease() {
 }
 
+bool activateCallbacks = true;
+
 HRESULT __stdcall ProfilerConcreteImpl::Initialize(IUnknown* pICorProfilerInfoUnk)
 {
   pICorProfilerInfoUnk->QueryInterface(IID_ICorProfilerInfo2, (LPVOID*)&iCorProfilerInfo);
@@ -38,6 +40,8 @@ HRESULT __stdcall ProfilerConcreteImpl::Initialize(IUnknown* pICorProfilerInfoUn
 
   iCorProfilerInfo->SetEnterLeaveFunctionHooks2((FunctionEnter2*)&FnEnterCallback, (FunctionLeave2*)FnLeaveCallback, (FunctionTailcall2*)FnTailcallCallback);
 
+  InitEnterLeaveCallbacks(&activateCallbacks);
+
   utils = new Utils(iCorProfilerInfo);
   return S_OK;
 }
@@ -46,7 +50,7 @@ HRESULT __stdcall ProfilerConcreteImpl::ExceptionThrown(ObjectID thrownObjectID)
 {
   char* className = new char[100];
   utils->GetClassNameByObjectId(thrownObjectID, className, 100);
-  cout << "\t\nfrom profiler: exception thrown: " << className << "\r\n";
+  //cout << "\t\nfrom profiler: exception thrown: " << className << "\r\n";
   delete[] className;
   return S_OK;
 }
@@ -56,7 +60,7 @@ HRESULT __stdcall ProfilerConcreteImpl::ObjectAllocated(ObjectID objectID, Class
   char* className = new char[1000];
 
   if (utils->GetClassNameByClassId(classID, className, 1000)) {
-    cout << "\t\nfrom profiler: class allocated: " << className << "\r\n";
+    //cout << "\t\nfrom profiler: class allocated: " << className << "\r\n";
 
     if (strcmp(className, "TestApp.CatBowlEmptyException") == 0) {
       char* stack = new char[1000];

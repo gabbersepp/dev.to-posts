@@ -19,12 +19,16 @@ namespace TestApp
 
         static void Fn2()
         {
-          Fn3();
+          Fn3(0);
         }
 
-        static void Fn3()
+        static void Fn3(int index)
         {
-
+          if (index > 30)
+          {
+            return;
+          }
+          Fn3(index + 1);
         }
     }
 }

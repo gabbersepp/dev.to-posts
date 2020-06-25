@@ -8,6 +8,8 @@ series:
 canonical_url:
 ---
 
+>**Note:** Get the full running example here: <TODO>
+
 The last time I showed some of the callbacks from `ICorProfilerCallback` and how you can obtain more information about the event. This time we want to take a look at the `Function Enter/Leave` callbacks.
 
 # Refactoring
@@ -158,7 +160,7 @@ In Zeile zwei und drei wird die Position im Stack definiert. Wieso der Compiler 
 ## A very simple approach to reduce the ASM code to as few lines as possible
 Die einfachste Variante dieser Callbacks könnte einfach eine in C++ geschriebene Funktion aufrufen. Das einzige, was dann beachtet werden muss, ist die verwendete Callingconvention:
 
-```assembly
+```cpp
 void _stdcall EnterCpp(
   FunctionID funcId,
   int identifier) {
@@ -180,6 +182,160 @@ void __declspec(naked) FnEnterCallback(
 }
 ```
 
+## Use more ASM code
+I also want to show you an example that makes "heavy" use of Assembler code. Angenommen man möchte in einem profiler das Loggen von Enter/Leave zur zeitweise aktivieren. Da die Callbacks bereits während der Initialisierung angegebene werden müssen, sind diese immer "aktiv", d.h. werden immer aufgerufen. Um nun per Flag das verarbeiten des Aufrufs zu steuern, könnte man ASM code schreiben, welcher ein Flag überprüft.
+
+First we have to introduce a flag. This code should be in the same file where the Assembler code is:
+
+```cpp
+bool* activateCallbacks;
+
+void InitEnterLeaveCallbacks(bool* activate) {
+  activateCallbacks = activate;
+}
+```
+
+Then call this function in the `Initialize()`:
+
+```cpp
+bool activateCallbacks = false;
+
+HRESULT __stdcall ProfilerConcreteImpl::Initialize(IUnknown* pICorProfilerInfoUnk)
+{
+  //...
+  InitEnterLeaveCallbacks(&activateCallbacks);
+  //...
+}
+```
+
+Was nun folgt ist simpler Assemblercode:
+
+```cpp
+void __declspec(naked) FnEnterCallback(
+  FunctionID funcId,
+  UINT_PTR clientData,
+  COR_PRF_FRAME_INFO func,
+  COR_PRF_FUNCTION_ARGUMENT_INFO* argumentInfo) {
+  __asm {
+    push ebx
+    mov ebx, [activateCallbacks]
+    cmp byte ptr [ebx], 1
+    JNE skipCallback
+
+    ; push last parameter first!
+    push 12345
+    push [ESP+12]
+    call EnterCpp
+
+    skipCallback:
+    pop ebx
+    ret 16
+  }
+}
+```
+
+Bitte beachten: Durch die verwendung von `EBX` als Zwischenspeicher, musste ich dies im Stack sichern und somit den ESP um vier weitere bytes nach oben schieben, um den `FunctionID` Parameter zu erhalten.
+
+## Stackoverflow detection
+Was könnte man nun damit noch anstellen? Nun, in .NEt Framework ist die Stackoverflow Exception der Tod einer Applikation. Aus meiner erfahrung heraus ist es auch nur manchmalk so, dass man einen Crashdump erhält. Was also tun? Man könnte mit der Kombination FunctionEnter/leave eine Art Erkennung entwickeln.
+
+Dazu legen wir zuerst mal ein Integer array an. Dieses dient als "HashMap", welche eine FunctionID auf einen Counter mappt:
+
+```cpp
+bool* activateCallbacks;
+int* hashMap;
+const int mapSize = 10000;
+
+void InitEnterLeaveCallbacks(bool* activate) {
+  activateCallbacks = activate;
+  hashMap = new int[mapSize];
+  memset(hashMap, 0, mapSize);
+}
+```
+
+Den Code zur behandlung des Stackoverflows würde ich mit CPP entwickeln, da man dort vermutlich irgendwelche Interaktionen machen muss, welche mit ASM zu aufwendig wären:
+
+```cpp
+void _stdcall StackOverflowDetected(FunctionID funcId, int count) {
+  std::cout << "stackoverflow: " << funcId << ", count: " << count;
+}
+```
+
+Den obigen Code, welcher das Flag prüft, erweitern wir adäquat:
+
+```cpp
+void __declspec(naked) FnEnterCallback(
+  FunctionID funcId,
+  UINT_PTR clientData,
+  COR_PRF_FRAME_INFO func,
+  COR_PRF_FUNCTION_ARGUMENT_INFO* argumentInfo) {
+  __asm {
+    push ebx
+    mov ebx, [activateCallbacks]
+    cmp byte ptr[ebx], 1
+    JNE skipCallback
+
+    ; check stackoverflow
+    mov ebx, [hashMap]
+    mov eax, [ESP + 8]
+    xor edx, edx
+    div dword ptr [mapSize]
+    add ebx, edx
+    inc dword ptr [ebx]
+    cmp dword ptr [ebx], 30
+    jb skipStackOverflow
+
+    push [ebx]
+    push [ESP + 8]
+    CALL StackOverflowDetected
+
+    skipStackOverflow:
+
+    ; push last parameter first!
+    push 12345
+    push [ESP+12]
+    call EnterCpp
+
+    skipCallback:    
+
+    pop ebx
+    ret 16
+  }
+}
+```
+Ich denke, der Code sollte soweit klar sein. Mittels einer Modulooperation berechnen wir den Hash der `FunctionID` und können so die Aufruftiefe mittracken. Allerdings fehlt noch das Aufräumen im Falle eins Returns der Funktion. Schließlich könnte man die Funktion auch in einer Schleife zig mal aufrufen, was hier fälschlicherweise auch einen SO erkennen würde:
+
+```cpp
+void __declspec(naked) FnLeaveCallback(
+  FunctionID funcId,
+  UINT_PTR clientData,
+  COR_PRF_FRAME_INFO func,
+  COR_PRF_FUNCTION_ARGUMENT_INFO* argumentInfo) {
+  __asm {
+    push ebx
+    mov ebx, [activateCallbacks]
+    cmp byte ptr[ebx], 1
+    JNE skipCallback
+
+    mov ebx, [hashMap]
+    mov eax, [ESP + 8]
+    xor edx, edx
+    div dword ptr [mapSize]
+    add ebx, edx
+    dec dword ptr [ebx]
+
+    skipCallback:
+
+    pop ebx
+    ret 16
+  }
+}
+```
+
+Hier passiert quasi das gleiche, nur dass der Vergleich wegfällt und `dec` statt `inc` benutzt wird.
+
+# Summary
+I showed you how you can use the Enter/Leave callbacks on a x86 platform. In the next article we are going to extend this to 64 bit. This differs a bit because there is no inline asembler support for 64 bit platforms. So stay tuned!
 
 # Additional Links
 [Official example about how to write Enter/Leave callbacks](https://github.com/Microsoft/clr-samples/blob/master/ProfilingAPI/ELTProfiler/CorProfiler.cpp#L27)

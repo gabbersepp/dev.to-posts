@@ -1,6 +1,8 @@
 #pragma once
 #include "pch.h"
 
+void InitEnterLeaveCallbacks(bool* activate);
+
 void FnEnterCallback(FunctionID funcId,
   UINT_PTR clientData,
   COR_PRF_FRAME_INFO func,
