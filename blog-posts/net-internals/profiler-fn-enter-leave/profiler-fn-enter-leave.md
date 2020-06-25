@@ -1,7 +1,6 @@
 ---
 published: false
 title: "Trace 'function enter/leave' events with a .NET profiler + detect StackOverflow. Assembler code included!"
-cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/net-internals/profiler-fn-enter-leave/assets/header.jpg"
 description: "Trace 'function enter/leave' events with a .NET profiler + detect StackOverflow. Assembler code included!"
 tags: dotnet, cpp, asm, tutorial
 series:
@@ -65,7 +64,7 @@ void __declspec(naked) FnTailcallCallback(FunctionID funcId,
 What is the sense of `ret 16`? Well, both callbacks get four arguments passed into by pushing them onto the stack. As already mentioned, there is no epilogue that is capable of removing them from the stack again. So it's on us to clear the stack. Four parameters where each has a size of four bytes results in 16 bytes that must be removed from the stack.
 
 ## Accessing the callback's arguments
-When pusing function arguments onto the stack, the last parameter in the function definition gets pushed first. Calling the assembler command `CALL` results in another decrease of the stack pointer (SP) because the address of the next opcode that should be executed after the function is pushed, too. This means that after arriving in the function, the SP must be raised by four bytes, to get the first parameter (was pushed directly before `CALL` occurred). To see this in action, w can create a small console application:
+When pushing function arguments onto the stack, the last parameter in the function definition gets pushed first. Calling the assembler command `CALL` results in another decrease of the stack pointer (SP) because the address of the next opcode that should be executed after the function is pushed, too. This means that after arriving in the function, the SP must be raised by four bytes, to get the first parameter (was pushed directly before `CALL` occurred). To see this in action, w can create a small console application:
 
 ```cpp
 #include<iostream>
@@ -150,7 +149,7 @@ _output$ = 12						; size = 4
 In line 2 and 3 the position in the stack is defined. We see that `input` is accessible by [ESP:8]. I think the compiler assumes that we do a `PUSH EBP` and thus have to use the offset of **8** instead of **4**, but I haven't investigated more about this.
 
 ## A very simple approach to reduce the ASM code to as few lines as possible
-If you want to reduce the necessary amount of assember code to a minimum, you can call a C++ function from assembler. Please pay attention which calling convention you choose. To see if all arguments are passed in the right order, I added a second parameter:
+If you want to reduce the necessary amount of assembler code to a minimum, you can call a C++ function from assembler. Please pay attention which calling convention you choose. To see if all arguments are passed in the right order, I added a second parameter:
 
 ```cpp
 void _stdcall EnterCpp(
@@ -200,7 +199,7 @@ HRESULT __stdcall ProfilerConcreteImpl::Initialize(IUnknown* pICorProfilerInfoUn
 }
 ```
 
-Now add some simple ASM code that comparse the flag's content with `1` ( = true) and if the check fails, it skips the processing of the *function enter* callback:
+Now add some simple ASM code that compares the flag's content with `1` ( = true) and if the check fails, it skips the processing of the *function enter* callback:
 
 ```cpp
 void __declspec(naked) FnEnterCallback(
@@ -229,7 +228,7 @@ void __declspec(naked) FnEnterCallback(
 **:exclamation:Please note:exclamation:**: By using `EBX` to hold the flag's pointer, we have to increase ESP by another four bytes to get the `FunctionID` parameter.
 
 ## Stackoverflow detection
-What else could we do with it? Well, in .NET Framework a `StackOverflowException` is the wirst case scenario. The application will crash immediatelly, mostly with no crash dumps available. The enter/leave notifications gives us a possibility to detect a SO, at least it can tell us where one might happen. First we create a integer array which serves as some kind of **HashMap**. It maps a `FunctionID` to the amount of calls to this function:
+What else could we do with it? Well, in .NET Framework a `StackOverflowException` is the worst case scenario. The application will crash immediately, mostly with no crash dumps available. The enter/leave notifications gives us a possibility to detect a SO, at least it can tell us where one might happen. First we create a integer array which serves as some kind of **HashMap**. It maps a `FunctionID` to the amount of calls to this function:
 
 ```cpp
 bool* activateCallbacks;
@@ -324,7 +323,7 @@ void __declspec(naked) FnLeaveCallback(
 ```
 
 # Summary
-I showed you how you can use the Enter/Leave callbacks on a x86 platform. In the next article we are going to extend this to 64 bit. This differs a bit because there is no inline asembler support for 64 bit platforms. So stay tuned!
+I showed you how you can use the Enter/Leave callbacks on a x86 platform. In the next article we are going to extend this to 64 bit. This differs a bit because there is no inline assembler support for 64 bit platforms. So stay tuned!
 
 # Additional Links
 [Official example about how to write Enter/Leave callbacks](https://github.com/Microsoft/clr-samples/blob/master/ProfilingAPI/ELTProfiler/CorProfiler.cpp#L27)
