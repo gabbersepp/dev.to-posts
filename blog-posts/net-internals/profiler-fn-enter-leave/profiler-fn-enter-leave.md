@@ -1,6 +1,7 @@
 ---
-published: false
+published: true
 title: "Trace 'function enter/leave' events with a .NET profiler + detect StackOverflow. Assembler code included!"
+cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/net-internals/profiler-fn-enter-leave/assets/header.jpg"
 description: "Trace 'function enter/leave' events with a .NET profiler + detect StackOverflow. Assembler code included!"
 tags: dotnet, cpp, asm, tutorial
 series:
@@ -22,7 +23,7 @@ If we look into the documentation of [FunctionEnter2](https://docs.microsoft.com
 
 ![](./assets/fnenter2-paragraph.jpg)
 
-`naked` advices the compiler to neither insert function prologue nor the epilogue at machine code level. The `prologue` consists of a few lines of code that prepares the CPU registers and the stack for the use within the function while the `epilogue` is the counterpart that restores the stack and registers before the function is left. This means, we should write our callbacks using `inline assembler` code. For those who immediately think that under `x64` there is no `inline assembler`: Yes you are right. We will have a look at this in another blog post. In this I want to focus on 32 bit.
+"`naked`" advices the compiler to neither insert function prologue nor the epilogue at machine code level. The `prologue` consists of a few lines of code that prepares the CPU registers and the stack for the use within the function while the `epilogue` is the counterpart that restores the stack and registers before the function is left. This means, we should write our callbacks using `inline assembler` code. For those who immediately think that under `x64` there is no `inline assembler`: Yes you are right. We will have a look at this in another blog post. In this I want to focus on 32 bit.
 
 Well, how should this assembler code look like? You can, of course, try it on your own. I took a look into the [official Microsoft example](https://github.com/Microsoft/clr-samples/blob/master/ProfilingAPI/ELTProfiler/CorProfiler.cpp#L27) to get a clue how this should work. For the sake of a better overview I put all the inline assembler code into an own file (named `naked32Bit.cpp`).
 
@@ -64,7 +65,7 @@ void __declspec(naked) FnTailcallCallback(FunctionID funcId,
 What is the sense of `ret 16`? Well, both callbacks get four arguments passed into by pushing them onto the stack. As already mentioned, there is no epilogue that is capable of removing them from the stack again. So it's on us to clear the stack. Four parameters where each has a size of four bytes results in 16 bytes that must be removed from the stack.
 
 ## Accessing the callback's arguments
-When pushing function arguments onto the stack, the last parameter in the function definition gets pushed first. Calling the assembler command `CALL` results in another decrease of the stack pointer (SP) because the address of the next opcode that should be executed after the function is pushed, too. This means that after arriving in the function, the SP must be raised by four bytes, to get the first parameter (was pushed directly before `CALL` occurred). To see this in action, w can create a small console application:
+When pushing function arguments onto the stack, the last parameter in the function definition gets pushed first. Calling the assembler command `CALL` results in another decrease of the stack pointer (SP) because the address of the opcode, that should be executed after the function, is pushed, too. This means that after arriving in the function, the SP must be raised by four bytes, to get the first parameter (was pushed directly before `CALL` occurred). To see this in action, we can create a small console application:
 
 ```cpp
 #include<iostream>
@@ -90,7 +91,7 @@ int main()
 }
 ```
 
-Please note the **__stdcall**. This means that we clean up the stack on our own, exactly as we would do it in our callbacks. If you omitt this keyword, the compiler applies **cdecl** calling convention, which means that the caller cleans up the stack.
+Please note the **__stdcall**. This means that we clean up the stack on our own, exactly as we would do it in our callbacks. If you omitt this keyword, the compiler applies **cdecl** calling convention, which means that the caller cleans up the stack. `ret 16` would lead to a corrupt stack in this case.
 
 Why do we need **[ESP + 12] to get the first argument**? Well, SP points to the next execution address. In the function we see two `push` commands, which decrease the SP by another 2*4 = 8 bytes. So in the end we have to increase SP by 12 bytes to get the first argument.
 
@@ -146,7 +147,7 @@ _output$ = 12						; size = 4
   00005	8b 45 08	 mov	 eax, DWORD PTR _input$[ebp]
 ```
 
-In line 2 and 3 the position in the stack is defined. We see that `input` is accessible by [ESP:8]. I think the compiler assumes that we do a `PUSH EBP` and thus have to use the offset of **8** instead of **4**, but I haven't investigated more about this.
+In line 2 and 3 the position in the stack is defined. We see that "`input`" is accessible by [ESP:8]. I think the compiler assumes that we do a `PUSH EBP` and thus have to use the offset of **8** instead of **4**, but I haven't investigated more about this.
 
 ## A very simple approach to reduce the ASM code to as few lines as possible
 If you want to reduce the necessary amount of assembler code to a minimum, you can call a C++ function from assembler. Please pay attention which calling convention you choose. To see if all arguments are passed in the right order, I added a second parameter:
