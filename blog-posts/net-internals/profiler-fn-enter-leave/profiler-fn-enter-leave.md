@@ -4,7 +4,7 @@ title: "Trace 'function enter/leave' events with a .NET profiler + detect StackO
 cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/net-internals/profiler-fn-enter-leave/assets/header.jpg"
 description: "Trace 'function enter/leave' events with a .NET profiler + detect StackOverflow. Assembler code included!"
 tags: dotnet, cpp, asm, tutorial
-series:
+series: Net-Profiler
 canonical_url:
 ---
 
