@@ -20,7 +20,7 @@ Today we are looking at the `COR_PRF_MONITOR_ENTERLEAVE` option which makes it p
 # Now Assembler comes into play
 If we look into the documentation of [FunctionEnter2](https://docs.microsoft.com/de-de/dotnet/framework/unmanaged-api/profiling/functionenter2-function), we can read a inconspicuous paragraph that tells us that:
 
-![](assets/fnenter2-paragraph.jpg)
+![](./assets/fnenter2-paragraph.jpg)
 
 `naked` advices the compiler to neither insert function prologue nor the epilogue at machine code level. The `prologue` consists of a few lines of code that prepares the CPU registers and the stack for the use within the function while the `epilogue` is the counterpart that restores the stack and registers before the function is left. This means, we should write our callbacks using `inline assembler` code. For those who immediately think that under `x64` there is no `inline assembler`: Yes you are right. We will have a look at this in another blog post. In this I want to focus on 32 bit.
 
