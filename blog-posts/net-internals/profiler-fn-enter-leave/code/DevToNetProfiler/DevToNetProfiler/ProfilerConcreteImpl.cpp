@@ -29,19 +29,6 @@ HRESULT ProfilerConcreteImpl::FinalConstruct()
 void ProfilerConcreteImpl::FinalRelease() {
 }
 
-__declspec(naked) void __stdcall Test(int a, int b, int* output) {
-  __asm {
-    ; mov EAX, [ESP + 4] // a
-    ; add EAX, [ESP + 8] // output
-    push EBX
-    mov EBX, [ESP + 16]
-    lea eax, a
-    mov [EBX], EAX
-    pop EBX
-     ret 12
-  }
-}
-
 HRESULT __stdcall ProfilerConcreteImpl::Initialize(IUnknown* pICorProfilerInfoUnk)
 {
   pICorProfilerInfoUnk->QueryInterface(IID_ICorProfilerInfo2, (LPVOID*)&iCorProfilerInfo);
@@ -49,12 +36,7 @@ HRESULT __stdcall ProfilerConcreteImpl::Initialize(IUnknown* pICorProfilerInfoUn
     | COR_PRF_ENABLE_OBJECT_ALLOCATED | COR_PRF_ENABLE_STACK_SNAPSHOT
     | COR_PRF_MONITOR_ENTERLEAVE);
 
-  int output = 0;
-  // last parameter pushd first
-  Test(1, 2, &output);
-  cout << "output: " << output;
-
-  //iCorProfilerInfo->SetEnterLeaveFunctionHooks2((FunctionEnter2*)&FnEnterCallback, (FunctionLeave2*)FnLeaveCallback, (FunctionTailcall2*)FnTailcallCallback);
+  iCorProfilerInfo->SetEnterLeaveFunctionHooks2((FunctionEnter2*)&FnEnterCallback, (FunctionLeave2*)FnLeaveCallback, (FunctionTailcall2*)FnTailcallCallback);
 
   utils = new Utils(iCorProfilerInfo);
   return S_OK;

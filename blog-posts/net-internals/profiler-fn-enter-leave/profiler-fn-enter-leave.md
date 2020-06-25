@@ -32,7 +32,7 @@ Doch wie muss dieser Inline Assembler Code aussehen? Natürlich könnte man sich
 
 Um die Übersicht zu wahren, habe ich eine neue Datei - `naked32Bit.cpp` -  angelegt, welche die Callbacks beinhaltet.
 
-# Assembler Code
+# Base Assembler Code
 
 Das Grundgerüst sieht folgendermaßen aus:
 
@@ -70,7 +70,7 @@ void __declspec(naked) FnTailcallCallback(FunctionID funcId,
 
 Was ist der Sinn von `ret 16`? Nun, sowohl die Enter- als auch der Leavecallback bekommen vier Parameter übergeben. Die Übergabe erfolgt im Stack. Da es keinen Epilog gibt, der Aufrufer aber erwartet, dass wir den Stack aufräumen, müssen wir die übergebenen Argumente vom Stack nehmen, andernfalls wäre der Stack beim Aufrufer nach der Ausführung der Funktion kaputt. Da jeder Parameter vier Bytes grioß ist, müssen wir 4*4 = 16 Bytes vom Stack entfernen. Das geht mit `ret` ganz einfach. Die Zahl dahinter gibt an, um wieviel Bytes der STackpointer verschoben werden soll.+
 
-# Accessing the callback's arguments
+## Accessing the callback's arguments
 Funktionsargumente werden vor dem Aufruf auf den Stack gepusht, wobei der letzte Parameter in der Defnition zuerst gepusht wird. Beim Aufruf von `CALL` wird noch die Adrsse des nächsten Opcodes gepusht. In der Funktion angekommen, zeigt der Stackpointer somit auf den nächsten auszuührenden Befehl. Wir wollen das auf die Schnelle verifizieren und schreiben ein kleines Konsolenprogramm:
 
 ```cpp
@@ -155,6 +155,30 @@ _output$ = 12						; size = 4
 
 In Zeile zwei und drei wird die Position im Stack definiert. Wieso der Compiler automatisch bei 8 startet statt bei 4, liegt vermutlich daran, dass er ein `PUSH EBP` am Anfang der Funktion vermutet. Ich hab das aber nicht weiter recherchiert.
 
+## A very simple approach to reduce the ASM code to as few lines as possible
+Die einfachste Variante dieser Callbacks könnte einfach eine in C++ geschriebene Funktion aufrufen. Das einzige, was dann beachtet werden muss, ist die verwendete Callingconvention:
+
+```assembly
+void _stdcall EnterCpp(
+  FunctionID funcId,
+  int identifier) {
+  std::cout << "enter funcion id: " << funcId << ", Arguments in correct order: " << (identifier == 12345) << "\r\n";
+}
+
+void __declspec(naked) FnEnterCallback(
+  FunctionID funcId,
+  UINT_PTR clientData,
+  COR_PRF_FRAME_INFO func,
+  COR_PRF_FUNCTION_ARGUMENT_INFO* argumentInfo) {
+  __asm {
+    ; push last parameter first!
+    push 12345
+    push [ESP+8]
+    call EnterCpp
+    ret 16
+  }
+}
+```
 
 
 # Additional Links
