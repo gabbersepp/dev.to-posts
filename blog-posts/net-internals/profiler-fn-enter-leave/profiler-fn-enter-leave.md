@@ -65,7 +65,7 @@ void __declspec(naked) FnTailcallCallback(FunctionID funcId,
 What is the sense of `ret 16`? Well, both callbacks get four arguments passed into by pushing them onto the stack. As already mentioned, there is no epilogue that is capable of removing them from the stack again. So it's on us to clear the stack. Four parameters where each has a size of four bytes results in 16 bytes that must be removed from the stack.
 
 ## Accessing the callback's arguments
-When pushing function arguments onto the stack, the last parameter in the function definition gets pushed first. Calling the assembler command `CALL` results in another decrease of the stack pointer (SP) because the address of the opcode, that should be executed after the function, is pushed, too. This means that after arriving in the function, the SP must be raised by four bytes, to get the first parameter (was pushed directly before `CALL` occurred). To see this in action, we can create a small console application:
+When pushing function arguments onto the stack, the last parameter in the function definition gets pushed first. Calling the assembler command `CALL` results in another decrease of the stack pointer (SP) because the address of the opcode, that should be executed after the function, is pushed, too. This means that after arriving in the function, the SP must be raised by four bytes, to get the first parameter (was pushed directly before `CALL` occurred). To see this in action, we can create a small console application which writes the value in `input` into `output`:
 
 ```cpp
 #include<iostream>
@@ -330,6 +330,7 @@ I showed you how you can use the Enter/Leave callbacks on a x86 platform. In the
 [Official example about how to write Enter/Leave callbacks](https://github.com/Microsoft/clr-samples/blob/master/ProfilingAPI/ELTProfiler/CorProfiler.cpp#L27)
 [Another example for Enter/Leave](https://searchcode.com/codesearch/view/777153/)
 [Additional ASM Code from MS for X64](https://github.com/microsoftarchive/clrprofiler/blob/master/CLRProfiler/profilerOBJ/amd64/asmhelpers.asm)
+[Page 10: Which registers can be used](https://www.agner.org/optimize/calling_conventions.pdf)
 
 ----
 
