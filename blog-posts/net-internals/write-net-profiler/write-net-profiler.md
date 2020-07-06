@@ -674,6 +674,9 @@ I see you in the next blog post when we are discussing how the profiler works.
 
 If you haven't seen the download link yet: [The full runnable example is here](https://github.com/gabbersepp/dev.to-posts/tree/master/blog-posts/net-internals/write-net-profiler/code/DevToNetProfiler)
 
+# Additional Links
+[Profiling.doc by Microsoft, mirrored on a private server](http://blog.monstuff.com/archives/images/Profiling.pdf)
+
 ----
 
 # Found a typo?
