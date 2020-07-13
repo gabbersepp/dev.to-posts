@@ -94,4 +94,9 @@
       <Filter>Quelldateien</Filter>
     </Midl>
   </ItemGroup>
+  <ItemGroup>
+    <MASM Include="FnEnterLeaveX64.asm">
+      <Filter>Quelldateien</Filter>
+    </MASM>
+  </ItemGroup>
 </Project>

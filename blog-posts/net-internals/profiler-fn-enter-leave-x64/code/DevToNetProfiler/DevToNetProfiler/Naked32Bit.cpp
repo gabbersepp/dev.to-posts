@@ -1,24 +1,31 @@
 #include "pch.h"
 #include<iostream>
 
-bool* activateCallbacks;
-int* hashMap;
-const int mapSize = 10000;
-
-void InitEnterLeaveCallbacks(bool* activate) {
-  activateCallbacks = activate;
-  hashMap = new int[mapSize];
-  memset(hashMap, 0, mapSize);
-}
-
-void _stdcall StackOverflowDetected(FunctionID funcId, int count) {
+extern "C" void _stdcall StackOverflowDetected(FunctionID funcId, int count) {
   std::cout << "stackoverflow: " << funcId << ", count: " << count;
 }
 
-void _stdcall EnterCpp(
+extern "C" void _stdcall EnterCpp(
   FunctionID funcId,
   int identifier) {
-  //std::cout << "enter funcion id: " << funcId << ", Arguments in correct order: " << (identifier == 12345) << "\r\n";
+  std::cout << "enter funcion id: " << funcId << ", Arguments in correct order: " << (identifier == 12345) << "\r\n";
+}
+
+#ifdef _WIN64
+
+#else
+
+bool* activateCallbacks;
+int* pHashMap;
+int mapSize;
+
+// mögliche fehler: im linker hinzufügen?
+// https://social.msdn.microsoft.com/Forums/vstudio/en-US/e6e95a9c-bba1-43d1-9ecc-1c6f3ac9cdc1/vc-linking-to-x64-assembly-file-does-not-work?forum=vcgeneral
+
+void InitEnterLeaveCallbacks(bool* activate, int* hashMap, int size) {
+  activateCallbacks = activate;
+  pHashMap = hashMap;
+  mapSize = size;
 }
 
 void __declspec(naked) FnEnterCallback(
@@ -33,7 +40,7 @@ void __declspec(naked) FnEnterCallback(
     JNE skipCallback
 
     ; check stackoverflow
-    mov ebx, [hashMap]
+    mov ebx, [pHashMap]
     mov eax, [ESP + 8]
     xor edx, edx
     div dword ptr [mapSize]
@@ -71,7 +78,7 @@ void __declspec(naked) FnLeaveCallback(
     cmp byte ptr[ebx], 1
     JNE skipCallback
 
-    mov ebx, [hashMap]
+    mov ebx, [pHashMap]
     mov eax, [ESP + 8]
     xor edx, edx
     div dword ptr [mapSize]
@@ -92,3 +99,4 @@ void __declspec(naked) FnTailcallCallback(FunctionID funcId,
     ret 12
   }
 }
+#endif

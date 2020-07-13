@@ -20,7 +20,9 @@ struct SnapshotClientData {
   char* stacktrace;
 };
 
-ProfilerConcreteImpl::ProfilerConcreteImpl() {}
+ProfilerConcreteImpl::ProfilerConcreteImpl() {
+  this->ActivateCallbacks = true;
+}
 
 HRESULT ProfilerConcreteImpl::FinalConstruct()
 {
@@ -29,7 +31,7 @@ HRESULT ProfilerConcreteImpl::FinalConstruct()
 void ProfilerConcreteImpl::FinalRelease() {
 }
 
-bool activateCallbacks = true;
+const int mapSize = 10000;
 
 HRESULT __stdcall ProfilerConcreteImpl::Initialize(IUnknown* pICorProfilerInfoUnk)
 {
@@ -40,7 +42,9 @@ HRESULT __stdcall ProfilerConcreteImpl::Initialize(IUnknown* pICorProfilerInfoUn
 
   iCorProfilerInfo->SetEnterLeaveFunctionHooks2((FunctionEnter2*)&FnEnterCallback, (FunctionLeave2*)FnLeaveCallback, (FunctionTailcall2*)FnTailcallCallback);
 
-  InitEnterLeaveCallbacks(&activateCallbacks);
+  this->PHashMap = new int[mapSize];
+  memset(this->PHashMap, 0, mapSize);
+  InitEnterLeaveCallbacks(&this->ActivateCallbacks, this->PHashMap, mapSize);
 
   utils = new Utils(iCorProfilerInfo);
   return S_OK;

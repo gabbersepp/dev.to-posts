@@ -29,6 +29,8 @@ public:
 
 private:
   Utils* utils;
+  bool ActivateCallbacks;
+  int* PHashMap;
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(NetProfiler), ProfilerConcreteImpl)
