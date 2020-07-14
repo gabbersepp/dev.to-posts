@@ -1,11 +1,13 @@
 ---
-published: false
+published: true
 title: "'function enter/leave' + .NET profiler + 64Bit. Assembler code included!"
 description: "This is the 64Bit v ersion of: Trace 'function enter/leave' events with a .NET profiler + detect StackOverflow. Assembler code included!"
 tags: dotnet, cpp, asm, tutorial
 series: Net-Profiler
 canonical_url:
 ---
+
+>**Note:** Get the full running example [here](https://github.com/gabbersepp/dev.to-posts/tree/master/blog-posts/net-internals/profiler-fn-enter-leave-x64/code/DevToNetProfiler)
 
 While beeing able to use inline assembler within a 32 bit project, you can not use that within a 64bit build. Microsoft just does not support this. You have to use an external `.asm` file instead which can be processed by `MASM` during the build process.
 
