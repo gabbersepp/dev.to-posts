@@ -205,6 +205,59 @@ END
 
 AN sich nichts Neues. Wichtig ist eben `sub RSP, 20h` und `add RSP, 20h`, wie oben bereits erwähnt.
 
+# Using CPP implementations
+Da scheinbar von dr CLR beim Aufruf der Callbacks die `fastcall` convention benutzt wird, liegt der Verdacht nahe, dass man auch eine CPP implementierung nutzen könnte. Tatsächlich konnte ich die Callbacks so umsetzen:
+
+```cpp
+
+#ifdef _WIN64
+bool* activateCallbacks;
+int* pHashMap;
+int mapSize;
+
+
+void InitEnterLeaveCallbacks(bool* activate, int* hashMap, int size) {
+  activateCallbacks = activate;
+  pHashMap = hashMap;
+  mapSize = size;
+}
+
+void __fastcall FnEnterCallback(
+  FunctionID funcId,
+  UINT_PTR clientData,
+  COR_PRF_FRAME_INFO func,
+  COR_PRF_FUNCTION_ARGUMENT_INFO* argumentInfo) {
+  if (activateCallbacks) {
+    int amount = pHashMap[funcId % mapSize];
+    amount++;
+    pHashMap[funcId % mapSize] = amount;
+
+    if (amount >= 30) {
+      StackOverflowDetected(funcId, amount);
+    }
+    EnterCpp(funcId, 12345);
+  }
+}
+
+void __fastcall FnLeaveCallback(
+  FunctionID funcId,
+  UINT_PTR clientData,
+  COR_PRF_FRAME_INFO func,
+  COR_PRF_FUNCTION_ARGUMENT_INFO* argumentInfo) {
+  if (activateCallbacks) {
+    pHashMap[funcId % mapSize] = pHashMap[funcId % mapSize] - 1;
+  }
+}
+
+void __fastcall FnTailcallCallback(FunctionID funcId,
+  UINT_PTR clientData,
+  COR_PRF_FRAME_INFO func) {
+}
+#else
+```
+
+Beim Test konnte ich keine Nachteile feststellen. Ob das allerdings so gewollt ist, kann ich nicht sagen.
+
 # Conclusion
 Der Unterschied zwischen 32 und 64 Bit ist nicht sehr groß. AM ehesten sticht die andere Callingconvention hervor. 
 
