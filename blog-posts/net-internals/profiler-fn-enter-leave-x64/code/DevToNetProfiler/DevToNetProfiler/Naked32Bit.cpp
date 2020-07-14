@@ -12,7 +12,50 @@ extern "C" void _stdcall EnterCpp(
 }
 
 #ifdef _WIN64
+bool* activateCallbacks;
+int* pHashMap;
+int mapSize;
 
+// mögliche fehler: im linker hinzufügen?
+// https://social.msdn.microsoft.com/Forums/vstudio/en-US/e6e95a9c-bba1-43d1-9ecc-1c6f3ac9cdc1/vc-linking-to-x64-assembly-file-does-not-work?forum=vcgeneral
+
+void InitEnterLeaveCallbacks(bool* activate, int* hashMap, int size) {
+  activateCallbacks = activate;
+  pHashMap = hashMap;
+  mapSize = size;
+}
+
+void __fastcall FnEnterCallback(
+  FunctionID funcId,
+  UINT_PTR clientData,
+  COR_PRF_FRAME_INFO func,
+  COR_PRF_FUNCTION_ARGUMENT_INFO* argumentInfo) {
+  if (activateCallbacks) {
+    int amount = pHashMap[funcId % mapSize];
+    amount++;
+    pHashMap[funcId % mapSize] = amount;
+
+    if (amount >= 30) {
+      StackOverflowDetected(funcId, amount);
+    }
+    EnterCpp(funcId, 12345);
+  }
+}
+
+void __fastcall FnLeaveCallback(
+  FunctionID funcId,
+  UINT_PTR clientData,
+  COR_PRF_FRAME_INFO func,
+  COR_PRF_FUNCTION_ARGUMENT_INFO* argumentInfo) {
+  if (activateCallbacks) {
+    pHashMap[funcId % mapSize] = pHashMap[funcId % mapSize] - 1;
+  }
+}
+
+void __fastcall FnTailcallCallback(FunctionID funcId,
+  UINT_PTR clientData,
+  COR_PRF_FRAME_INFO func) {
+}
 #else
 
 bool* activateCallbacks;
