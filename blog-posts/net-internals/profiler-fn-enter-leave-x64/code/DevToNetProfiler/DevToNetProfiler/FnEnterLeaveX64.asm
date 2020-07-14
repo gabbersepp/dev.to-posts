@@ -16,7 +16,6 @@ extern StackOverflowDetected:proc
 ; -----------------------------------------------------------------------------------------------------------	
 _TEXT	SEGMENT
 
-; The PUBLIC modifier will make your function visible and callable outside
 PUBLIC InitEnterLeaveCallbacks
 
 InitEnterLeaveCallbacks PROC
