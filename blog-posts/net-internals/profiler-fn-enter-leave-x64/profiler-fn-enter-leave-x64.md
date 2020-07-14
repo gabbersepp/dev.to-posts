@@ -7,22 +7,25 @@ series: Net-Profiler
 canonical_url:
 ---
 
-Während in einem 32 Bit projekt inline Assembler benutzt werden kann, gibt es in der X64 Architektur keinen inline Assembler BEfehl mehr. VS unterstützt dies nicht. Stattdessen können die Enter/Leave Callbacks in einer reinen ASM Datei definiert werden. Diese kann dann im Buildprozess mit dem MASM verarbeitet werden.
+While beeing able to use inline assembler within a 32 bit project, you can not use that within a 64bit build. Microsoft just does not support this. You have to use an external `.asm` file instead which can be processed by `MASM` during the build process.
 
 # Assembler in VS
-Um in einem C++ Projekt in VS2019 den MASM zu aktivieren, kann man die [offizielle Anleitung](https://docs.microsoft.com/de-de/cpp/assembler/masm/masm-for-x64-ml64-exe?view=vs-2019) befolgen. Zusätzlich empfehle ich, die VS Erweiterung [AsmDude](https://marketplace.visualstudio.com/items?itemName=Henk-JanLebbink.AsmDude) um Syntaxhighlighting zu erhalten.
-
-Rechtsklick-> eigenschafte -> in 32 bei build ausschließen
+To activate `MASM` support in a `C++` project in `VS2019`, please follow the guidelines in the [official documentation](https://docs.microsoft.com/de-de/cpp/assembler/masm/masm-for-x64-ml64-exe?view=vs-2019). Additionally I suggest you to install the VS extension [AsmDude](https://marketplace.visualstudio.com/items?itemName=Henk-JanLebbink.AsmDude) to get syntax highlighting.
 
 # Switching between both implementations
-Die in der ASM Dateien definierten Prozeduren können in der C++ Datei angesprochen werden. Dazu muss die Funktion mit `extern "C"` gepräfixt werden. Dies dient dazu, dass der C++ Compiler die Funktionsnamen so belässt wie sie geschrieben sind.
+To access the procedures that are defined in the assembler file, you must declare them with `extern "C"` in the header file. Otherwise the compiler rewrites the function names and thus the linker won't be able to match the CPP and ASM output together.
 
-Beispiel:
+To see that effect, add a new function in a header file and call it somewhere in your CPP code. Then open the `obj` file and search the method name.
+
 ```cpp
 extern bool DevToTest(int a, int b);
 ```
 
+Without the `"C"` addition, the name does not match the original one:
+
 ![](./assets/devtotest_extern.jpg)
+
+Using `"C"` fixes this:
 
 ```cpp
 extern "C" bool DevToTest(int a, int b);
@@ -30,8 +33,8 @@ extern "C" bool DevToTest(int a, int b);
 
 ![](./assets/devtotest_externc.jpg)
 
-Um nun abhängig von 32 und 64 Bit unterschiedlichen Code ausführen zu können, bietet es sich an, die Präprozessormakros zu benutzen.
-Dazu die `Naked32Bit.h` wie folgt anpassen:
+
+To differentiate between 32 and 64 bit code, you can use preprocessor directives. Adjust `Naked32Bit.h` as following:
 
 ```cpp
 #pragma once
@@ -63,11 +66,11 @@ void InitEnterLeaveCallbacks(bool* activate, int* hashMap, int size);
 #endif
 ```
 
-Im Falle eines 64 Bit Builds verweisen also die Funktionen auf das Kompilat einer externen Datei. Bitte beachtet, dass ich die Signatur der `Init()` Funktion angepasst habe. Das war notwendig, weil ich in der 64Bit asm Datei auch den Check auf das FLag einbauen möchte. Zudem benötige ich dort auch die HashMap. Um mir den Aufwand zu sparen, die Variablen im ASM definieren zu müssen, übergebe ich einfach die in `CPP` definierten Variablen an die ASM Funktion.
+In case of a 64 bit build, the functions refer to external symbols. I also adjusted the signature of the `Init` function. This was necessary because I wanted to show you how you can build the same logic as in the inline assembler. But this requires a hashmap. To avoid allocating memory in assembler, I just pass the variables from `CPP` into the assembler code. This saves me some time and makes the whole thing more readable. 
 
-*Hinweis*: Das Naming der Headerdatei passt natürlich nur noch bedingt, aber das soll uns nicht stören :smile:
+*Note*: Of course the naming of the header file is not correct anymore, but this does not matter :smile:
 
-Die Implementierungsdatei (`Naked32bit.cpp`) muss ebenfalls angepasst werden:
+Now adjust `Naked32bit.cpp`:
 
 ```cpp
 extern "C" void _stdcall StackOverflowDetected(FunctionID funcId, int count) {
@@ -95,9 +98,9 @@ void InitEnterLeaveCallbacks(bool* activate, int* hashMap, int size) {
 }
 ```
 
-Die beiden Funktionen `EnterCpp` und `SODetected` müssen mit `extern "C"` markiert werden, um die Namen in der ASM Datei verfügbar zu machen. Zudem muss die `Init` Funktion angepasst und die Variablen ebenfalls in den Block für 32Bit Code verschoben werden. Da der komplette notwendige 64Bit Code in der ASM Datei ist, kann der 64Bit Block hier ler bleiben.
+Both functions, `EnterCpp` and `SODetected` must be marked with `extern "C"`. The `Init` function and the variables must be moved into the 32bit code block. You can leave the 64bit code block empty because everything will be in the assembler file.
 
-Nun fehlt noch die Initialisierung der Callbacks in der `ProfilerCOncreteImpl.cpp`:
+Now add the initialize in `ProfilerCOncreteImpl.cpp`:
 
 ```cpp
   this->PHashMap = new int[mapSize];
@@ -105,15 +108,13 @@ Nun fehlt noch die Initialisierung der Callbacks in der `ProfilerCOncreteImpl.cp
   InitEnterLeaveCallbacks(&this->ActivateCallbacks, this->PHashMap, mapSize);
 ```
 
-Die grundlage für die Umschaltung zwischen den Buildprofilen ist gelegt. Nun fehlt noch der Assemblercode.
-
 # The ASM Code
-Das Herzstück folgt nun. An sich ist es keine Hexerei. Das einzige, auf was man achten sollte: Es wird nun die FastCall Convention benutzt. Am Ende des Blogposts gibt es ein paar Link, welche sich damit befassen. Das wichtigste, was mir während der Nutzung aufgefallen ist:
-- Die Parameter werden von Links nach Rechts in den Register RCX, RDX, R8, R9 übergeben
-- Der AUfrufer muss zwingend 4*8 Byte auf dem Stack reservieren, damit der Aufgerufene seine Parameter dorthin sichern könnte
-- Der Aufrufer muss den Stack wieder aufräumen
+What you will see now is no magic. There is only one thing you have to pay attention for: In 64Bt builds there is only one calling convention: `fastcall`. See the links at the end of the post to get an insight into it. The most important points (at least these are the points I came across a few times):
+- parameters are passed from left to right in the register: `RCX, RDX, R8, R9`
+- The caller must reserve **4*8** bytes in case of the callee wants to store the parameters onto the stack
+- The caller has to clean up the stack afterwards
 
-Die letzten zwei Punkte habe ich regelmäßig vergessen, was dann zu unerwünschten, nicht zuordenbaren, Fehlverhalten führte.
+I stumbled a few times over the last two points which led to unwanted behavior. 
 
 ```
 _DATA SEGMENT
@@ -198,13 +199,12 @@ _TEXT	ENDS
 END
 ```
 
-AN sich nichts Neues. Wichtig ist eben `sub RSP, 20h` und `add RSP, 20h`, wie oben bereits erwähnt.
+You see, nothing new here. `sub RSP, 20h` and `add RSP, 20h` are used to reserve memory on the stack and clean it up afterwards.
 
 # Using CPP implementations
-Da scheinbar von dr CLR beim Aufruf der Callbacks die `fastcall` convention benutzt wird, liegt der Verdacht nahe, dass man auch eine CPP implementierung nutzen könnte. Tatsächlich konnte ich die Callbacks so umsetzen:
+As it seems that the CLR uses `fastcall` convention for calling the callbacks, you may assume that you can use CPP implementations instead of writing assembler code. Indeed I was able to do this:
 
 ```cpp
-
 #ifdef _WIN64
 bool* activateCallbacks;
 int* pHashMap;
@@ -251,10 +251,10 @@ void __fastcall FnTailcallCallback(FunctionID funcId,
 #else
 ```
 
-Beim Test konnte ich keine Nachteile feststellen. Ob das allerdings so gewollt ist, kann ich nicht sagen.
+During testing the code I don't see any errors but I don't know if this approach is intended by Microsoft.
 
 # Conclusion
-Der Unterschied zwischen 32 und 64 Bit ist nicht sehr groß. AM ehesten sticht die andere Callingconvention hervor. 
+The differences between 32 and 63 bit is not so big. I think the most relevant thing is the calling convention.
 
 # Additional Links
 [Configure project in VS to enable MASM](https://docs.microsoft.com/de-de/cpp/assembler/masm/masm-for-x64-ml64-exe?view=vs-2019)
