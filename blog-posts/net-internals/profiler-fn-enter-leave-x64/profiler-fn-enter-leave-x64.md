@@ -1,6 +1,6 @@
 ---
 published: false
-title: "'function enter/leave' + .NET profiler * 64Bit. Assembler code included!"
+title: "'function enter/leave' + .NET profiler + 64Bit. Assembler code included!"
 description: "This is the 64Bit v ersion of: Trace 'function enter/leave' events with a .NET profiler + detect StackOverflow. Assembler code included!"
 tags: dotnet, cpp, asm, tutorial
 series: Net-Profiler
@@ -8,10 +8,6 @@ canonical_url:
 ---
 
 Während in einem 32 Bit projekt inline Assembler benutzt werden kann, gibt es in der X64 Architektur keinen inline Assembler BEfehl mehr. VS unterstützt dies nicht. Stattdessen können die Enter/Leave Callbacks in einer reinen ASM Datei definiert werden. Diese kann dann im Buildprozess mit dem MASM verarbeitet werden.
-
----> diesen Absatz streichen
-# Why not use C++ Code with stdcall convention?
-Beim Durcharbeiten des letzten Posts könntest du auf die Idee gekommen sein, statt inline Assembler Code zu nutzen, einfach eine Funktion mit stdcall Konvention zu bauen. Diese würde vor dem "return" den Stack aufräumen. Allerdings ist es so, dass bei der stdcall Konvention vor dem Aufruf der Funktion einige Register gesichert werden und andere müssen vom Aufgerufenen gesichert werden. Die CLR macht jedoch den ersten Schritt nicht. Um nun stdcall zu simulieren, müsste man beim
 
 # Assembler in VS
 Um in einem C++ Projekt in VS2019 den MASM zu aktivieren, kann man die [offizielle Anleitung](https://docs.microsoft.com/de-de/cpp/assembler/masm/masm-for-x64-ml64-exe?view=vs-2019) befolgen. Zusätzlich empfehle ich, die VS Erweiterung [AsmDude](https://marketplace.visualstudio.com/items?itemName=Henk-JanLebbink.AsmDude) um Syntaxhighlighting zu erhalten.

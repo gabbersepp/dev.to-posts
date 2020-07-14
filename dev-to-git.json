@@ -25,7 +25,7 @@
     { "id": 316495, "relativePathToArticle": "./blog-posts/net-internals/call-c-from-cpp/call-c-from-cpp.md" },
     { "id": 324236, "relativePathToArticle": "./blog-posts/net-internals/net-bitness/net-bitness.md" },
     { "id": 354033, "relativePathToArticle": "./blog-posts/net-internals/profiler-fn-enter-leave/profiler-fn-enter-leave.md" },
-    
+    { "id": 397649, "relativePathToArticle": "./blog-posts/net-internals/profiler-fn-enter-leave-x64/profiler-fn-enter-leave-x64.md" },
 
     { "id": 322762, "relativePathToArticle": "./blog-posts/net-internals/write-net-profiler/write-net-profiler.md" },
     { "id": 322785, "relativePathToArticle": "./blog-posts/net-internals/how-does-profiler-work/how-does-profiler-work.md" },
