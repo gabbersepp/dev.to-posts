@@ -1,10 +1,9 @@
 ---
 published: false
-title: "Intellisense for Cypress Fixture Files"
-cover_image: "https://raw.githubusercontent.com/gabbersepp/dev.to-posts/master/blog-posts/intellisense-for-cypress-fixture-files/assets/your-asset.png"
-description: "Introducing a VSCode extension that provides intellisense for cypress fixture file paths"
-tags: cypress, javascript, vscode, productivity
-series:
+title: "'function enter/leave' + .NET profiler * 64Bit. Assembler code included!"
+description: "This is the 64Bit v ersion of: Trace 'function enter/leave' events with a .NET profiler + detect StackOverflow. Assembler code included!"
+tags: dotnet, cpp, asm, tutorial
+series: Net-Profiler
 canonical_url:
 ---
 
