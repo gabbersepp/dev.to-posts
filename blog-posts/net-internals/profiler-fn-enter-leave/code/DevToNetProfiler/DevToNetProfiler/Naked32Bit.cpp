@@ -1,5 +1,6 @@
 #include "pch.h"
 #include<iostream>
+#include "Utils.h"
 
 bool* activateCallbacks;
 int* hashMap;
@@ -11,15 +12,13 @@ void InitEnterLeaveCallbacks(bool* activate) {
   memset(hashMap, 0, mapSize);
 }
 
-void _stdcall StackOverflowDetected(FunctionID funcId, int count) {
-  std::cout << "stackoverflow: " << funcId << ", count: " << count;
-}
+void _stdcall StackOverflowDetected(FunctionID funcId, int count);// {
+//  std::cout << "stackoverflow: " << funcId << ", count: " << count;
+//}
 
 void _stdcall EnterCpp(
   FunctionID funcId,
-  int identifier) {
-  //std::cout << "enter funcion id: " << funcId << ", Arguments in correct order: " << (identifier == 12345) << "\r\n";
-}
+  int identifier);
 
 void __declspec(naked) FnEnterCallback(
   FunctionID funcId,
@@ -43,7 +42,7 @@ void __declspec(naked) FnEnterCallback(
     jb skipStackOverflow
 
     push [ebx]
-    push [ESP + 8]
+    push [ESP + 12]
     CALL StackOverflowDetected
 
     skipStackOverflow:

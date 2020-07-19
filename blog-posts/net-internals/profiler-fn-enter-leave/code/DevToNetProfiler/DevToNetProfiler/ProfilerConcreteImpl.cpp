@@ -31,6 +31,31 @@ void ProfilerConcreteImpl::FinalRelease() {
 
 bool activateCallbacks = true;
 
+
+void _stdcall StackOverflowDetected(FunctionID funcId, int count) {
+  Utils* utils = new Utils(iCorProfilerInfo);
+  char* fnName = new char[100];
+  memset(fnName, 0, 100);
+  utils->GetFunctionNameById(funcId, fnName, 100);
+
+  std::cout << "stackoverflow: " << funcId << ", " << fnName << ", count: " << count << "\r\n";
+
+  delete[] fnName;
+  delete utils;
+}
+
+void _stdcall EnterCpp(
+  FunctionID funcId,
+  int identifier) {
+  Utils* utils = new Utils(iCorProfilerInfo);
+  char* fnName = new char[100];
+  memset(fnName, 0, 100);
+  utils->GetFunctionNameById(funcId, fnName, 100);
+  std::cout << "fn enter " << fnName << "\r\n";
+  delete[] fnName;
+  delete utils;
+}
+
 HRESULT __stdcall ProfilerConcreteImpl::Initialize(IUnknown* pICorProfilerInfoUnk)
 {
   pICorProfilerInfoUnk->QueryInterface(IID_ICorProfilerInfo2, (LPVOID*)&iCorProfilerInfo);

@@ -50,7 +50,7 @@ void __declspec(naked) FnEnterCallback(
     jb skipStackOverflow
 
     push [ebx]
-    push [ESP + 8]
+    push [ESP + 12]
     CALL StackOverflowDetected
 
     skipStackOverflow:
