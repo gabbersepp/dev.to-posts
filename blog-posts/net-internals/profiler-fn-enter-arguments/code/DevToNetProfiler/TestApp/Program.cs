@@ -9,6 +9,7 @@ namespace TestApp
       Console.ReadLine();
 
       StructFn(new TestStruct { Int1 = 101, Int2 = 102, Int3 = 103 });
+      StructFn(new OneFieldStruct { Int1 = 100 });
       IntArrayFn(new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
       StringFn("Hello from C#");
       IntFn(1234);
@@ -30,6 +31,10 @@ namespace TestApp
     static void StructFn(TestStruct t)
     {
     }
+
+    static void StructFn(OneFieldStruct t)
+    {
+    }
   }
 
   struct TestStruct
@@ -37,5 +42,10 @@ namespace TestApp
     public int Int1;
     public int Int2;
     public int Int3;
+  }
+
+  struct OneFieldStruct
+  {
+    public int Int1;
   }
 }
