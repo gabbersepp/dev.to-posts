@@ -41,16 +41,20 @@ FnEnterCallback PROC
   CMP DWORD PTR [R8], 30
   JB skipStackOverflow
 
+  push R9
+  push rcx
   xor rdx, rdx
   MOV EDX, [R8]
   SUB RSP, 20h
   CALL StackOverflowDetected
   ADD RSP, 20h
+  pop rcx
+  pop R9
 
   skipStackOverflow:
 
   sub RSP, 20h
-  mov rdx, 12345
+  MOV RDX, R9
   CALL EnterCpp
   add RSP, 20h
 

@@ -1,15 +1,11 @@
 #include "pch.h"
 #include<iostream>
 
-extern "C" void _stdcall StackOverflowDetected(FunctionID funcId, int count) {
-  std::cout << "stackoverflow: " << funcId << ", count: " << count;
-}
+extern "C" void _stdcall StackOverflowDetected(FunctionID funcId, int count);
 
 extern "C" void _stdcall EnterCpp(
   FunctionID funcId,
-  int identifier) {
-  std::cout << "enter funcion id: " << funcId << ", Arguments in correct order: " << (identifier == 12345) << "\r\n";
-}
+  COR_PRF_FUNCTION_ARGUMENT_INFO * argumentInfo);
 
 #ifdef _WIN64
 
@@ -50,13 +46,13 @@ void __declspec(naked) FnEnterCallback(
     jb skipStackOverflow
 
     push [ebx]
-    push [ESP + 8]
+    push [ESP + 12]
     CALL StackOverflowDetected
 
     skipStackOverflow:
 
     ; push last parameter first!
-    push 12345
+    push [ESP+20]
     push [ESP+12]
     call EnterCpp
 

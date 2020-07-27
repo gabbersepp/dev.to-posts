@@ -1,34 +1,41 @@
 using System;
-using System.Threading;
 
 namespace TestApp
 {
-    class Program
+  class Program
+  {
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-          Console.ReadLine();
-          Fn1();
-          Console.ReadLine();
-        }
+      Console.ReadLine();
 
-        static void Fn1()
-        {
-          Fn2();
-        }
+      StructFn(new TestStruct { Int1 = 101, Int2 = 102, Int3 = 103 });
+      IntArrayFn(new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
+      StringFn("Hello from C#");
+      IntFn(1234);
 
-        static void Fn2()
-        {
-          Fn3(0);
-        }
-
-        static void Fn3(int index)
-        {
-          if (index > 30)
-          {
-            return;
-          }
-          Fn3(index + 1);
-        }
+      Console.ReadLine();
     }
+
+    static void IntArrayFn(int[] intArray)
+    {
+    }
+    static void StringFn(string str)
+    {
+    }
+
+    static void IntFn(int i1)
+    {
+    }
+
+    static void StructFn(TestStruct t)
+    {
+    }
+  }
+
+  struct TestStruct
+  {
+    public int Int1;
+    public int Int2;
+    public int Int3;
+  }
 }

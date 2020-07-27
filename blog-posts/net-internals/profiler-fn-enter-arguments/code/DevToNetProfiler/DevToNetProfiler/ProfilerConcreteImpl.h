@@ -28,7 +28,6 @@ public:
   HRESULT __stdcall ProfilerConcreteImpl::ObjectAllocated(ObjectID objectID, ClassID classID);
 
 private:
-  Utils* utils;
   bool ActivateCallbacks;
   int* PHashMap;
 };

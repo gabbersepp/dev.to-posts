@@ -3,8 +3,13 @@
 #include<iostream>
 #include "Naked32Bit.h"
 
+#include<locale>
+#include<codecvt>
+#include<string>
+#include <cuchar>
 using namespace std;
 CComQIPtr<ICorProfilerInfo2> iCorProfilerInfo;
+Utils* utils;
 
 HRESULT __stdcall DoStackSnapshotCallback(
   FunctionID funcId,
@@ -38,7 +43,7 @@ HRESULT __stdcall ProfilerConcreteImpl::Initialize(IUnknown* pICorProfilerInfoUn
   pICorProfilerInfoUnk->QueryInterface(IID_ICorProfilerInfo2, (LPVOID*)&iCorProfilerInfo);
   iCorProfilerInfo->SetEventMask(COR_PRF_MONITOR_EXCEPTIONS | COR_PRF_MONITOR_OBJECT_ALLOCATED
     | COR_PRF_ENABLE_OBJECT_ALLOCATED | COR_PRF_ENABLE_STACK_SNAPSHOT
-    | COR_PRF_MONITOR_ENTERLEAVE);
+    | COR_PRF_MONITOR_ENTERLEAVE | COR_PRF_ENABLE_FUNCTION_ARGS);
 
   iCorProfilerInfo->SetEnterLeaveFunctionHooks2((FunctionEnter2*)&FnEnterCallback, (FunctionLeave2*)FnLeaveCallback, (FunctionTailcall2*)FnTailcallCallback);
 
@@ -102,4 +107,83 @@ HRESULT __stdcall DoStackSnapshotCallback(
   snapshotClientData->pUtils->GetFunctionNameById(funcId, output, 1000);
 
   return S_OK;
+}
+
+extern "C" void _stdcall StackOverflowDetected(FunctionID funcId, int count) {
+  std::cout << "stackoverflow: " << funcId << ", count: " << count;
+}
+
+extern "C" void _stdcall EnterCpp(
+  FunctionID funcId,
+  COR_PRF_FUNCTION_ARGUMENT_INFO * argumentInfo) {
+
+  char* fnName = new char[100];
+  utils->GetFunctionNameById(funcId, fnName, 100);
+
+  if (strcmp(fnName, "IntFn") == 0) {
+    COR_PRF_FUNCTION_ARGUMENT_RANGE range = argumentInfo->ranges[0];
+    UINT_PTR valuePtr = range.startAddress;
+    int* ptr = (int*)valuePtr;
+
+    std::cout << "\r\n\r\n## Entered IntFn ##\r\n";
+    std::cout << "argument: " << *ptr << "\r\n";
+    std::cout << "## IntFn ends ##";
+  }
+
+  if (strcmp(fnName, "StructFn") == 0) {
+    COR_PRF_FUNCTION_ARGUMENT_RANGE range = argumentInfo->ranges[0];
+    UINT_PTR valuePtr = range.startAddress;
+    int* ptr = (int*)valuePtr;
+    std::cout << "\r\n\r\n## Entered StructFn() ##\r\n";
+    std::cout << "size of range: " << range.length << "\r\n";
+    std::cout << "arguments: Int1 = " << *ptr << ", Int2 = " << *(ptr + 1) << ", Int3 = " << *(ptr + 2) << "\r\n";
+    std::cout << "## StructFn() ends ##";
+  }
+
+  if (strcmp(fnName, "StringFn") == 0) {
+    COR_PRF_FUNCTION_ARGUMENT_RANGE range = argumentInfo->ranges[0];
+    UINT_PTR valuePtr = range.startAddress;
+
+    byte** ptr = (byte**)valuePtr;
+    byte* strPtr = *ptr;
+    strPtr = strPtr + sizeof(int*);
+    long stringLength = *(long*)strPtr;
+    strPtr += 4;
+    char* dest = new char[100];
+
+    std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> codecvt;
+    std::string u8str = codecvt.to_bytes((char16_t*)strPtr);
+
+    std::cout << "\r\n\r\n## Entered StringFn ##\r\n";
+    std::cout << "Length: " << stringLength << "\r\n";
+    std::cout << "\r\argument: " << u8str;
+    std::cout << "\r\n## StringFn ends ##";
+
+    delete[] dest;
+  }
+
+  if (strcmp(fnName, "IntArrayFn") == 0) {
+    COR_PRF_FUNCTION_ARGUMENT_RANGE range = argumentInfo->ranges[0];
+    UINT_PTR valuePtr = range.startAddress;
+
+    int** ptr = (int**)valuePtr;
+    int* intArray = *ptr;
+
+    std::cout << "\r\n\r\n## Enter IntArrayFn ##\r\n";
+    intArray = intArray + sizeof(int*)/sizeof(int); //skip object header of array
+    long arrayLength = *(long*)intArray;
+    std::cout << "Length: " << arrayLength << "\r\n";
+    intArray += sizeof(int*) / sizeof(int);
+    std::cout << "Arguments: ";
+
+    for (int i = 0; i < arrayLength; i++)
+    {
+      std:cout << "," << *intArray;
+      intArray += 1;
+    }
+
+    std::cout << "\r\n## IntArrayFn ends ##";
+  }
+
+  delete[] fnName;
 }
