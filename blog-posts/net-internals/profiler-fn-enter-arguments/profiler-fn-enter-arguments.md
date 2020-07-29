@@ -9,46 +9,51 @@ canonical_url:
 
 >**Get the full runnable example:** [here](https://github.com/gabbersepp/dev.to-posts/tree/master/blog-posts/net-internals/profiler-fn-enter-arguments/code/DevToNetProfiler)
 
-Today I want to guide you thoruhg the process of getting function parameters and return values. I use the code from the last blogpost as
-Heute wollen wir uns anschauen, wie man Funktionsparameter und Rückgabewerte erfassen kann. Ausgangsbasis ist der Code aus dem letzten Blogpost. Dort hängen wir uns in die Function Enter/Leave Callbacks ein.
+Today I want to guide you through the process of getting function parameters and return values. As always I am using the code from the last blogpost and extend it where necessary. For this case we have to adjust `EnterCpp` and the part of assembler code that calls this function.
 
-Aus dem Stand heraus hatte ich keine Idee, wie man anhand der Infos <add parameter of functio e ter> an die Parameter kommt. Nach längerer Suche bin ich jedoch auf diesen Issue gestoßen:
-
-https://github.com/dotnet/docs/issues/6728
-
-Der Ersteller hat das gleiche Problem wie ich. Ein mit der Materie vertrauter Entwickler hat ihm eine grobe Anleitung geschrieben, was getan werden muss. Dies wollen wir als Ausgangsbasis nutzen.
+While writing this lines I had no idea how this can be achieved. Of course I had the documentation about the [FunctionEnter2](https://docs.microsoft.com/de-de/dotnet/framework/unmanaged-api/profiling/functionenter2-function) callback and it's parameter `COR_PRF_FUNCTION_ARGUMENT_INFO *argumentInfo`. But how I had to use it was not described. I also found no example in the world wide web but luckily I found someone who tried the same and was asking for help in the official [dotnet repo](https://github.com/dotnet/docs/issues/6728). He doesn't get a complete working example but only a short explanation how he can get what he wants. This was enough for me to figure out the remaining stuff.
 
 # Modifying the Assembler code
-Aber bevor wir im C++ code weiter machen können, müssen wir die Parameter in den Assembler Callbacks anpassen. Die Funktionsdefinition lautet:
+Before we can start writing cool C++ code we must adjust the function signature of `EnterCpp`. When looking at the raw ICorProfiler definition of the enter callback, we can identify one additional argument that we should pass along with the `FunctionId`, named `argumentInfo`:
 
 ```cpp
 void FnEnterCallback(FunctionID funcId, UINT_PTR clientData, COR_PRF_FRAME_INFO func, COR_PRF_FUNCTION_ARGUMENT_INFO argumentInfo)
 ```
 
-Bisher wurde nur **funcId** benutzt. Nun benötigen wir zusätzlich **argumentInfo**. Dies soll der zweite Parameter in `EnterCpp` sein:
+So let's change the signature of `EnterCpp`:
 
 ```cpp
 void EnterCpp(FunctionID funcId, COR_PRF_FUNCTION_ARGUMENT_INFO * argumentInfo)
 ```
 
-Im Falle von X64 Code ist der Fall simpel, wir legen das Argument in das Register `RDX`, was nach `fastcall` Konvention in einem zweiten Parameter von Links resultiert. With `fastcall` parameters are passed from left to right in the register `RCX, RDX, R8, R9` which means that the ASM callback has the value `argumentInfo` in `R9`. D.h. man muss diese Zeile vor dem `CALL EnterCpp` hinzufügen: `MOV RDX, R9`
-Im 32 Bit code tut es diese Zeile hier: `push [ESP+20]`
+In case of **64 bit** assembler `argumentInfo` is the fourth parameter from left and thus resists in the register `R9`. To make it available to `EnterCpp` just copy it to `RDX`: 
+```
+MOV RDX, R9
+```
+
+In case of **32 bit** assembler, we have to push the correct value from the stack:
+
+```
+push [ESP+20]
+```
+
+Feel free to take a look into the code to see the full assembler code.
 
 # Necessary steps if we know the types
 
-Im ersten Schritt gehe ich davon aus, dass mir die Parameter der Funktion bekannt sind. Zudem haben wir nur einen Parameter. Das spart mir einiges an Code und ih kann eher sehen, ob es prinzipiell funktioniert.
+For this first try I assume that we know the types of the parameter and I know that the functions will have only one parameter. Using those preconditons makes it easier to get a first runnable example. 
 
-Folgende Schritte sind notwendig, um ausgehend davon die Parameter aus dem Speicher zu lesem:
-- Überspringe alle Funktionen, deren Parameter wir nicht kennen
-- Pointer auf die Funktionsparameter holen
-- Objektheader überspringen
-- Daten verwerten abhängig von den Datentypen
+You need these steps:
++ Skip all functions whose name does not match our predefined set of functions
++ get a pointer to the function parameter
++ skip object header (if exists)
++ process data according to it's type
 
-Man sieht, es ist gar nicht so tragisch. Aber wie immer steckt der Teufel im Detail.
+In the end this is not too hard to build. But as always, I needed a lot of try&error to get it right.
 
-# Funktionen überspringen
+# Skip functions
 
-Das ist einfach. Wir müssen den Funktionsnamen anhand der **FunctionId** holen und mit dem bekannten Funktionsnamen vergleichen. Dazu können wir die `Utils` Klasse benutzen:
+Well, this is easy. Just get the function name and compare it against our known function names. Utilize the `Utils` class for that:
 
 ```cpp
 char* fnName = new char[100];
@@ -64,63 +69,25 @@ From what I have understand, the `argumentInfo` points to an struct that describ
 - `argumentInfo->numRanges` is the amount of such blocks
 - `argumentInfo->ranges` is an array of data
 
-Da wir nur einen Parameter haben, muss uns das nicht weiter kümmern und wir können uns auf `argumentInfo->ranges[0].startAddress` fokkussieren.
+As we just have one parameter, this is not something we care about. So let's focus on `argumentInfo->ranges[0].startAddress`.
 
 ```cpp
 COR_PRF_FUNCTION_ARGUMENT_RANGE range = argumentInfo->ranges[0];
 UINT_PTR valuePtr = range.startAddress;
 ```
 
-Was ist nun `valuePtr`? Eine richtige Dokumentation darüber habe ich nicht gefunden, aber von dem was logisch ist und sich aus Debugging und Testen ergab, ist valuePtr:
-- **value Typen wie int:** ein Pointer auf einen integer
-- **Objekte:** ein Pointer auf den ["Method Table Pointer"](https://devblogs.microsoft.com/premier-developer/managed-object-internals-part-1-layout/)
-- **Struct:** ein Pointer auf die Struct
+So what is `valuePtr`? I haven't found a documentation about that but from what I have seen by debugging and testing, `valuePtr` is:
++ **value type like 'int'**: a pointer to the value
++ **object**: a pointer to the [Method Table pointer](https://devblogs.microsoft.com/premier-developer/managed-object-internals-part-1-layout/)
+- **Struct:** a pointer to the struct
 
-`range.length` gibt die Größe des Speicherbereichs in Bytes an und ist notwendig, da im Falle eine Struct alle Felder nacheinander im Speicher sind und man wissen muss, ob nach den Feldern noch weitere Daten kommen.
+# Skip objektheader
+[This article](https://devblogs.microsoft.com/premier-developer/managed-object-internals-part-1-layout/) states that an object points to the `Method Table Pointer` and not to the beginning of the object data. Right now we don't need the information contained in the header and thus can skip it. **Attention:** Take caree of the correct pointer size on 32 bit systems vs 64 bit systems. Of course you don't have to care about it if the parameter's type is not of type `Object`.
 
-Beispiel:
+# Process data
+How can we interpret the data? Well, this depends on the data type. This raises the question, how we know the internal representation of the data? There are at least two possibilities to get an answer to this question. One is to read books and articles from Microsoft or other people about that topic. Another approach, which can last in many times, is to use a .NET project + Visual Studio + Debugger to inspect the memory.
 
-```cs
-struct TestStruct
-{
-    public int Int1;
-    public int Int2;
-    public int Int3;
-}
-//...
-static void StructFn(TestStruct t)
-{
-}
-//...
-var t = new TestStruct { Int1 = 101, Int2 = 102, Int3 = 103 };
-StructFn(t);
-```
-
-Dazu dieser Profilercode:
-
-```cpp
-COR_PRF_FUNCTION_ARGUMENT_RANGE range = argumentInfo->ranges[0];
-UINT_PTR valuePtr = range.startAddress;
-int* ptr = (int*)valuePtr;
-std::cout << "\r\n\r\nsize of range: " << range.length << "\r\n";
-std::cout << "entered StructFn() with argument: " << *ptr << "," << *(ptr + 1) << "," << *(ptr + 2) << "\r\n\r\n";
-``` 
-
-Dies führt zu folgendem Ergebnis:
-![](./assets/struct-profiler.jpg)
-
-`range.length` ist hier 12, da die struct drei integer mit je 4 bytes beinhaltet. Vermutlich könnte es zudem sein, dass eine Range auch mehrere Parameterpointer beonhaltet. Das habe ich nicht geprüft.
-
-
-# Objektheader überspringen
-[Hier](https://devblogs.microsoft.com/premier-developer/managed-object-internals-part-1-layout/) ist beschrieben, dass ein Objekt auf den `Method Table Pointer`zeigt, also nicht an den Anfang des Objektes. Dieser Header ist für uns nicht interessant und muss deshalb übersprungen werden. Wichtig: Ein Pointer ist 4 Bytes groß auf 32 Bit systemen oder 8 bytes auf 64 Bit systemen.
-
-Es sollte klar sein, dass man nur den Header überspringen muss, wenn man auch ein Objekt vorliegen hat :-)
-
-# Daten verwerten
-WIe die Daten nun zu interpretieren sind, hängt vom Datentyp ab. Wie findet man nun raus, wie die Daten intern im Speicher vorliegen? Nun, eine Möglichkeit wäre, irgendwelche Microsoft DOkuemte & Bücher zu durchforsten. Die andere, und meines erachtens elegantere (zumindest in manchen Fällen), ist, im Debugger einfach zu schauen, wie der Speucher aufgebaut ist.
-
-Wir brauchen dazu eine C# Funktion. Dies kann im Profiler Testprogramm geschrieben werden oder in einem neuen .NET Projekt:
+To do this we first need some C# code:
 
 ```cs
 static void Main(string[] args)
@@ -130,22 +97,22 @@ static void Main(string[] args)
 
 static void IntArrayFn(int[] intArray)
 {
-    // place a breakpoint here and leave the mthod empty
+    // place a breakpoint here and leave the method empty
 }
 ```
 
-Nun muss das Projekt als 64 Bit Programm ausgef+hrt werden. Als 64Bit kompiliert wird `fastcall` Konvention benutzt.Das bedeutet, dass die Parameter von `IntArrayFn` in den Registern `RCX, RDX, R8, R9` übergeben werden (von links nach rechts). Für uns hat das den eleganten Vorteil, dass wir in der Funktion einen Breakpoint setzen können und über **Debugging > Window > Register** die Register anzeigen lassen können:
+Now execute the project as 64 bit application. This will produce function calls following the `fastcall` convention. That means that the parameters of `IntArrayFn` are passed from left to right in the registers `RCX, RDX, R8, R9`. This givbes us the possibility to retrive the memory adress of the argument by inspecting the registers. Run the application and as soon as the breakpoint is hit, open **Debugging > Window > Register** to display the registers:
 
 ![](./assets/register.jpg)
 
-Der Wert aus `RCX` *(000002015C922F40)* wird nun kopiert und in **Debugging > Window > Memory** kopiert:
+Copy the value from `RCX` *(000002015C922F40)* into **Debugging > Window > Memory**:
 
 ![](./assets/memory.jpg)
 
-Der erste markierte Bereich ist der Pointer auf die `Method Table`. Dem folgt die Größe des Arrays (wird hier als long mit 8 Byte abgebildet) sowie darau folgend die Elemente des Arrays mit je 4 Byte.
+The first marked area is the pointer to the `Method Table`. The next 8 bytes represent the length of the array and after that you see the array elements with 4 bytes in size each.
 
-# Beispiele
-Nun werden wir einige Beispiele sehen. AUsgangsbasis ist folgender Code in `EnterCpp`:
+# Examples
+Now I show you some examples. In every example I am using this code in `EnterCpp`:
 
 ```cpp
 extern "C" void _stdcall EnterCpp(
@@ -156,7 +123,7 @@ extern "C" void _stdcall EnterCpp(
   utils->GetFunctionNameById(funcId, fnName, 100);
 ```
 
-ANhand von `fnName` können wir nun gezielt folgende Funktionen prüfen:
+And this C# code in the test application:
 
 ```cs
 using System;
@@ -203,7 +170,7 @@ namespace TestApp
 ```
 
 ## IntFn
-Dies ist einfach. EIn Integer ist ein valuetype und kann direkt angesprochen werden:
+This is very easy. An integer is a value type and as such I can access it directly:
 
 ```cpp
 if (strcmp(fnName, "IntFn") == 0) {
@@ -218,7 +185,7 @@ if (strcmp(fnName, "IntFn") == 0) {
 ```
 
 ## StructFn
-eine struct ist ebenfalls ein value type. Man würde also erwarten, dass die Felder bzw deren Werte in einem zzsammenhängenden Speicherblock sind. Das ist auch so:
+A struct also is a value type and thus can be handled like an integer. All fields of the struct are in memory one after the other:
 
 ```cpp
 if (strcmp(fnName, "StructFn") == 0) {
@@ -232,10 +199,10 @@ if (strcmp(fnName, "StructFn") == 0) {
 }
 ``` 
 
-`range.length` ist hier **12**, da die Struct drei Felder à vier Bytes hat.
+`range.length` is **12**, because the struct consists of three fields where evry field needs four bytes.
 
 ## IntArrayFn
-Nun kommt erstmaks der Objectheader ins Spiel.
+Now we see the handling of the object header.
 
 ```cpp
 if (strcmp(fnName, "IntArrayFn") == 0) {
@@ -262,10 +229,13 @@ if (strcmp(fnName, "IntArrayFn") == 0) {
 }
 ```
 
-**valuePtr** ist nun ein Pointer auf eine *Method Table*. Diese überspringen wir mit 4 Bytes (32bit) bzw 8 Bytes (64 bit). Die nächsten 8 Byte (long) beinhalten die Arraylänge. Anschließend können wir auf die eigentlichen Arrayelemente zugreifen.
+`sizeof(int*)/sizeof(int)` is **2** in case of a 64 bit application and **1** for 32 bit applications. 
+>**Remember**, raising a `int*` by one means to skip four bytes.
+
+After skipping the header and reading the size, we have access to all array elements.
 
 ## StringFn
-Die StringFn ist insofern besonders, weil wir zur Ausgabe des Strings den Kram erstmal in etwas umwandeln müssen, was C++ versteht. Ich hab den Code dazu aus irgendeinem Stackoverfloe Artikel kopiert:
+A `string` is a little bit special because we have to convert it to print it to the console. I have copied a few lines of code for that task from a Stackoverflow article. Apart from this it is the same like in the integer array above:
 
 ```cpp
 if (strcmp(fnName, "StringFn") == 0) {
@@ -291,8 +261,8 @@ if (strcmp(fnName, "StringFn") == 0) {
 }
 ```
 
-# COnclusion
-Man sieht, das alles ist kein großes Hexenwerk. Auch von unbekannten Funktionen kann man die Werte anzeigen. Dann muss man eben noch den Typ des Parameters holen. Alles keine große Sache denke ich.
+# Conclusion
+As you can see, it is no big deal at all. I think I will try to get the values of unknown functions, too. This will be helpful in some debugging scenarios I think.
 
 # Additional Links
 [COR_PRF_FUNCTION_ARGUMENT_RANGE](https://docs.microsoft.com/en-us/dotnet/framework/unmanaged-api/profiling/cor-prf-function-argument-range-structure)
