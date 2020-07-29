@@ -7,8 +7,9 @@ series: Net-Profiler
 canonical_url:
 ---
 
->**Get the full runnable example:** [here]()
+>**Get the full runnable example:** [here](https://github.com/gabbersepp/dev.to-posts/tree/master/blog-posts/net-internals/profiler-fn-enter-arguments/code/DevToNetProfiler)
 
+Today I want to guide you thoruhg the process of getting function parameters and return values. I use the code from the last blogpost as
 Heute wollen wir uns anschauen, wie man Funktionsparameter und Rückgabewerte erfassen kann. Ausgangsbasis ist der Code aus dem letzten Blogpost. Dort hängen wir uns in die Function Enter/Leave Callbacks ein.
 
 Aus dem Stand heraus hatte ich keine Idee, wie man anhand der Infos <add parameter of functio e ter> an die Parameter kommt. Nach längerer Suche bin ich jedoch auf diesen Issue gestoßen:
