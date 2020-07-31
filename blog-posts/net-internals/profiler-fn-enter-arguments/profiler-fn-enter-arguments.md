@@ -41,7 +41,7 @@ Feel free to take a look into the code to see the full assembler code.
 
 # Necessary steps if we know the types
 
-For this first try I assume that we know the types of the parameter and I know that the functions will have only one parameter. Using those preconditons makes it easier to get a first runnable example. 
+For this first try I assume that we know the types of the parameter and I know that the functions will have only one parameter. Using those preconditions makes it easier to get a first runnable example. 
 
 You need these steps:
 + Skip all functions whose name does not match our predefined set of functions
@@ -65,7 +65,7 @@ if (strcmp(fnName, "FunctionWithParameter") == 0) {
 ```
 
 # Get Pointer to function arguments
-From what I have understand, the `argumentInfo` points to an struct that describes memory blocks with parameters. The reason fpr this is that parameters are not accessible in an continuous memoryblock but are split up for technical reasons. 
+From what I have understand, the `argumentInfo` points to an struct that describes memory blocks with parameters. The reason for this is that parameters are not accessible in an continuous memory block but are split up for technical reasons. 
 - `argumentInfo->numRanges` is the amount of such blocks
 - `argumentInfo->ranges` is an array of data
 
@@ -81,8 +81,8 @@ So what is `valuePtr`? I haven't found a documentation about that but from what 
 + **object**: a pointer to the [Method Table pointer](https://devblogs.microsoft.com/premier-developer/managed-object-internals-part-1-layout/)
 + **Struct:** a pointer to the struct
 
-# Skip objektheader
-[This article](https://devblogs.microsoft.com/premier-developer/managed-object-internals-part-1-layout/) states that an object points to the `Method Table Pointer` and not to the beginning of the object data. Right now we don't need the information contained in the header and thus can skip it. **Attention:** Take caree of the correct pointer size on 32 bit systems vs 64 bit systems. Of course you don't have to care about it if the parameter's type is not of type `Object`.
+# Skip object header
+[This article](https://devblogs.microsoft.com/premier-developer/managed-object-internals-part-1-layout/) states that an object points to the `Method Table Pointer` and not to the beginning of the object data. Right now we don't need the information contained in the header and thus can skip it. **Attention:** Take care of the correct pointer size on 32 bit systems vs 64 bit systems. Of course you don't have to care about it if the parameter's type is not of type `Object`.
 
 # Process data
 How can we interpret the data? Well, this depends on the data type. This raises the question, how we know the internal representation of the data? There are at least two possibilities to get an answer to this question. One is to read books and articles from Microsoft or other people about that topic. Another approach, which can last in many times, is to use a .NET project + Visual Studio + Debugger to inspect the memory.
@@ -101,7 +101,7 @@ static void IntArrayFn(int[] intArray)
 }
 ```
 
-Now execute the project as 64 bit application. This will produce function calls following the `fastcall` convention. That means that the parameters of `IntArrayFn` are passed from left to right in the registers `RCX, RDX, R8, R9`. This givbes us the possibility to retrive the memory adress of the argument by inspecting the registers. Run the application and as soon as the breakpoint is hit, open **Debugging > Window > Register** to display the registers:
+Now execute the project as 64 bit application. This will produce function calls following the `fastcall` convention. That means that the parameters of `IntArrayFn` are passed from left to right in the registers `RCX, RDX, R8, R9`. This gives us the possibility to retrieve the memory address of the argument by inspecting the registers. Run the application and as soon as the breakpoint is hit, open **Debugging > Window > Register** to display the registers:
 
 ![](./assets/register.jpg)
 
