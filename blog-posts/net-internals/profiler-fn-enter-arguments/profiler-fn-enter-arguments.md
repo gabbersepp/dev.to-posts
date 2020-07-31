@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 title: "Read function arguments from .NET applications with .NET ProfilingAPI"
 description: "I show you how you can extend your profiler in order to read function parameters within a FunctionEnter event"
 tags: dotnet, cpp, csharp, tutorial
@@ -9,7 +9,7 @@ canonical_url:
 
 >**Get the full runnable example:** [here](https://github.com/gabbersepp/dev.to-posts/tree/master/blog-posts/net-internals/profiler-fn-enter-arguments/code/DevToNetProfiler)
 
-Today I want to guide you through the process of getting function parameters and return values. As always I am using the code from the last blogpost and extend it where necessary. For this case we have to adjust `EnterCpp` and the part of assembler code that calls this function.
+Today I want to guide you through the process of getting function parameters and return values. As always I am using the code from the last blogpost and extend it where necessary. For this article we have to adjust `EnterCpp` and the part of assembler code that calls this function.
 
 While writing this lines I had no idea how this can be achieved. Of course I had the documentation about the [FunctionEnter2](https://docs.microsoft.com/de-de/dotnet/framework/unmanaged-api/profiling/functionenter2-function) callback and it's parameter `COR_PRF_FUNCTION_ARGUMENT_INFO *argumentInfo`. But how I had to use it was not described. I also found no example in the world wide web but luckily I found someone who tried the same and was asking for help in the official [dotnet repo](https://github.com/dotnet/docs/issues/6728). He doesn't get a complete working example but only a short explanation how he can get what he wants. This was enough for me to figure out the remaining stuff.
 
@@ -26,7 +26,7 @@ So let's change the signature of `EnterCpp`:
 void EnterCpp(FunctionID funcId, COR_PRF_FUNCTION_ARGUMENT_INFO * argumentInfo)
 ```
 
-In case of **64 bit** assembler `argumentInfo` is the fourth parameter from left and thus resists in the register `R9`. To make it available to `EnterCpp` just copy it to `RDX`: 
+In case of **64 bit** assembler `argumentInfo` is the fourth parameter from left and thus is located in the register `R9`. To make it available to `EnterCpp` just copy it to `RDX`: 
 ```
 MOV RDX, R9
 ```
@@ -85,7 +85,7 @@ So what is `valuePtr`? I haven't found a documentation about that but from what 
 [This article](https://devblogs.microsoft.com/premier-developer/managed-object-internals-part-1-layout/) states that an object points to the `Method Table Pointer` and not to the beginning of the object data. Right now we don't need the information contained in the header and thus can skip it. **Attention:** Take care of the correct pointer size on 32 bit systems vs 64 bit systems. Of course you don't have to care about it if the parameter's type is not of type `Object`.
 
 # Process data
-How can we interpret the data? Well, this depends on the data type. This raises the question, how we know the internal representation of the data? There are at least two possibilities to get an answer to this question. One is to read books and articles from Microsoft or other people about that topic. Another approach, which can last in many times, is to use a .NET project + Visual Studio + Debugger to inspect the memory.
+How can we interpret the data? Well, this depends on the data type. This raises the question, how we know the internal representation of the data? There are at least two possibilities to get an answer to this question. One is to read books and articles from Microsoft or other people about that topic. Another approach, which is sufficient in many times, is to use a .NET project + Visual Studio + Debugger to inspect the memory.
 
 To do this we first need some C# code:
 
