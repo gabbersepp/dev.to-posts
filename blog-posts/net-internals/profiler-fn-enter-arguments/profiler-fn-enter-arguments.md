@@ -79,7 +79,7 @@ UINT_PTR valuePtr = range.startAddress;
 So what is `valuePtr`? I haven't found a documentation about that but from what I have seen by debugging and testing, `valuePtr` is:
 + **value type like 'int'**: a pointer to the value
 + **object**: a pointer to the [Method Table pointer](https://devblogs.microsoft.com/premier-developer/managed-object-internals-part-1-layout/)
-- **Struct:** a pointer to the struct
++ **Struct:** a pointer to the struct
 
 # Skip objektheader
 [This article](https://devblogs.microsoft.com/premier-developer/managed-object-internals-part-1-layout/) states that an object points to the `Method Table Pointer` and not to the beginning of the object data. Right now we don't need the information contained in the header and thus can skip it. **Attention:** Take caree of the correct pointer size on 32 bit systems vs 64 bit systems. Of course you don't have to care about it if the parameter's type is not of type `Object`.
