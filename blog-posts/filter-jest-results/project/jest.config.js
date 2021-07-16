@@ -1,7 +1,7 @@
 module.exports = {
   reporters: [
     "default",
-    ["jest-report-wrapper.js",
+    ["./jest-report-wrapper.js",
       [
         { underlying: "jest-junit" },
         {

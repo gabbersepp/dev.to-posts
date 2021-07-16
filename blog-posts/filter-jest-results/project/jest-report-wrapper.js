@@ -4,7 +4,7 @@ class ReporterWrapper {
     this._options = options;
     this.underlyingReporters = [];
 
-    this.underlyingReporters = underlyingReporter.map(r => {
+    this.underlyingReporters = options.map(r => {
       const resolved = require(r.underlying);
       return new resolved(globalConfig, r.underlyingOptions);
     })

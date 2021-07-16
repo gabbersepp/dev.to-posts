@@ -210,7 +210,7 @@ As every reporter receives the same testresult instance, it makes sense to confi
 module.exports = {
   reporters: [
     "default",
-    ["jest-report-wrapper.js",
+    ["./jest-report-wrapper.js",
       [
         { underlying: "jest-junit" },
         {
@@ -264,7 +264,7 @@ constructor(globalConfig, options) {
   this._options = options;
   this.underlyingReporters = [];
 
-  this.underlyingReporters = underlyingReporter.map(r => {
+  this.underlyingReporters = options.map(r => {
     const resolved = require(r.underlying);
     return new resolved(globalConfig, r.underlyingOptions);
   })
