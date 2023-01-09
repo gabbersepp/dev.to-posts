@@ -5,7 +5,7 @@
     "eleventy": "node twitter.js && eleventy --serve"
   },
   "devDependencies": {
-    "@11ty/eleventy": "0.10.0",
+    "@11ty/eleventy": "1.0.2",
     "request": "2.88.2",
     "twitter-lite": "0.9.4"
   }
