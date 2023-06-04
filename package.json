@@ -2,11 +2,11 @@
   "name": "dev.to",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gabbersepp/dev.to-posts.git"
+    "url": "https://github.com/YOUR-USERNAME/YOUR-REPO.git"
   },
   "scripts": {
     "prettier": "prettier",
-    "embedme": "embedme blog-posts/**/*.md blog-posts/**/**/*.md",
+    "embedme": "embedme blog-posts/**/*.md",
     "prettier:base": "yarn run prettier \"**/*.{js,json,scss,md,ts,html,component.html}\"",
     "prettier:write": "yarn run prettier:base --write",
     "prettier:check": "yarn run prettier:base --list-different",
@@ -15,8 +15,8 @@
     "dev-to-git": "dev-to-git"
   },
   "dependencies": {
-    "dev-to-git": "1.4.1",
-    "embedme": "1.20.0",
-    "prettier": "1.19.1"
+    "dev-to-git": "1.4.10",
+    "embedme": "1.22.1",
+    "prettier": "2.8.8"
   }
 }
