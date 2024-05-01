@@ -10,7 +10,7 @@
     "prettier:base": "prettier \"**/*.{js,json,scss,md,ts,html,component.html}\"",
     "prettier:write": "prettier \"**/*.{js,json,scss,md,ts,html,component.html}\" --write",
     "prettier:check": "prettier \"**/*.{js,json,scss,md,ts,html,component.html}\" --list-different",
-    "embedme:check": "embedme --verify",
+    "embedme:check": "embedme blog-posts/**/*.md --verify",
     "embedme:write": "embedme",
     "dev-to-git": "dev-to-git"
   },
