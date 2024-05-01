@@ -8,8 +8,8 @@
     "prettier": "prettier",
     "embedme": "embedme blog-posts/**/*.md",
     "prettier:base": "prettier \"**/*.{js,json,scss,md,ts,html,component.html}\"",
-    "prettier:write": "prettier:base --write",
-    "prettier:check": "prettier:base --list-different",
+    "prettier:write": "prettier \"**/*.{js,json,scss,md,ts,html,component.html}\" --write",
+    "prettier:check": "prettier \"**/*.{js,json,scss,md,ts,html,component.html}\" --list-different",
     "embedme:check": "embedme --verify",
     "embedme:write": "embedme",
     "dev-to-git": "dev-to-git"
