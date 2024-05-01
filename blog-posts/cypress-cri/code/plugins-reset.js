@@ -6,9 +6,9 @@ module.exports = (on) => {
             if (client) {
                 await client.close();
             }
-        
+
             return Promise.resolve(true);
         }
-    }
+    });
     //...
 }
