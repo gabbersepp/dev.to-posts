@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 20.12.2
       - name: Install dependencies
-        run: yarn --frozen-lockfile --non-interactive --no-progress
+        run: yarn --non-interactive --no-progress
       - name: Format check
         run: yarn run prettier:check
       - name: Readme check
