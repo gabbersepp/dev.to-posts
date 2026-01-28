@@ -2,13 +2,13 @@
 #include<iostream>
 
 extern "C" void _stdcall StackOverflowDetected(FunctionID funcId, int count) {
-  std::cout << "stackoverflow: " << funcId << ", count: " << count;
+  //std::cout << "stackoverflow: " << funcId << ", count: " << count;
 }
 
 extern "C" void _stdcall EnterCpp(
   FunctionID funcId,
   int identifier) {
-  std::cout << "enter funcion id: " << funcId << ", Arguments in correct order: " << (identifier == 12345) << "\r\n";
+  //std::cout << "enter funcion id: " << funcId << ", Arguments in correct order: " << (identifier == 12345) << "\r\n";
 }
 
 #ifdef _WIN64

@@ -66,7 +66,7 @@ HRESULT __stdcall ProfilerConcreteImpl::ObjectAllocated(ObjectID objectID, Class
   if (utils->GetClassNameByClassId(classID, className, 1000)) {
     //cout << "\t\nfrom profiler: class allocated: " << className << "\r\n";
 
-    if (strcmp(className, "TestApp.CatBowlEmptyException") == 0) {
+    if (strcmp(className, "ConsoleAppTest.CatBowlEmptyException") == 0) {
       char* stack = new char[1000];
       memset(stack, 0, 1000);
       SnapshotClientData clientData;
